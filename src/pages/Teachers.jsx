@@ -21,7 +21,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Plus, Search, Mail, Phone, Eye, Edit, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../utils';
 import AddTeacherModal from '@/components/teachers/AddTeacherModal';
+import EditTeacherModal from '@/components/teachers/EditTeacherModal';
 
 export default function Teachers() {
   const [teachers, setTeachers] = useState([]);
@@ -31,6 +34,8 @@ export default function Teachers() {
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [expandedSubjects, setExpandedSubjects] = useState({});
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   useEffect(() => {
     loadTeachers();
@@ -61,6 +66,17 @@ export default function Teachers() {
   const handleTeacherAdded = () => {
     loadTeachers();
     setShowAddModal(false);
+  };
+
+  const handleEditTeacher = (teacher) => {
+    setSelectedTeacher(teacher);
+    setShowEditModal(true);
+  };
+
+  const handleTeacherUpdated = () => {
+    loadTeachers();
+    setShowEditModal(false);
+    setSelectedTeacher(null);
   };
 
   // Calculate stats
@@ -290,25 +306,42 @@ export default function Teachers() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <button className="p-1 hover:bg-gray-100 rounded">
+                          <a 
+                            href={`mailto:${teacher.email}`}
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="Send Email"
+                          >
                             <Mail className="h-4 w-4 text-gray-600" />
-                          </button>
-                          <button className="p-1 hover:bg-gray-100 rounded">
+                          </a>
+                          <a 
+                            href={`tel:${teacher.phone}`}
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="Call"
+                          >
                             <Phone className="h-4 w-4 text-gray-600" />
-                          </button>
+                          </a>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <button className="p-1 hover:bg-gray-100 rounded">
+                          <Link 
+                            to={createPageUrl(`TeacherProfile?id=${teacher.id}`)}
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="View Profile"
+                          >
                             <Eye className="h-4 w-4 text-gray-600" />
-                          </button>
-                          <button className="p-1 hover:bg-gray-100 rounded">
+                          </Link>
+                          <button 
+                            onClick={() => handleEditTeacher(teacher)}
+                            className="p-1 hover:bg-gray-100 rounded"
+                            title="Edit"
+                          >
                             <Edit className="h-4 w-4 text-gray-600" />
                           </button>
                           <button 
                             onClick={() => handleDeleteTeacher(teacher.id)}
                             className="p-1 hover:bg-gray-100 rounded"
+                            title="Delete"
                           >
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </button>
@@ -333,6 +366,12 @@ export default function Teachers() {
         open={showAddModal}
         onOpenChange={setShowAddModal}
         onTeacherAdded={handleTeacherAdded}
+      />
+      <EditTeacherModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        teacher={selectedTeacher}
+        onTeacherUpdated={handleTeacherUpdated}
       />
     </div>
   );
