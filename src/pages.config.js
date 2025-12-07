@@ -11,6 +11,7 @@ import StudentProfile from './pages/StudentProfile';
 import TeacherProfile from './pages/TeacherProfile';
 import Chat from './pages/Chat';
 import Email from './pages/Email';
+import Automation from './pages/Automation';
 import __Layout from './Layout.jsx';
 
 
@@ -28,6 +29,7 @@ export const PAGES = {
     "TeacherProfile": TeacherProfile,
     "Chat": Chat,
     "Email": Email,
+    "Automation": Automation,
 }
 
 export const pagesConfig = {
