@@ -7,6 +7,7 @@ import Grading from './pages/Grading';
 import Documents from './pages/Documents';
 import ReportCenter from './pages/ReportCenter';
 import Finance from './pages/Finance';
+import StudentProfile from './pages/StudentProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -20,6 +21,7 @@ export const PAGES = {
     "Documents": Documents,
     "ReportCenter": ReportCenter,
     "Finance": Finance,
+    "StudentProfile": StudentProfile,
 }
 
 export const pagesConfig = {
