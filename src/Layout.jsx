@@ -51,7 +51,7 @@ export default function Layout({ children, currentPageName }) {
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
             alt="Calvary Christian School"
-            className={!collapsed ? "h-10 w-auto" : "h-8 w-auto"}
+            className={!collapsed ? "h-14 w-auto" : "h-10 w-auto"}
           />
         </div>
         <Button
@@ -168,7 +168,7 @@ export default function Layout({ children, currentPageName }) {
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
               alt="Calvary Christian School"
-              className="h-10 w-auto"
+              className="h-14 w-auto"
             />
           </div>
           <div className="w-10" />
