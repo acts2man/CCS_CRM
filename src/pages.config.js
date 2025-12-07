@@ -10,6 +10,7 @@ import Finance from './pages/Finance';
 import StudentProfile from './pages/StudentProfile';
 import TeacherProfile from './pages/TeacherProfile';
 import Chat from './pages/Chat';
+import Email from './pages/Email';
 import __Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "StudentProfile": StudentProfile,
     "TeacherProfile": TeacherProfile,
     "Chat": Chat,
+    "Email": Email,
 }
 
 export const pagesConfig = {
