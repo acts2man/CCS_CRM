@@ -13,6 +13,7 @@ import Chat from './pages/Chat';
 import Email from './pages/Email';
 import Automation from './pages/Automation';
 import WorkflowBuilder from './pages/WorkflowBuilder';
+import Forms from './pages/Forms';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "Email": Email,
     "Automation": Automation,
     "WorkflowBuilder": WorkflowBuilder,
+    "Forms": Forms,
 }
 
 export const pagesConfig = {
