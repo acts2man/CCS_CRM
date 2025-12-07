@@ -12,6 +12,7 @@ import TeacherProfile from './pages/TeacherProfile';
 import Chat from './pages/Chat';
 import Email from './pages/Email';
 import Automation from './pages/Automation';
+import WorkflowBuilder from './pages/WorkflowBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "Chat": Chat,
     "Email": Email,
     "Automation": Automation,
+    "WorkflowBuilder": WorkflowBuilder,
 }
 
 export const pagesConfig = {

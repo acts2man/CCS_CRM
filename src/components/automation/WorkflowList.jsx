@@ -14,6 +14,8 @@ import {
   FolderPlus, Plus, Search, Filter, Clock, 
   Calendar, LayoutList, MoreVertical, Folder, ExternalLink, ChevronRight, ChevronLeft
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 
 export default function WorkflowList() {
   const [activeTab, setActiveTab] = useState('all');
@@ -211,10 +213,13 @@ export default function WorkflowList() {
                       <Checkbox />
                     </td>
                     <td className="py-4 px-4">
-                      <div className="flex items-center gap-2">
+                      <Link 
+                        to={createPageUrl(`WorkflowBuilder?id=${workflow.id}`)}
+                        className="flex items-center gap-2 hover:underline"
+                      >
                         <span className="font-medium text-blue-600">{workflow.description || 'Workflow'}</span>
                         <ExternalLink className="h-3 w-3 text-gray-400" />
-                      </div>
+                      </Link>
                     </td>
                     <td className="py-4 px-4">
                       <Badge 
