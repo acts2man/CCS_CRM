@@ -136,19 +136,28 @@ export default function Students() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredStudents.map((student) => (
-            <Card key={student.id} className="hover:shadow-lg transition-shadow overflow-hidden">
-              <div className="relative w-full h-40 bg-gray-100">
-                <img 
-                  src={student.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.first_name}`} 
-                  alt={`${student.first_name} ${student.last_name}`}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-2 right-2">
+            <Card key={student.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                      <img 
+                        src={student.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.first_name}`} 
+                        alt={`${student.first_name} ${student.last_name}`}
+                        className="w-full h-full object-cover object-top"
+                        style={{ objectPosition: 'center 15%' }}
+                      />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">{student.first_name} {student.last_name}</CardTitle>
+                      <p className="text-sm text-gray-500">Grade {student.grade_level}</p>
+                    </div>
+                  </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="secondary" className="h-8 w-8 p-0 bg-white/90 hover:bg-white">
+                      <Button variant="ghost" className="h-8 w-8 p-0">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -173,10 +182,6 @@ export default function Students() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-              </div>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">{student.first_name} {student.last_name}</CardTitle>
-                <p className="text-sm text-gray-500">Grade {student.grade_level}</p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
