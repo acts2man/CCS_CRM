@@ -48,9 +48,11 @@ export default function Layout({ children, currentPageName }) {
     <div className="flex flex-col h-full bg-slate-900 text-white">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">
-            CCS
-          </div>
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
+            alt="Calvary Christian School"
+            className="h-8 w-auto"
+          />
           {!collapsed && <span className="font-semibold text-lg">Calvary Christian</span>}
         </div>
         <Button
@@ -164,9 +166,11 @@ export default function Layout({ children, currentPageName }) {
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white">
-              CCS
-            </div>
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
+              alt="Calvary Christian School"
+              className="h-8 w-auto"
+            />
             <span className="font-semibold">Calvary Christian</span>
           </div>
           <div className="w-10" />
