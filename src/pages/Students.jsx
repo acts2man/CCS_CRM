@@ -139,11 +139,11 @@ export default function Students() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredStudents.map((student) => (
             <Card key={student.id} className="hover:shadow-lg transition-shadow overflow-hidden">
-              <div className="relative w-full bg-gray-100 flex justify-center">
+              <div className="relative w-full h-40 bg-gray-100">
                 <img 
                   src={student.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.first_name}`} 
                   alt={`${student.first_name} ${student.last_name}`}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-full object-cover"
                 />
                 <div className="absolute top-2 right-2">
                   <DropdownMenu>
