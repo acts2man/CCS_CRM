@@ -38,10 +38,14 @@ export default function Layout({ children, currentPageName }) {
     { name: 'System', href: 'SystemSettings', icon: Settings },
   ];
 
+  const supportNavigation = [
+    { name: 'Tutorials', href: 'Tutorials', icon: HelpCircle },
+    { name: 'Help Center', href: 'HelpCenter', icon: HelpCircle },
+  ];
+
   const bottomNavigation = [
     { name: 'Profile', href: 'Profile', icon: Users },
     { name: 'Settings', href: 'Settings', icon: Settings },
-    { name: 'Tutorials', href: 'Tutorials', icon: HelpCircle },
   ];
 
   const SidebarContent = () => (
@@ -89,7 +93,7 @@ export default function Layout({ children, currentPageName }) {
         </nav>
 
         <Separator className="my-4 bg-slate-700" />
-        
+
         <div className="space-y-1">
           {!collapsed && (
             <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase">
@@ -97,6 +101,34 @@ export default function Layout({ children, currentPageName }) {
             </div>
           )}
           {adminNavigation.map((item) => {
+            const Icon = item.icon;
+            const isActive = currentPageName === item.href;
+            return (
+              <Link
+                key={item.name}
+                to={createPageUrl(item.href)}
+                className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                <Icon className="h-5 w-5 flex-shrink-0" />
+                {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
+              </Link>
+            );
+          })}
+        </div>
+
+        <Separator className="my-4 bg-slate-700" />
+
+        <div className="space-y-1">
+          {!collapsed && (
+            <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase">
+              Support
+            </div>
+          )}
+          {supportNavigation.map((item) => {
             const Icon = item.icon;
             const isActive = currentPageName === item.href;
             return (

@@ -14,6 +14,8 @@ import Email from './pages/Email';
 import Automation from './pages/Automation';
 import WorkflowBuilder from './pages/WorkflowBuilder';
 import Forms from './pages/Forms';
+import Tutorials from './pages/Tutorials';
+import HelpCenter from './pages/HelpCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -34,6 +36,8 @@ export const PAGES = {
     "Automation": Automation,
     "WorkflowBuilder": WorkflowBuilder,
     "Forms": Forms,
+    "Tutorials": Tutorials,
+    "HelpCenter": HelpCenter,
 }
 
 export const pagesConfig = {
