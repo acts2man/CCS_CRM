@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import FinanceOverviewTab from '@/components/finance/FinanceOverviewTab';
-import FinanceInvoicesTab from '@/components/finance/FinanceInvoicesTab';
-import FinancePaymentLinksTab from '@/components/finance/FinancePaymentLinksTab';
-import FinanceTransactionsTab from '@/components/finance/FinanceTransactionsTab';
-import FinanceProductsTab from '@/components/finance/FinanceProductsTab';
-import FinanceDocumentsTab from '@/components/finance/FinanceDocumentsTab';
-import FinanceSettingsTab from '@/components/finance/FinanceSettingsTab';
+import FinanceOverviewTab from '@/components/finance/FinanceOverviewTab.js';
+import FinanceInvoicesTab from '@/components/finance/FinanceInvoicesTab.js';
+import FinancePaymentLinksTab from '@/components/finance/FinancePaymentLinksTab.js';
+import FinanceTransactionsTab from '@/components/finance/FinanceTransactionsTab.js';
+import FinanceProductsTab from '@/components/finance/FinanceProductsTab.js';
+import FinanceDocumentsTab from '@/components/finance/FinanceDocumentsTab.js';
+import FinanceSettingsTab from '@/components/finance/FinanceSettingsTab.js';
 
 export default function Finance() {
   return (
