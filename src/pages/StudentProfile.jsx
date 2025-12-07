@@ -110,13 +110,14 @@ export default function StudentProfile() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <Avatar className="h-16 w-16">
-            <AvatarImage 
+          <div className="relative w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+            <img 
               src={student.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.first_name}`} 
-              alt={`${student.first_name} ${student.last_name}`} 
+              alt={`${student.first_name} ${student.last_name}`}
+              className="w-full h-full object-cover object-top"
+              style={{ objectPosition: 'center 15%' }}
             />
-            <AvatarFallback>{student.first_name?.[0]}{student.last_name?.[0]}</AvatarFallback>
-          </Avatar>
+          </div>
           <div>
             <h1 className="text-3xl font-bold">{student.first_name} {student.last_name}</h1>
             <p className="text-gray-600">Grade {student.grade_level}</p>
