@@ -21,6 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Plus, Search, Mail, Phone, Eye, Edit, Trash2 } from 'lucide-react';
+import AddTeacherModal from '@/components/teachers/AddTeacherModal';
 
 export default function Teachers() {
   const [teachers, setTeachers] = useState([]);
@@ -29,6 +30,7 @@ export default function Teachers() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [expandedSubjects, setExpandedSubjects] = useState({});
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     loadTeachers();
@@ -54,6 +56,11 @@ export default function Teachers() {
         console.error('Error deleting teacher:', error);
       }
     }
+  };
+
+  const handleTeacherAdded = () => {
+    loadTeachers();
+    setShowAddModal(false);
   };
 
   // Calculate stats
@@ -114,7 +121,10 @@ export default function Teachers() {
           <h1 className="text-3xl font-bold">Teachers</h1>
           <p className="text-gray-600 mt-1">Manage faculty members and their information</p>
         </div>
-        <Button className="bg-slate-900 hover:bg-slate-800">
+        <Button 
+          className="bg-slate-900 hover:bg-slate-800"
+          onClick={() => setShowAddModal(true)}
+        >
           <Plus className="h-4 w-4 mr-2" />
           Add Teacher
         </Button>
@@ -318,6 +328,12 @@ export default function Teachers() {
           </div>
         </CardContent>
       </Card>
+
+      <AddTeacherModal
+        open={showAddModal}
+        onOpenChange={setShowAddModal}
+        onTeacherAdded={handleTeacherAdded}
+      />
     </div>
   );
 }
