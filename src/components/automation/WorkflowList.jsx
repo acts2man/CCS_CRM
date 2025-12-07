@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { 
   FolderPlus, Plus, Search, Filter, Clock, 
-  Calendar, LayoutList, MoreVertical, Folder
+  Calendar, LayoutList, MoreVertical, Folder, ExternalLink, ChevronRight, ChevronLeft
 } from 'lucide-react';
 
 export default function WorkflowList() {
@@ -21,6 +21,9 @@ export default function WorkflowList() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [currentFolder, setCurrentFolder] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
     loadWorkflows();
@@ -29,8 +32,19 @@ export default function WorkflowList() {
   const loadWorkflows = async () => {
     setLoading(true);
     try {
-      const data = await base44.entities.Automation.list('-created_date', 100);
-      setWorkflows(data);
+      if (currentFolder) {
+        // Load workflows in this folder (using AutomationStep as workflow items)
+        const steps = await base44.entities.AutomationStep.filter(
+          { automation_id: currentFolder.id },
+          '-created_date',
+          100
+        );
+        setWorkflows(steps);
+      } else {
+        // Load folders (Automation entities)
+        const data = await base44.entities.Automation.list('-created_date', 100);
+        setWorkflows(data);
+      }
     } catch (error) {
       console.error('Error loading workflows:', error);
     } finally {
@@ -45,8 +59,24 @@ export default function WorkflowList() {
   ];
 
   const filteredWorkflows = workflows.filter(w =>
-    w.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    w.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    w.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Pagination
+  const totalPages = Math.ceil(filteredWorkflows.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedWorkflows = filteredWorkflows.slice(startIndex, startIndex + itemsPerPage);
+
+  const handleFolderClick = (folder) => {
+    setCurrentFolder(folder);
+    setCurrentPage(1);
+  };
+
+  const handleBackClick = () => {
+    setCurrentFolder(null);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -125,8 +155,21 @@ export default function WorkflowList() {
         </div>
 
         {/* Breadcrumb */}
-        <div className="px-6 py-2 border-b text-sm text-gray-600">
-          Home
+        <div className="px-6 py-2 border-b text-sm text-gray-600 flex items-center gap-2">
+          {currentFolder ? (
+            <>
+              <button 
+                onClick={handleBackClick}
+                className="text-blue-600 hover:underline"
+              >
+                Back
+              </button>
+              <span>/</span>
+              <span>{currentFolder.name}</span>
+            </>
+          ) : (
+            <span>Home</span>
+          )}
         </div>
 
         {/* Table */}
@@ -160,11 +203,83 @@ export default function WorkflowList() {
                     No workflows found
                   </td>
                 </tr>
-              ) : (
-                filteredWorkflows.map(workflow => (
+              ) : currentFolder ? (
+                // Inside folder - show individual workflows
+                paginatedWorkflows.map(workflow => (
                   <tr key={workflow.id} className="border-b hover:bg-gray-50">
                     <td className="py-4 px-6">
                       <Checkbox />
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-blue-600">{workflow.description || 'Workflow'}</span>
+                        <ExternalLink className="h-3 w-3 text-gray-400" />
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <Badge 
+                        variant="outline"
+                        className={workflow.is_enabled ? 'border-green-500 text-green-700 bg-green-50' : 'border-gray-300 text-gray-600'}
+                      >
+                        {workflow.is_enabled ? 'Published' : 'Draft'}
+                      </Badge>
+                    </td>
+                    <td className="py-4 px-4 text-sm text-blue-600">
+                      {Math.floor(Math.random() * 500)}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-blue-600">
+                      {workflow.is_enabled ? Math.floor(Math.random() * 50) : 0}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {new Date(workflow.created_date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                      })}
+                    </td>
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      {new Date(workflow.created_date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                      })}
+                    </td>
+                    <td className="py-4 px-4">
+                      <ChevronRight className="h-4 w-4 text-gray-400" />
+                    </td>
+                    <td className="py-4 px-4">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                          <DropdownMenuItem>Archive</DropdownMenuItem>
+                          <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                // Folder view
+                paginatedWorkflows.map(workflow => (
+                  <tr 
+                    key={workflow.id} 
+                    className="border-b hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleFolderClick(workflow)}
+                  >
+                    <td className="py-4 px-6">
+                      <Checkbox onClick={(e) => e.stopPropagation()} />
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
@@ -190,7 +305,8 @@ export default function WorkflowList() {
                             day: 'numeric',
                             year: 'numeric',
                             hour: 'numeric',
-                            minute: '2-digit'
+                            minute: '2-digit',
+                            hour12: true
                           })
                         : '-'}
                     </td>
@@ -200,7 +316,8 @@ export default function WorkflowList() {
                         day: 'numeric',
                         year: 'numeric',
                         hour: 'numeric',
-                        minute: '2-digit'
+                        minute: '2-digit',
+                        hour12: true
                       })}
                     </td>
                     <td className="py-4 px-4">
@@ -211,7 +328,12 @@ export default function WorkflowList() {
                     <td className="py-4 px-4">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -229,6 +351,44 @@ export default function WorkflowList() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {filteredWorkflows.length > 0 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setCurrentPage(page)}
+                  className={currentPage === page ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                >
+                  {page}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+            <div className="text-sm text-gray-600">
+              {itemsPerPage} / page
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
