@@ -9,7 +9,6 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MessageSquare, Search, Bell } from 'lucide-react';
 import { format } from 'date-fns';
-import ConversationList from '@/components/chat/ConversationList';
 import ChatArea from '@/components/chat/ChatArea';
 import NewMessageModal from '@/components/chat/NewMessageModal';
 import CreateGroupModal from '@/components/chat/CreateGroupModal';
