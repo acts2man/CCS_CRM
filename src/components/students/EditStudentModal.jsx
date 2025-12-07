@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import {
   Dialog,
@@ -12,10 +12,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Loader2, Upload } from "lucide-react";
 
 export default function EditStudentModal({ open, onOpenChange, student, onStudentUpdated }) {
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState("");
+  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -34,8 +38,25 @@ export default function EditStudentModal({ open, onOpenChange, student, onStuden
         emergency_contact_phone: student.emergency_contact_phone || "",
         medical_notes: student.medical_notes || "",
       });
+      setPhotoUrl(student.photo_url || "");
     }
   }, [student]);
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setPhotoUrl(file_url);
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+      alert("Failed to upload photo");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +65,12 @@ export default function EditStudentModal({ open, onOpenChange, student, onStuden
     setLoading(true);
 
     try {
-      await base44.entities.Student.update(student.id, formData);
+      const studentData = {
+        ...formData,
+        photo_url: photoUrl || undefined
+      };
+      
+      await base44.entities.Student.update(student.id, studentData);
       
       if (onStudentUpdated) onStudentUpdated();
     } catch (error) {
@@ -69,6 +95,35 @@ export default function EditStudentModal({ open, onOpenChange, student, onStuden
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col items-center gap-3">
+            <Avatar className="w-24 h-24">
+              <AvatarImage src={photoUrl} alt="Student photo" />
+              <AvatarFallback className="bg-gray-100">
+                {formData.first_name?.[0]}{formData.last_name?.[0]}
+              </AvatarFallback>
+            </Avatar>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+            >
+              {uploading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Uploading...
+                </>
+              ) : 'Upload Photo'}
+            </Button>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="first_name">First Name *</Label>
