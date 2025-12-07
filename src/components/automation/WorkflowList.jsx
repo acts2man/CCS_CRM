@@ -10,6 +10,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { 
   FolderPlus, Plus, Search, Filter, Clock, 
   Calendar, LayoutList, MoreVertical, Folder, ExternalLink, ChevronRight, ChevronLeft
@@ -26,6 +34,8 @@ export default function WorkflowList() {
   const [currentFolder, setCurrentFolder] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newWorkflowName, setNewWorkflowName] = useState('');
 
   useEffect(() => {
     loadWorkflows();
@@ -80,6 +90,26 @@ export default function WorkflowList() {
     setCurrentPage(1);
   };
 
+  const handleCreateWorkflow = async () => {
+    if (!newWorkflowName.trim()) return;
+    
+    try {
+      const user = await base44.auth.me();
+      const newWorkflow = await base44.entities.Automation.create({
+        name: newWorkflowName,
+        status: 'paused',
+        created_by: user.id
+      });
+      
+      setShowCreateModal(false);
+      setNewWorkflowName('');
+      window.location.href = createPageUrl(`WorkflowBuilder?id=${newWorkflow.id}`);
+    } catch (error) {
+      console.error('Error creating workflow:', error);
+      alert('Failed to create workflow');
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -90,7 +120,10 @@ export default function WorkflowList() {
             <FolderPlus className="h-4 w-4 mr-2" />
             Create Folder
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700"
+            onClick={() => setShowCreateModal(true)}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Create Workflow
           </Button>
@@ -395,6 +428,40 @@ export default function WorkflowList() {
           </div>
         )}
       </div>
+
+      {/* Create Workflow Modal */}
+      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Workflow</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="workflow-name">Workflow Name</Label>
+              <Input
+                id="workflow-name"
+                placeholder="Enter workflow name"
+                value={newWorkflowName}
+                onChange={(e) => setNewWorkflowName(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleCreateWorkflow()}
+                className="mt-1"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCreateModal(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleCreateWorkflow}
+              className="bg-blue-600 hover:bg-blue-700"
+              disabled={!newWorkflowName.trim()}
+            >
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
