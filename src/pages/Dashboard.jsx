@@ -1,126 +1,88 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, GraduationCap, BookOpen, Calendar, DollarSign, FileText } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import AdminDashboard from "@/components/dashboard/AdminDashboard";
+import TeacherDashboard from "@/components/dashboard/TeacherDashboard";
+import ParentDashboard from "@/components/dashboard/ParentDashboard";
+import StudentDashboard from "@/components/dashboard/StudentDashboard";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
-  const [stats, setStats] = useState({
-    students: 0,
-    teachers: 0,
-    classes: 0,
-    documents: 0
-  });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    loadDashboardData();
+    loadUser();
   }, []);
 
-  const loadDashboardData = async () => {
+  const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-
-      const [students, teachers, classes, documents] = await Promise.all([
-        base44.entities.Student.list(),
-        base44.entities.Teacher.list(),
-        base44.entities.Class.list(),
-        base44.entities.Document.list()
-      ]);
-
-      setStats({
-        students: students.length,
-        teachers: teachers.length,
-        classes: classes.length,
-        documents: documents.length
-      });
-    } catch (error) {
-      console.error("Error loading dashboard:", error);
+    } catch (err) {
+      console.error("Error loading user:", err);
+      setError(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const statCards = [
-    { title: "Students", value: stats.students, icon: Users, color: "text-blue-600" },
-    { title: "Teachers", value: stats.teachers, icon: GraduationCap, color: "text-green-600" },
-    { title: "Classes", value: stats.classes, icon: BookOpen, color: "text-purple-600" },
-    { title: "Documents", value: stats.documents, icon: FileText, color: "text-orange-600" }
-  ];
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4 mb-4">
+          <Loader2 className="h-6 w-6 text-blue-600 animate-spin" />
+          <p className="text-lg font-medium">Loading your dashboard...</p>
+        </div>
+        <Skeleton className="h-8 w-48 bg-gray-200" />
+        <Skeleton className="h-6 w-72 bg-gray-200" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-32 rounded-lg bg-gray-200" />
+          ))}
+        </div>
+        <Skeleton className="h-96 rounded-lg bg-gray-200" />
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Welcome to Calvary Christian School</h1>
-          <p className="text-gray-600 mt-2">
-            {user ? `Hello, ${user.full_name || user.email}!` : 'School Management System'}
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 p-6 bg-red-50 rounded-lg">
+        <AlertCircle className="h-12 w-12 text-red-600 mb-4" />
+        <h2 className="text-xl font-bold text-red-800 mb-2">Authentication Error</h2>
+        <p className="text-red-700 mb-4 text-center max-w-md">
+          We encountered a problem loading your dashboard.
+        </p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+        >
+          Refresh Page
+        </button>
+      </div>
+    );
+  }
+
+  switch (user?.role) {
+    case "admin":
+      return <AdminDashboard />;
+    case "teacher":
+      return <TeacherDashboard />;
+    case "parent":
+      return <ParentDashboard />;
+    case "student":
+      return <StudentDashboard />;
+    default:
+      return (
+        <div className="flex flex-col items-center justify-center h-64 bg-yellow-50 p-6 rounded-lg">
+          <AlertCircle className="h-12 w-12 text-yellow-600 mb-4" />
+          <h2 className="text-xl font-bold text-yellow-800 mb-2">Dashboard Not Available</h2>
+          <p className="text-center mb-4">
+            We couldn't determine your user role.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {statCards.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <Card key={index}>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    {stat.title}
-                  </CardTitle>
-                  <Icon className={`h-5 w-5 ${stat.color}`} />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold">{stat.value}</div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Common tasks and shortcuts</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                <div className="font-medium">Take Attendance</div>
-                <div className="text-sm text-gray-600">Mark student attendance for today</div>
-              </button>
-              <button className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                <div className="font-medium">Add Student</div>
-                <div className="text-sm text-gray-600">Register a new student</div>
-              </button>
-              <button className="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                <div className="font-medium">View Reports</div>
-                <div className="text-sm text-gray-600">Access academic reports</div>
-              </button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Latest updates and changes</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-gray-600">
-                No recent activity to display.
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
+      );
+  }
 }
