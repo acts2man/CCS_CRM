@@ -96,12 +96,13 @@ export default function EditStudentModal({ open, onOpenChange, student, onStuden
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col items-center gap-3">
-            <Avatar className="w-24 h-24">
-              <AvatarImage src={photoUrl} alt="Student photo" />
-              <AvatarFallback className="bg-gray-100">
-                {formData.first_name?.[0]}{formData.last_name?.[0]}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
+              <img 
+                src={photoUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.first_name}`} 
+                alt="Student photo"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <input
               ref={fileInputRef}
               type="file"
