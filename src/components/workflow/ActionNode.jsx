@@ -33,7 +33,7 @@ const colorMap = {
   filter: 'bg-pink-50 border-pink-200 text-pink-700'
 };
 
-export default function ActionNode({ action, isSelected, onSelect }) {
+export default function ActionNode({ action, isSelected, onSelect, onDelete }) {
   const Icon = iconMap[action.type] || Square;
   const colorClass = colorMap[action.type] || 'bg-gray-50 border-gray-200 text-gray-700';
 
@@ -50,8 +50,8 @@ export default function ActionNode({ action, isSelected, onSelect }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-medium text-sm">{action.name}</div>
-          {action.subtext && (
-            <div className="text-xs text-gray-500 truncate">{action.subtext}</div>
+          {action.config?.subtext && (
+            <div className="text-xs text-gray-500 truncate">{action.config.subtext}</div>
           )}
         </div>
         <DropdownMenu>
@@ -61,10 +61,10 @@ export default function ActionNode({ action, isSelected, onSelect }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={onSelect}>Edit</DropdownMenuItem>
             <DropdownMenuItem>Duplicate</DropdownMenuItem>
             <DropdownMenuItem>Disable</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600" onClick={onDelete}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -4,9 +4,8 @@ import {
   GitBranch, Filter, FileText, Pencil
 } from 'lucide-react';
 
-export default function WorkflowToolbar() {
+export default function WorkflowToolbar({ onAddAction }) {
   const tools = [
-    { icon: Square, label: 'Trigger', type: 'trigger' },
     { icon: Clock, label: 'Wait', type: 'wait' },
     { icon: Mail, label: 'Email', type: 'email' },
     { icon: MessageSquare, label: 'SMS', type: 'sms' },
@@ -24,6 +23,7 @@ export default function WorkflowToolbar() {
         return (
           <button
             key={index}
+            onClick={() => onAddAction(tool.type)}
             className="w-10 h-10 flex items-center justify-center rounded hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors"
             title={tool.label}
           >
