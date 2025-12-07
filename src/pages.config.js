@@ -8,6 +8,7 @@ import Documents from './pages/Documents';
 import ReportCenter from './pages/ReportCenter';
 import Finance from './pages/Finance';
 import StudentProfile from './pages/StudentProfile';
+import TeacherProfile from './pages/TeacherProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +23,7 @@ export const PAGES = {
     "ReportCenter": ReportCenter,
     "Finance": Finance,
     "StudentProfile": StudentProfile,
+    "TeacherProfile": TeacherProfile,
 }
 
 export const pagesConfig = {
