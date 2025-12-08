@@ -21,6 +21,15 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
     loadDocuments();
   }, []);
 
+  useEffect(() => {
+    setActionName(action.name || '');
+    setTo(action.config?.to || '');
+    setCc(action.config?.cc || '');
+    setSubject(action.config?.subject || '');
+    setBodyTemplate(action.config?.body_template || '');
+    setBody(action.config?.body || '');
+  }, [action]);
+
   const loadDocuments = async () => {
     try {
       const docs = await base44.entities.Document.filter({ 
