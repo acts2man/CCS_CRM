@@ -91,6 +91,7 @@ export default function WorkflowBuilder() {
 
   const handleUpdateAction = (updatedAction) => {
     setActions(actions.map(a => a.id === updatedAction.id ? updatedAction : a));
+    setSelectedAction(updatedAction);
   };
 
   const handleSaveWorkflow = async () => {
@@ -101,7 +102,7 @@ export default function WorkflowBuilder() {
       });
 
       for (const action of actions) {
-        if (action.id.startsWith('new-')) {
+        if (typeof action.id === 'string' && !action.id.match(/^[0-9a-f]{24}$/i)) {
           await base44.entities.AutomationStep.create({
             automation_id: workflowId,
             step_type: action.type,
