@@ -48,15 +48,15 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
   };
 
   return (
-    <div className="w-96 bg-white border-l flex flex-col h-full">
-      <div className="p-4 border-b flex items-center justify-between">
+    <div className="w-96 bg-white border-l flex flex-col h-full overflow-hidden">
+      <div className="p-4 border-b flex items-center justify-between flex-shrink-0">
         <h3 className="font-semibold">Email Configuration</h3>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="flex-1 overflow-auto p-4 space-y-4">
+      <div className="flex-1 overflow-auto p-4 space-y-4 min-h-0">
         <div>
           <Label>Action Name</Label>
           <Input
@@ -146,7 +146,7 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
         </div>
       </div>
 
-      <div className="border-t p-4 flex gap-2">
+      <div className="border-t p-4 flex gap-2 flex-shrink-0 bg-white">
         <Button variant="outline" onClick={onClose} className="flex-1">
           Cancel
         </Button>
