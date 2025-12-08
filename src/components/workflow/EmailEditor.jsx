@@ -32,6 +32,16 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
     }
   };
 
+  const handleTemplateChange = (templateName) => {
+    setBodyTemplate(templateName);
+    if (templateName) {
+      const doc = documents.find(d => d.name === templateName);
+      if (doc && doc.description) {
+        setBody(doc.description);
+      }
+    }
+  };
+
   const handleSave = () => {
     onUpdate({
       ...action,
@@ -144,15 +154,17 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
             <br/>• {`{{absence_count}}`} - Total absences
           </p>
         </div>
+
+        <div className="flex gap-2 pt-2">
+          <Button variant="outline" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700">
+            Save Email Action
+          </Button>
+        </div>
       </div>
 
-      <div className="border-t p-4 flex gap-2 flex-shrink-0 bg-white">
-        <Button variant="outline" onClick={onClose} className="flex-1">
-          Cancel
-        </Button>
-        <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700">
-          Save Email Action
-        </Button>
       </div>
     </div>
   );
