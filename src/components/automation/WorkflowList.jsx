@@ -262,11 +262,11 @@ export default function WorkflowList() {
                         {workflow.is_enabled ? 'Published' : 'Draft'}
                       </Badge>
                     </td>
-                    <td className="py-4 px-4 text-sm text-blue-600">
-                      {Math.floor(Math.random() * 500)}
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      -
                     </td>
-                    <td className="py-4 px-4 text-sm text-blue-600">
-                      {workflow.is_enabled ? Math.floor(Math.random() * 50) : 0}
+                    <td className="py-4 px-4 text-sm text-gray-600">
+                      -
                     </td>
                     <td className="py-4 px-4 text-sm text-gray-600">
                       {new Date(workflow.created_date).toLocaleDateString('en-US', {

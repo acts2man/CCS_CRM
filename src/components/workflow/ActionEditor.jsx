@@ -7,7 +7,25 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
+import TriggerEditor from './TriggerEditor';
+import ConditionEditor from './ConditionEditor';
+import EmailEditor from './EmailEditor';
+
 export default function ActionEditor({ action, onClose, onUpdate }) {
+  // Route to appropriate editor based on action type
+  if (action.type === 'trigger') {
+    return <TriggerEditor action={action} onClose={onClose} onUpdate={onUpdate} />;
+  }
+  
+  if (action.type === 'condition') {
+    return <ConditionEditor action={action} onClose={onClose} onUpdate={onUpdate} />;
+  }
+  
+  if (action.type === 'action' && action.config?.action_type === 'send_email') {
+    return <EmailEditor action={action} onClose={onClose} onUpdate={onUpdate} />;
+  }
+
+  // Default editor for other action types
   const [actionName, setActionName] = useState(action.name || '');
   const [config, setConfig] = useState(action.config || {});
 
@@ -17,10 +35,6 @@ export default function ActionEditor({ action, onClose, onUpdate }) {
       name: actionName,
       config: config
     });
-  };
-
-  const updateConfig = (field, value) => {
-    setConfig(prev => ({ ...prev, [field]: value }));
   };
 
   const getActionTypeDisplay = () => {
