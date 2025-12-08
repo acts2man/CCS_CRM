@@ -115,7 +115,7 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
 
         <div>
           <Label>Email Template (Optional)</Label>
-          <Select value={bodyTemplate} onValueChange={setBodyTemplate}>
+          <Select value={bodyTemplate} onValueChange={handleTemplateChange}>
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="Select a template" />
             </SelectTrigger>
@@ -130,20 +130,18 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
           </Select>
         </div>
 
-        {!bodyTemplate && (
-          <div>
-            <Label>Email Body</Label>
-            <Textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder="Enter email content..."
-              className="mt-1 min-h-[200px]"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Use variables: {`{{student.first_name}}, {{student.last_name}}, {{absence_count}}`}
-            </p>
-          </div>
-        )}
+        <div>
+          <Label>Email Body</Label>
+          <Textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Enter email content..."
+            className="mt-1 min-h-[200px]"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Use variables: {`{{student.first_name}}, {{student.last_name}}, {{absence_count}}`}
+          </p>
+        </div>
 
         <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
           <p className="text-xs text-purple-800">
@@ -163,8 +161,6 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
             Save Email Action
           </Button>
         </div>
-      </div>
-
       </div>
     </div>
   );
