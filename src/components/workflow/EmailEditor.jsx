@@ -59,7 +59,7 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
   };
 
   return (
-    <div className="w-96 bg-white border-l flex flex-col h-full overflow-hidden">
+    <div className="w-96 bg-white border-l flex flex-col h-full">
       <div className="p-4 border-b flex items-center justify-between flex-shrink-0">
         <h3 className="font-semibold">Email Configuration</h3>
         <Button variant="ghost" size="icon" onClick={onClose}>
@@ -67,7 +67,7 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
         </Button>
       </div>
 
-      <div className="flex-1 overflow-auto p-4 space-y-4 min-h-0">
+      <div className="flex-1 overflow-auto p-4 space-y-4">
         <div>
           <Label>Action Name</Label>
           <Input
@@ -153,15 +153,15 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
             <br/>• {`{{absence_count}}`} - Total absences
           </p>
         </div>
+      </div>
 
-        <div className="flex gap-2 pt-2">
-          <Button variant="outline" onClick={onClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700">
-            Save Email Action
-          </Button>
-        </div>
+      <div className="border-t p-4 flex gap-2 flex-shrink-0">
+        <Button variant="outline" onClick={onClose} className="flex-1">
+          Cancel
+        </Button>
+        <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700">
+          Save Email Action
+        </Button>
       </div>
     </div>
   );
