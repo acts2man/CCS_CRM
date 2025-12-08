@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Users, UserCheck, UserX, Clock, Search, Save } from 'lucide-react';
-import { format } from 'date-fns';
+import { Users, UserCheck, UserX, Clock, Search, Save, ChevronLeft, ChevronRight, Settings, Zap } from 'lucide-react';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, getDay } from 'date-fns';
 
 export default function Attendance() {
   const [students, setStudents] = useState([]);
@@ -23,10 +23,29 @@ export default function Attendance() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [pendingChanges, setPendingChanges] = useState({});
+  const [calendarMonth, setCalendarMonth] = useState(new Date());
+  const [monthAttendance, setMonthAttendance] = useState([]);
 
   useEffect(() => {
     loadData();
   }, [selectedDate]);
+
+  useEffect(() => {
+    loadMonthAttendance();
+  }, [calendarMonth]);
+
+  const loadMonthAttendance = async () => {
+    try {
+      const start = format(startOfMonth(calendarMonth), 'yyyy-MM-dd');
+      const end = format(endOfMonth(calendarMonth), 'yyyy-MM-dd');
+      
+      const data = await base44.entities.Attendance.list('', 2000);
+      const filtered = data.filter(a => a.date >= start && a.date <= end);
+      setMonthAttendance(filtered);
+    } catch (error) {
+      console.error('Error loading month attendance:', error);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -349,17 +368,264 @@ export default function Attendance() {
         <TabsContent value="calendar" className="mt-6">
           <Card>
             <CardContent className="pt-6">
-              <p className="text-gray-500">Calendar view coming soon...</p>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold">
+                  {format(calendarMonth, 'MMMM yyyy')}
+                </h2>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1))}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCalendarMonth(new Date())}
+                  >
+                    Today
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1))}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-7 gap-2">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div key={day} className="text-center text-sm font-semibold text-gray-600 py-2">
+                    {day}
+                  </div>
+                ))}
+
+                {(() => {
+                  const monthStart = startOfMonth(calendarMonth);
+                  const monthEnd = endOfMonth(calendarMonth);
+                  const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
+                  const startDay = getDay(monthStart);
+                  
+                  const calendarDays = [];
+                  for (let i = 0; i < startDay; i++) {
+                    calendarDays.push(<div key={`empty-${i}`} className="aspect-square" />);
+                  }
+                  
+                  days.forEach(day => {
+                    const dayStr = format(day, 'yyyy-MM-dd');
+                    const dayRecords = monthAttendance.filter(a => a.date === dayStr);
+                    const presentCount = dayRecords.filter(a => a.status === 'present').length;
+                    const absentCount = dayRecords.filter(a => a.status === 'absent').length;
+                    const tardyCount = dayRecords.filter(a => a.status === 'tardy').length;
+                    const totalMarked = dayRecords.length;
+                    
+                    calendarDays.push(
+                      <button
+                        key={dayStr}
+                        onClick={() => setSelectedDate(day)}
+                        className={`aspect-square p-2 rounded-lg border transition-all ${
+                          isToday(day) ? 'border-blue-600 bg-blue-50' :
+                          isSameDay(day, selectedDate) ? 'border-slate-900 bg-slate-100' :
+                          'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex flex-col h-full">
+                          <div className={`text-sm font-semibold mb-1 ${
+                            isToday(day) ? 'text-blue-600' :
+                            isSameDay(day, selectedDate) ? 'text-slate-900' :
+                            'text-gray-900'
+                          }`}>
+                            {format(day, 'd')}
+                          </div>
+                          {totalMarked > 0 && (
+                            <div className="flex-1 flex flex-col gap-1 text-xs">
+                              {presentCount > 0 && (
+                                <div className="bg-green-100 text-green-800 px-1 rounded">
+                                  {presentCount}P
+                                </div>
+                              )}
+                              {absentCount > 0 && (
+                                <div className="bg-red-100 text-red-800 px-1 rounded">
+                                  {absentCount}A
+                                </div>
+                              )}
+                              {tardyCount > 0 && (
+                                <div className="bg-yellow-100 text-yellow-800 px-1 rounded">
+                                  {tardyCount}T
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  });
+                  
+                  return calendarDays;
+                })()}
+              </div>
+
+              <div className="mt-6 flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-green-100 border border-green-200 rounded"></div>
+                  <span>Present</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-red-100 border border-red-200 rounded"></div>
+                  <span>Absent</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-yellow-100 border border-yellow-200 rounded"></div>
+                  <span>Tardy</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="automation" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <p className="text-gray-500">Automation settings coming soon...</p>
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-bold mb-2">Attendance Automation</h2>
+                    <p className="text-gray-600">Set up automated workflows based on attendance patterns</p>
+                  </div>
+                  <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Zap className="h-4 w-4 mr-2" />
+                    Create Workflow
+                  </Button>
+                </div>
+
+                <div className="grid gap-4">
+                  <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <UserX className="h-5 w-5 text-orange-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Truancy Alert</h3>
+                          <p className="text-sm text-gray-600">Notify parents after 3 consecutive absences</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">Active</span>
+                        <Button variant="ghost" size="sm">
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-500 ml-13">
+                      Last triggered: 2 hours ago • 3 students notified
+                    </div>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                          <Clock className="h-5 w-5 text-yellow-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Late Arrival Notification</h3>
+                          <p className="text-sm text-gray-600">Send SMS when student marked tardy</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">Active</span>
+                        <Button variant="ghost" size="sm">
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-500 ml-13">
+                      Last triggered: Today at 8:45 AM • 12 notifications sent
+                    </div>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:shadow-md transition-shadow opacity-60">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <UserCheck className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Perfect Attendance Award</h3>
+                          <p className="text-sm text-gray-600">Monthly recognition for 100% attendance</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">Paused</span>
+                        <Button variant="ghost" size="sm">
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-500 ml-13">
+                      Next run: End of month
+                    </div>
+                  </div>
+
+                  <div className="border rounded-lg p-4 hover:shadow-md transition-shadow opacity-60">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                          <UserX className="h-5 w-5 text-red-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Weekly Attendance Report</h3>
+                          <p className="text-sm text-gray-600">Email summary to parents every Friday</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded">Paused</span>
+                        <Button variant="ghost" size="sm">
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-500 ml-13">
+                      Next run: Friday at 3:00 PM
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-semibold mb-4">Automation Templates</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="border rounded-lg p-4 hover:border-blue-600 transition-colors cursor-pointer">
+                    <h4 className="font-semibold mb-2">Daily Attendance Summary</h4>
+                    <p className="text-sm text-gray-600 mb-3">Send daily attendance stats to administrators</p>
+                    <Button variant="outline" size="sm">Use Template</Button>
+                  </div>
+                  <div className="border rounded-lg p-4 hover:border-blue-600 transition-colors cursor-pointer">
+                    <h4 className="font-semibold mb-2">Absence Follow-up</h4>
+                    <p className="text-sm text-gray-600 mb-3">Automated check-in calls for unexcused absences</p>
+                    <Button variant="outline" size="sm">Use Template</Button>
+                  </div>
+                  <div className="border rounded-lg p-4 hover:border-blue-600 transition-colors cursor-pointer">
+                    <h4 className="font-semibold mb-2">Attendance Improvement Plan</h4>
+                    <p className="text-sm text-gray-600 mb-3">Trigger intervention after attendance threshold</p>
+                    <Button variant="outline" size="sm">Use Template</Button>
+                  </div>
+                  <div className="border rounded-lg p-4 hover:border-blue-600 transition-colors cursor-pointer">
+                    <h4 className="font-semibold mb-2">Positive Reinforcement</h4>
+                    <p className="text-sm text-gray-600 mb-3">Reward students for improved attendance patterns</p>
+                    <Button variant="outline" size="sm">Use Template</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
