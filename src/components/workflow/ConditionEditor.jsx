@@ -64,9 +64,9 @@ export default function ConditionEditor({ action, onClose, onUpdate }) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value=">=">Greater than or equal (≥)</SelectItem>
-              <SelectItem value=">">Greater than (>)</SelectItem>
+              <SelectItem value=">">Greater than (&gt;)</SelectItem>
               <SelectItem value="==">Equal to (=)</SelectItem>
-              <SelectItem value="<">Less than (<)</SelectItem>
+              <SelectItem value="<">Less than (&lt;)</SelectItem>
               <SelectItem value="<=">Less than or equal (≤)</SelectItem>
               <SelectItem value="!=">Not equal (≠)</SelectItem>
             </SelectContent>
