@@ -55,6 +55,7 @@ export default function EmailEditor({ action, onClose, onUpdate }) {
         body: body || undefined
       }
     });
+    onClose();
   };
 
   return (
