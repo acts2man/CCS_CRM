@@ -19,7 +19,8 @@ const iconMap = {
   call: Phone,
   condition: GitBranch,
   phone_check: Phone,
-  filter: Filter
+  filter: Filter,
+  action: Mail
 };
 
 const colorMap = {
@@ -30,7 +31,8 @@ const colorMap = {
   call: 'bg-orange-50 border-orange-200 text-orange-700',
   condition: 'bg-yellow-50 border-yellow-200 text-yellow-700',
   phone_check: 'bg-blue-50 border-blue-200 text-blue-700',
-  filter: 'bg-pink-50 border-pink-200 text-pink-700'
+  filter: 'bg-pink-50 border-pink-200 text-pink-700',
+  action: 'bg-purple-50 border-purple-200 text-purple-700'
 };
 
 export default function ActionNode({ action, isSelected, onSelect, onDelete }) {
@@ -50,8 +52,13 @@ export default function ActionNode({ action, isSelected, onSelect, onDelete }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-medium text-sm">{action.name}</div>
-          {action.config?.subtext && (
-            <div className="text-xs text-gray-500 truncate">{action.config.subtext}</div>
+          {action.config?.action_type && (
+            <div className="text-xs text-gray-500 truncate capitalize">{action.config.action_type.replace('_', ' ')}</div>
+          )}
+          {action.config?.condition_type && (
+            <div className="text-xs text-gray-500 truncate">
+              {action.config.field} {action.config.operator} {action.config.value}
+            </div>
           )}
         </div>
         <DropdownMenu>

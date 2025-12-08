@@ -8,16 +8,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 export default function ActionEditor({ action, onClose, onUpdate }) {
-  const [actionName, setActionName] = useState(action.name);
-  const [message, setMessage] = useState('Please reply with YES in confirm you got the right time. ALSO, Please confirm phone number confirmation has been scheduled and received by {{contact.email}} {{contact.email}}');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [actionName, setActionName] = useState(action.name || '');
+  const [config, setConfig] = useState(action.config || {});
 
   const handleSave = () => {
     onUpdate({
       ...action,
       name: actionName,
-      config: { message, phoneNumber }
+      config: config
     });
+  };
+
+  const updateConfig = (field, value) => {
+    setConfig(prev => ({ ...prev, [field]: value }));
+  };
+
+  const getActionTypeDisplay = () => {
+    const typeMap = {
+      trigger: 'Trigger',
+      action: 'Action',
+      condition: 'Condition',
+      email: 'Email',
+      sms: 'SMS',
+      wait: 'Wait',
+      calculate: 'Calculate'
+    };
+    return typeMap[action.type] || action.type;
   };
 
   return (
@@ -25,10 +41,7 @@ export default function ActionEditor({ action, onClose, onUpdate }) {
       {/* Header */}
       <div className="p-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold">Sms</h3>
-          <Button variant="ghost" size="sm" className="h-6 text-xs text-blue-600">
-            Learn More
-          </Button>
+          <h3 className="font-semibold capitalize">{getActionTypeDisplay()}</h3>
         </div>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-4 w-4" />
@@ -58,88 +71,30 @@ export default function ActionEditor({ action, onClose, onUpdate }) {
           <div className="p-4 space-y-4">
             {/* Action Name */}
             <div>
-              <Label className="text-xs font-semibold text-gray-700">ACTION NAME</Label>
+              <Label className="text-xs font-semibold text-gray-700">NAME / DESCRIPTION</Label>
               <Input
                 value={actionName}
                 onChange={(e) => setActionName(e.target.value)}
                 className="mt-1"
+                placeholder="Enter action name"
               />
             </div>
 
-            {/* Template */}
-            <div>
-              <Label className="text-xs font-semibold text-gray-700">TEMPLATE</Label>
-              <Select defaultValue="none">
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select template" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">— Select Template —</SelectItem>
-                  <SelectItem value="template1">Template 1</SelectItem>
-                  <SelectItem value="template2">Template 2</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Message */}
-            <div>
-              <Label className="text-xs font-semibold text-gray-700">MESSAGE</Label>
-              <div className="mt-1 border rounded-lg">
-                <div className="flex items-center gap-1 p-2 border-b bg-gray-50">
-                  <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <span className="text-xs">↶</span>
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <span className="text-xs">↷</span>
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <span className="text-xs">⚙</span>
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <span className="text-xs">⋮</span>
-                  </Button>
-                </div>
-                <Textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="min-h-[200px] border-0 focus-visible:ring-0 text-sm"
-                  placeholder="Enter your message..."
-                />
-                <div className="p-2 text-xs text-gray-500 border-t">
-                  760 characters | 11 words
-                </div>
+            {/* Configuration Details */}
+            <div className="space-y-3">
+              <Label className="text-xs font-semibold text-gray-700">CONFIGURATION</Label>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <pre className="text-xs text-gray-700 whitespace-pre-wrap font-mono">
+                  {JSON.stringify(config, null, 2)}
+                </pre>
               </div>
             </div>
 
-            {/* Add Attachments */}
-            <Button variant="outline" className="w-full justify-center text-green-600 border-green-600 hover:bg-green-50">
-              <Plus className="h-4 w-4 mr-2" />
-              Add attachments
-            </Button>
-
-            {/* Add New Through URL */}
-            <div>
-              <Label className="text-xs font-semibold text-gray-700">ADD NEW THROUGH URL</Label>
-              <div className="flex gap-2 mt-1">
-                <Input placeholder="Enter URL" className="flex-1" />
-                <Button variant="outline">+ Add</Button>
-              </div>
-            </div>
-
-            {/* Test Phone Number */}
-            <div>
-              <Label className="text-xs font-semibold text-gray-700">TEST PHONE NUMBER</Label>
-              <div className="flex gap-2 mt-1">
-                <Input
-                  placeholder="Please add country code along with the number"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="flex-1 text-sm"
-                />
-                <Button variant="outline" className="text-blue-600">
-                  Send Test SMS
-                </Button>
-              </div>
+            {/* Info */}
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-xs text-blue-800">
+                This action is part of your automated truancy workflow. Edit the configuration in the database or workflow settings to modify behavior.
+              </p>
             </div>
           </div>
         </TabsContent>
