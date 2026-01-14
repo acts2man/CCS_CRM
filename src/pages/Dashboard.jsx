@@ -19,6 +19,14 @@ export default function Dashboard() {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
+      
+      // Check if user has a matching Teacher record
+      const teachers = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
+      if (teachers && teachers.length > 0) {
+        // If Teacher record exists, treat as teacher
+        currentUser.role = 'teacher';
+      }
+      
       setUser(currentUser);
     } catch (err) {
       console.error("Error loading user:", err);
