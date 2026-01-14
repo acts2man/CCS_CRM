@@ -51,11 +51,11 @@ export default function TeacherDashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Teacher Dashboard</h1>
         <p className="text-gray-600 mt-2">
-          Welcome back, {user?.full_name || user?.email}!
+          Welcome back, {user?.full_name}!
         </p>
       </div>
 
