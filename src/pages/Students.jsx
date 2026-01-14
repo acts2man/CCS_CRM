@@ -88,8 +88,8 @@ export default function Students() {
       student.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGrade = filterGrade === null || student.grade_level === filterGrade;
     
-    // Teachers only see grades 7-12
-    const teacherGradeMatch = user?.role !== 'teacher' || ['7', '8', '9', '10', '11', '12'].includes(student.grade_level);
+    // Teachers only see grades 7-8
+    const teacherGradeMatch = user?.role !== 'teacher' || ['7', '8'].includes(student.grade_level);
     
     return matchesSearch && matchesGrade && teacherGradeMatch;
   });
