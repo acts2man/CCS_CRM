@@ -25,10 +25,21 @@ export default function Students() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    loadUser();
     loadStudents();
   }, []);
+
+  const loadUser = async () => {
+    try {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+    } catch (error) {
+      console.error('Error loading user:', error);
+    }
+  };
 
   const loadStudents = async () => {
     try {
@@ -76,7 +87,11 @@ export default function Students() {
       student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGrade = filterGrade === null || student.grade_level === filterGrade;
-    return matchesSearch && matchesGrade;
+    
+    // Teachers only see grades 7-12
+    const teacherGradeMatch = user?.role !== 'teacher' || ['7', '8', '9', '10', '11', '12'].includes(student.grade_level);
+    
+    return matchesSearch && matchesGrade && teacherGradeMatch;
   });
 
   if (loading) {
