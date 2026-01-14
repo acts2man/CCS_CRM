@@ -218,25 +218,33 @@ export default function Layout({ children, currentPageName }) {
       <Separator className="bg-slate-700" />
 
       <div className="p-2 space-y-1">
-        {bottomNavigation.map((item) => {
-          const Icon = item.icon;
-          const isActive = currentPageName === item.href;
-          return (
-            <Link
-              key={item.name}
-              to={createPageUrl(item.href)}
-              className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-              }`}
-            >
-              <Icon className="h-5 w-5 flex-shrink-0" />
-              {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
-            </Link>
-          );
-        })}
-      </div>
+                {bottomNavigation.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = currentPageName === item.href;
+                  return (
+                    <Link
+                      key={item.name}
+                      to={createPageUrl(item.href)}
+                      className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                        isActive
+                          ? 'bg-blue-600 text-white'
+                          : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                      }`}
+                    >
+                      <Icon className="h-5 w-5 flex-shrink-0" />
+                      {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
+                    </Link>
+                  );
+                })}
+                <Button 
+                  onClick={() => base44.auth.logout()}
+                  className="w-full justify-start text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent"
+                  variant="ghost"
+                >
+                  <X className="h-5 w-5 flex-shrink-0" />
+                  {!collapsed && <span className="text-sm font-medium">Logout</span>}
+                </Button>
+              </div>
     </div>
   );
 
