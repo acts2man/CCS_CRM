@@ -25,6 +25,11 @@ export default function Attendance() {
   const [pendingChanges, setPendingChanges] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [monthAttendance, setMonthAttendance] = useState([]);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -44,6 +49,22 @@ export default function Attendance() {
       setMonthAttendance(filtered);
     } catch (error) {
       console.error('Error loading month attendance:', error);
+    }
+  };
+
+  const loadUser = async () => {
+    try {
+      const currentUser = await base44.auth.me();
+      
+      // Check if user has a matching Teacher record
+      const teachers = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
+      if (teachers && teachers.length > 0) {
+        currentUser.role = 'teacher';
+      }
+      
+      setUser(currentUser);
+    } catch (error) {
+      console.error('Error loading user:', error);
     }
   };
 
@@ -123,7 +144,11 @@ export default function Attendance() {
     const gradeMatch = selectedGrade === 'all' || student.grade_level === selectedGrade;
     const searchMatch = searchTerm === '' || 
       `${student.first_name} ${student.last_name}`.toLowerCase().includes(searchTerm.toLowerCase());
-    return gradeMatch && searchMatch;
+    
+    // Teachers only see grades 7 and higher
+    const teacherGradeMatch = user?.role !== 'teacher' || ['7', '8', '9', '10', '11', '12'].includes(student.grade_level);
+    
+    return gradeMatch && searchMatch && teacherGradeMatch;
   });
 
   if (loading) {
