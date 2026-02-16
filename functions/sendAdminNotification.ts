@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
     const { firstName, lastName, email, startDate, endDate, fullDay, startTime, endTime, totalHours, usePto, reason } = await req.json();
 
     await resend.emails.send({
-      from: 'CCS Time Off <onboarding@resend.dev>',
+      from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
       to: 'troy@reputationguardians.net',
       subject: 'New Time-Off Request Submitted',
       html: `
