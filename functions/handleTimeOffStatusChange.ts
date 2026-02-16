@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import { google } from 'npm:googleapis@140.0.0';
 
-const CALENDAR_ID = 'primary'; // Use 'primary' or specific calendar ID
+const CALENDAR_ID = 'YOUR_CALENDAR_ID_HERE'; // Replace with your Google Calendar ID (e.g., 'abc123@group.calendar.google.com')
 
 Deno.serve(async (req) => {
   try {
