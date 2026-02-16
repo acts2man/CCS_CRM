@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import { google } from 'npm:googleapis@140.0.0';
 
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE'; // Replace with your Google Sheet ID
+const SPREADSHEET_ID = "1Jk2WClj-D_NIURwLb2WrILDVp2ion4FcPH72JKor6bI"; // Replace with your Google Sheet ID
 
 Deno.serve(async (req) => {
   try {
