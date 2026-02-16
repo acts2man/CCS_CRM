@@ -19,54 +19,67 @@ Deno.serve(async (req) => {
 
     // Handle approval
     if (request.status === 'approved') {
-      // Send approval email
-      console.log(`Sending approval email to: ${request.work_email}`);
-      const emailResult = await resend.emails.send({
-        from: 'CCS Time Off <onboarding@resend.dev>',
-        to: request.work_email,
-        subject: 'Time-Off Request Approved ✓',
-        html: `
-          <h2>Your Time-Off Request Has Been Approved!</h2>
-          <p>Hi ${request.first_name},</p>
-          <p>Great news! Your time-off request has been approved by the admin.</p>
-          <p><strong>Details:</strong></p>
-          <ul>
-            <li><strong>Start Date:</strong> ${request.start_date}</li>
-            <li><strong>End Date:</strong> ${request.end_date}</li>
-            <li><strong>Full Day:</strong> ${request.full_day ? 'Yes' : 'No'}</li>
-            <li><strong>PTO Used:</strong> ${request.use_pto ? 'Yes' : 'No'}</li>
-          </ul>
-          <p>This time has been added to the calendar.</p>
-          <p>Thank you!</p>
-        `,
-      });
-      console.log('Email sent successfully:', emailResult);
+      try {
+        // Send approval email
+        console.log(`Sending approval email to: ${request.work_email}`);
+        console.log(`Resend API Key exists: ${!!Deno.env.get('RESEND_API_KEY')}`);
+        
+        const emailResult = await resend.emails.send({
+          from: 'CCS Time Off <onboarding@resend.dev>',
+          to: request.work_email,
+          subject: 'Time-Off Request Approved ✓',
+          html: `
+            <h2>Your Time-Off Request Has Been Approved!</h2>
+            <p>Hi ${request.first_name},</p>
+            <p>Great news! Your time-off request has been approved by the admin.</p>
+            <p><strong>Details:</strong></p>
+            <ul>
+              <li><strong>Start Date:</strong> ${request.start_date}</li>
+              <li><strong>End Date:</strong> ${request.end_date}</li>
+              <li><strong>Full Day:</strong> ${request.full_day ? 'Yes' : 'No'}</li>
+              <li><strong>PTO Used:</strong> ${request.use_pto ? 'Yes' : 'No'}</li>
+            </ul>
+            <p>This time has been added to the calendar.</p>
+            <p>Thank you!</p>
+          `,
+        });
+        console.log('Email sent successfully:', JSON.stringify(emailResult));
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError);
+        throw emailError;
+      }
 
-      // Add to Google Calendar
-      console.log('Adding event to Google Calendar');
-      const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
-      
-      const auth = new google.auth.OAuth2();
-      auth.setCredentials({ access_token: accessToken });
-      const calendar = google.calendar({ version: 'v3', auth });
+      try {
+        // Add to Google Calendar
+        console.log('Adding event to Google Calendar');
+        const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+        console.log('Got calendar access token');
+        
+        const auth = new google.auth.OAuth2();
+        auth.setCredentials({ access_token: accessToken });
+        const calendar = google.calendar({ version: 'v3', auth });
 
-      const calendarResult = await calendar.events.insert({
-        calendarId: CALENDAR_ID,
-        requestBody: {
-          summary: `${request.first_name} ${request.last_name} - Time Off`,
-          description: `Reason: ${request.reason_notes}`,
-          start: {
-            date: request.start_date,
+        const calendarResult = await calendar.events.insert({
+          calendarId: CALENDAR_ID,
+          requestBody: {
+            summary: `${request.first_name} ${request.last_name} - Time Off`,
+            description: `Reason: ${request.reason_notes}`,
+            start: {
+              date: request.start_date,
+            },
+            end: {
+              date: request.end_date,
+            },
+            colorId: '11', // Red color for time off
           },
-          end: {
-            date: request.end_date,
-          },
-          colorId: '11', // Red color for time off
-        },
-      });
-      console.log('Calendar event created:', calendarResult.data.id);
+        });
+        console.log('Calendar event created:', calendarResult.data.id);
+      } catch (calendarError) {
+        console.error('Failed to add to calendar:', calendarError);
+        throw calendarError;
+      }
 
-      // Mark as synced
+      // Mark as synced only if both operations succeeded
       await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
         user_notified: true,
         synced_to_calendar: true,
