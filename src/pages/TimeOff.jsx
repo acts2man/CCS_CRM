@@ -74,22 +74,18 @@ export default function TimeOff() {
 
       // Send email notification to admin
       try {
-        await base44.integrations.Core.SendEmail({
-          to: "troy@reputationguardians.net", // Update with your admin email
-          subject: "New Time-Off Request Submitted",
-          body: `
-            <h2>New Time-Off Request</h2>
-            <p><strong>Employee:</strong> ${formData.first_name} ${formData.last_name}</p>
-            <p><strong>Email:</strong> ${formData.work_email}</p>
-            <p><strong>Start Date:</strong> ${formData.start_date}</p>
-            <p><strong>End Date:</strong> ${formData.end_date}</p>
-            <p><strong>Full Day:</strong> ${formData.full_day ? 'Yes' : 'No'}</p>
-            ${!formData.full_day ? `<p><strong>Time:</strong> ${formData.start_time} - ${formData.end_time}</p>` : ''}
-            <p><strong>Total Hours:</strong> ${formData.total_hours}</p>
-            <p><strong>Use PTO:</strong> ${formData.use_pto ? 'Yes' : 'No'}</p>
-            <p><strong>Reason:</strong> ${formData.reason_notes}</p>
-            <p>Please review in Google Sheets and mark Yes/No in the approval column.</p>
-          `
+        await base44.functions.invoke('sendAdminNotification', {
+          firstName: formData.first_name,
+          lastName: formData.last_name,
+          email: formData.work_email,
+          startDate: formData.start_date,
+          endDate: formData.end_date,
+          fullDay: formData.full_day,
+          startTime: formData.start_time,
+          endTime: formData.end_time,
+          totalHours: formData.total_hours,
+          usePto: formData.use_pto,
+          reason: formData.reason_notes
         });
       } catch (emailError) {
         console.error("Failed to send admin notification:", emailError);

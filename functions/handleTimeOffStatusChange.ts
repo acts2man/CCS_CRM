@@ -1,7 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import { google } from 'npm:googleapis@140.0.0';
+import { Resend } from 'npm:resend@4.0.0';
 
-const CALENDAR_ID = 'a0f63acb1d30ec35e8ca13a3f8da083f039696f1f8b419e86e1c8ec6fe983546@group.calendar.google.com'; // Use 'primary' or specific calendar ID
+const CALENDAR_ID = 'a0f63acb1d30ec35e8ca13a3f8da083f039696f1f8b419e86e1c8ec6fe983546@group.calendar.google.com';
+const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 Deno.serve(async (req) => {
   try {
@@ -18,10 +20,11 @@ Deno.serve(async (req) => {
     // Handle approval
     if (request.status === 'approved') {
       // Send approval email
-      await base44.asServiceRole.integrations.Core.SendEmail({
+      await resend.emails.send({
+        from: 'CCS Time Off <onboarding@resend.dev>',
         to: request.work_email,
         subject: 'Time-Off Request Approved ✓',
-        body: `
+        html: `
           <h2>Your Time-Off Request Has Been Approved!</h2>
           <p>Hi ${request.first_name},</p>
           <p>Great news! Your time-off request has been approved by the admin.</p>
@@ -68,10 +71,11 @@ Deno.serve(async (req) => {
 
     // Handle denial
     if (request.status === 'denied') {
-      await base44.asServiceRole.integrations.Core.SendEmail({
+      await resend.emails.send({
+        from: 'CCS Time Off <onboarding@resend.dev>',
         to: request.work_email,
         subject: 'Time-Off Request Update',
-        body: `
+        html: `
           <h2>Time-Off Request Status Update</h2>
           <p>Hi ${request.first_name},</p>
           <p>Unfortunately, we're not able to approve your time-off request at this time.</p>
