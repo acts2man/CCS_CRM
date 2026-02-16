@@ -64,9 +64,9 @@ import StudentProfile from './pages/StudentProfile';
 import Students from './pages/Students';
 import TeacherProfile from './pages/TeacherProfile';
 import Teachers from './pages/Teachers';
+import TimeOff from './pages/TimeOff';
 import Tutorials from './pages/Tutorials';
 import WorkflowBuilder from './pages/WorkflowBuilder';
-import TimeOff from './pages/TimeOff';
 import __Layout from './Layout.jsx';
 
 
@@ -88,9 +88,9 @@ export const PAGES = {
     "Students": Students,
     "TeacherProfile": TeacherProfile,
     "Teachers": Teachers,
+    "TimeOff": TimeOff,
     "Tutorials": Tutorials,
     "WorkflowBuilder": WorkflowBuilder,
-    "TimeOff": TimeOff,
 }
 
 export const pagesConfig = {

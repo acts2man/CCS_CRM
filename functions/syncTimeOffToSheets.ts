@@ -23,26 +23,27 @@ Deno.serve(async (req) => {
     auth.setCredentials({ access_token: accessToken });
     const sheets = google.sheets({ version: 'v4', auth });
 
-    // Prepare row data
+    // Prepare row data to match sheet columns
+    const submissionDate = new Date(request.created_date).toLocaleDateString();
     const rowData = [
-      request.id,
-      request.first_name,
-      request.last_name,
-      request.work_email,
-      request.full_day ? 'Yes' : 'No',
-      request.start_date,
-      request.end_date,
-      request.reason_notes,
-      request.use_pto ? 'Yes' : 'No',
-      request.status,
-      '', // Approval column (Yes/No) - admin fills this
-      new Date(request.created_date).toLocaleString(),
+      `${request.first_name} ${request.last_name}`, // Name
+      request.work_email, // Email
+      submissionDate, // Date (submission date)
+      request.start_date, // Start Date
+      request.end_date, // End Date
+      request.start_time || '', // Start Time
+      request.end_time || '', // End Time
+      request.total_hours || '', // Total Hours
+      request.reason_notes, // Reason
+      request.use_pto ? 'Yes' : 'No', // PTO
+      '', // Approved (Yes/No) - admin fills this
+      '' // Sub note
     ];
 
     // Append to sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Sheet1!A:L', // Adjust sheet name if needed
+      range: 'Sheet1!A:M', // Updated range for new columns
       valueInputOption: 'RAW',
       resource: {
         values: [rowData],

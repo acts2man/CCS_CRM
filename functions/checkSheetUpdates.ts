@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
     // Read all rows from sheet
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Sheet1!A:K', // Adjust range based on your columns
+      range: 'Sheet1!A:M', // Updated range
     });
 
     const rows = response.data.values || [];
@@ -26,14 +26,20 @@ Deno.serve(async (req) => {
     // Skip header row
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
-      const [requestId, firstName, lastName, email, fullDay, startDate, endDate, reason, usePTO, currentStatus, approvalStatus] = row;
+      const [name, email, submissionDate, startDate, endDate, startTime, endTime, totalHours, reason, usePTO, approvalStatus] = row;
 
-      if (!requestId || !approvalStatus) continue;
+      if (!email || !approvalStatus) continue;
 
-      // Get the request from database
-      const request = await base44.asServiceRole.entities.TimeOffRequest.get(requestId);
+      // Find the request by matching email and dates
+      const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({
+        work_email: email,
+        start_date: startDate,
+        end_date: endDate
+      });
       
-      if (!request) continue;
+      if (!requests || requests.length === 0) continue;
+      
+      const request = requests[0];
 
       // Check if approval status changed
       let newStatus = request.status;
