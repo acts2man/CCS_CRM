@@ -22,6 +22,7 @@ Deno.serve(async (req) => {
     });
 
     const rows = response.data.values || [];
+    let updatesCount = 0;
     
     // Skip header row
     for (let i = 1; i < rows.length; i++) {
@@ -30,7 +31,12 @@ Deno.serve(async (req) => {
       // G: Full Day, H: PTO, I: Total Hours, J: Reason, K: Approved/Subnote
       const [name, email, startDate, endDate, startTime, endTime, fullDay, pto, totalHours, reason, approvalStatus] = row;
 
-      if (!email || !approvalStatus) continue;
+      console.log(`Row ${i}: email=${email}, startDate=${startDate}, endDate=${endDate}, approval=${approvalStatus}`);
+
+      if (!email || !approvalStatus) {
+        console.log(`Skipping row ${i}: missing email or approval status`);
+        continue;
+      }
 
       // Find the request by matching email and dates
       const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({
@@ -39,9 +45,15 @@ Deno.serve(async (req) => {
         end_date: endDate
       });
       
-      if (!requests || requests.length === 0) continue;
+      console.log(`Found ${requests?.length || 0} requests for row ${i}`);
+      
+      if (!requests || requests.length === 0) {
+        console.log(`No matching request found for row ${i}`);
+        continue;
+      }
       
       const request = requests[0];
+      console.log(`Request status: ${request.status}, approval in sheet: ${approvalStatus}`);
 
       // Check if approval status changed
       let newStatus = request.status;
@@ -53,13 +65,15 @@ Deno.serve(async (req) => {
 
       // Update if status changed
       if (newStatus !== request.status) {
+        console.log(`Updating request ${request.id} from ${request.status} to ${newStatus}`);
         await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
           status: newStatus,
         });
+        updatesCount++;
       }
     }
 
-    return Response.json({ success: true, message: 'Checked sheet updates' });
+    return Response.json({ success: true, message: `Checked sheet updates. Updated ${updatesCount} request(s)` });
   } catch (error) {
     console.error('Error checking sheet updates:', error);
     return Response.json({ error: error.message }, { status: 500 });
