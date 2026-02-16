@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 import { google } from 'npm:googleapis@140.0.0';
 
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE'; // Replace with your Google Sheet ID
+const SPREADSHEET_ID = '1Jk2WClj-D_NIURwLb2WrILDVp2ion4FcPH72JKor6bI';
 
 Deno.serve(async (req) => {
   try {
@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
     // Read all rows from sheet
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Sheet1!A:M', // Updated range
+      range: 'Sheet1!A:K', // A-K columns
     });
 
     const rows = response.data.values || [];
@@ -26,7 +26,9 @@ Deno.serve(async (req) => {
     // Skip header row
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
-      const [name, email, submissionDate, startDate, endDate, startTime, endTime, totalHours, reason, usePTO, approvalStatus] = row;
+      // A: Name, B: Email, C: Start Date, D: End Date, E: Start Time, F: End Time, 
+      // G: Full Day, H: PTO, I: Total Hours, J: Reason, K: Approved/Subnote
+      const [name, email, startDate, endDate, startTime, endTime, fullDay, pto, totalHours, reason, approvalStatus] = row;
 
       if (!email || !approvalStatus) continue;
 
@@ -51,7 +53,7 @@ Deno.serve(async (req) => {
 
       // Update if status changed
       if (newStatus !== request.status) {
-        await base44.asServiceRole.entities.TimeOffRequest.update(requestId, {
+        await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
           status: newStatus,
         });
       }
