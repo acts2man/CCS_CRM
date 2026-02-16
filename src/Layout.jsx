@@ -48,6 +48,7 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Grading', href: 'Grading', icon: BookOpen },
         { name: 'Documents', href: 'Documents', icon: FileText },
         { name: 'Reports', href: 'ReportCenter', icon: FileSpreadsheet },
+        { name: 'Time Off', href: 'TimeOff', icon: Calendar },
         { name: 'Chat', href: 'Chat', icon: MessageSquare },
         { name: 'Email', href: 'Email', icon: Mail },
       ];
