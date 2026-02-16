@@ -20,7 +20,8 @@ Deno.serve(async (req) => {
     // Handle approval
     if (request.status === 'approved') {
       // Send approval email
-      await resend.emails.send({
+      console.log(`Sending approval email to: ${request.work_email}`);
+      const emailResult = await resend.emails.send({
         from: 'CCS Time Off <onboarding@resend.dev>',
         to: request.work_email,
         subject: 'Time-Off Request Approved ✓',
@@ -39,15 +40,17 @@ Deno.serve(async (req) => {
           <p>Thank you!</p>
         `,
       });
+      console.log('Email sent successfully:', emailResult);
 
       // Add to Google Calendar
+      console.log('Adding event to Google Calendar');
       const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
       
       const auth = new google.auth.OAuth2();
       auth.setCredentials({ access_token: accessToken });
       const calendar = google.calendar({ version: 'v3', auth });
 
-      await calendar.events.insert({
+      const calendarResult = await calendar.events.insert({
         calendarId: CALENDAR_ID,
         requestBody: {
           summary: `${request.first_name} ${request.last_name} - Time Off`,
@@ -61,6 +64,7 @@ Deno.serve(async (req) => {
           colorId: '11', // Red color for time off
         },
       });
+      console.log('Calendar event created:', calendarResult.data.id);
 
       // Mark as synced
       await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
@@ -71,7 +75,8 @@ Deno.serve(async (req) => {
 
     // Handle denial
     if (request.status === 'denied') {
-      await resend.emails.send({
+      console.log(`Sending denial email to: ${request.work_email}`);
+      const emailResult = await resend.emails.send({
         from: 'CCS Time Off <onboarding@resend.dev>',
         to: request.work_email,
         subject: 'Time-Off Request Update',
@@ -88,6 +93,7 @@ Deno.serve(async (req) => {
           <p>Thank you for understanding.</p>
         `,
       });
+      console.log('Denial email sent successfully:', emailResult);
 
       // Mark as notified
       await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
