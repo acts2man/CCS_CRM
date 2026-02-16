@@ -23,27 +23,32 @@ Deno.serve(async (req) => {
     auth.setCredentials({ access_token: accessToken });
     const sheets = google.sheets({ version: 'v4', auth });
 
+    // Helper function to convert 24-hour time to 12-hour format
+    const formatTime = (time24) => {
+      if (!time24) return '';
+      const [hours, minutes] = time24.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const hour12 = hour % 12 || 12;
+      return `${hour12}:${minutes} ${ampm}`;
+    };
+
     // Prepare row data to match sheet columns
-    const submissionDate = new Date(request.created_date).toLocaleDateString();
     const rowData = [
-      `${request.first_name} ${request.last_name}`, // Name
-      request.work_email, // Email
-      submissionDate, // Date (submission date)
-      request.start_date, // Start Date
-      request.end_date, // End Date
-      request.start_time || '', // Start Time
-      request.end_time || '', // End Time
-      request.total_hours || '', // Total Hours
-      request.reason_notes, // Reason
-      request.use_pto ? 'Yes' : 'No', // PTO
-      '', // Approved (Yes/No) - admin fills this
-      '' // Sub note
+      `${request.first_name} ${request.last_name}`, // A: Full Name
+      request.work_email, // B: Email
+      request.start_date, // C: Start Date
+      request.end_date, // D: End Date
+      formatTime(request.start_time), // E: Start Time
+      formatTime(request.end_time), // F: End Time
+      request.total_hours || '', // G: Total Hours
+      request.reason_notes // H: Reason
     ];
 
     // Append to sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Sheet1!A:M', // Updated range for new columns
+      range: 'Sheet1!A:H', // A-H columns
       valueInputOption: 'RAW',
       resource: {
         values: [rowData],
