@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function Layout({ children, currentPageName }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -286,7 +287,8 @@ export default function Layout({ children, currentPageName }) {
         <main className="flex-1 overflow-auto">
           {children}
         </main>
-      </div>
-    </div>
-  );
-}
+        </div>
+        <Toaster />
+        </div>
+        );
+        }
