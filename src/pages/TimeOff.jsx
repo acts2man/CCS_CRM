@@ -56,6 +56,13 @@ export default function TimeOff() {
         status: "pending"
       });
 
+      // Sync to Google Sheets and send admin notification
+      try {
+        await base44.functions.invoke('syncTimeOffToSheets', { requestId: request.id });
+      } catch (syncError) {
+        console.error("Failed to sync to sheets:", syncError);
+      }
+
       // Send email notification to admin
       try {
         await base44.integrations.Core.SendEmail({
@@ -70,7 +77,7 @@ export default function TimeOff() {
             <p><strong>Full Day:</strong> ${formData.full_day ? 'Yes' : 'No'}</p>
             <p><strong>Use PTO:</strong> ${formData.use_pto ? 'Yes' : 'No'}</p>
             <p><strong>Reason:</strong> ${formData.reason_notes}</p>
-            <p>Please review and approve/deny this request.</p>
+            <p>Please review in Google Sheets and mark Yes/No in the approval column.</p>
           `
         });
       } catch (emailError) {
