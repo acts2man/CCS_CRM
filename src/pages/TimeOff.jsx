@@ -66,7 +66,7 @@ export default function TimeOff() {
       // Send email notification to admin
       try {
         await base44.integrations.Core.SendEmail({
-          to: "admin@calvarychristian.org", // Update with your admin email
+          to: "troy@reputationguardians.net", // Update with your admin email
           subject: "New Time-Off Request Submitted",
           body: `
             <h2>New Time-Off Request</h2>
