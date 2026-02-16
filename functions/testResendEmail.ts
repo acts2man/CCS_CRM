@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     console.log(`Resend API Key (first 10 chars): ${Deno.env.get('RESEND_API_KEY')?.substring(0, 10)}`);
 
     const result = await resend.emails.send({
-      from: 'CCS Time Off <onboarding@resend.dev>',
+      from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
       to: email,
       subject: 'Test Email from CCS',
       html: '<h1>Test Email</h1><p>This is a test email from the CCS system.</p>',
