@@ -17,10 +17,13 @@ export default function TimeOff() {
     first_name: "",
     last_name: "",
     work_email: "",
+    submission_date: new Date().toISOString().split('T')[0],
+    full_day: true,
     start_date: "",
     end_date: "",
     start_time: "",
     end_time: "",
+    total_hours: "",
     reason_notes: "",
     use_pto: false
   });
@@ -29,9 +32,12 @@ export default function TimeOff() {
     e.preventDefault();
     
     // Validation
-    if (!formData.first_name || !formData.last_name || !formData.work_email || 
-        !formData.start_date || !formData.end_date || !formData.start_time || 
-        !formData.end_time || !formData.reason_notes) {
+    const requiredFields = !formData.first_name || !formData.last_name || !formData.work_email || 
+        !formData.start_date || !formData.end_date || !formData.total_hours || !formData.reason_notes;
+    
+    const timeFieldsRequired = !formData.full_day && (!formData.start_time || !formData.end_time);
+    
+    if (requiredFields || timeFieldsRequired) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
@@ -52,15 +58,10 @@ export default function TimeOff() {
     setLoading(true);
 
     try {
-      // Calculate total hours
-      const start = new Date(`2000-01-01T${formData.start_time}`);
-      const end = new Date(`2000-01-01T${formData.end_time}`);
-      const hours = (end - start) / (1000 * 60 * 60);
-      
       // Create time off request
       const request = await base44.entities.TimeOffRequest.create({
         ...formData,
-        total_hours: hours,
+        total_hours: parseFloat(formData.total_hours),
         status: "pending"
       });
 
@@ -82,7 +83,9 @@ export default function TimeOff() {
             <p><strong>Email:</strong> ${formData.work_email}</p>
             <p><strong>Start Date:</strong> ${formData.start_date}</p>
             <p><strong>End Date:</strong> ${formData.end_date}</p>
-            <p><strong>Time:</strong> ${formData.start_time} - ${formData.end_time}</p>
+            <p><strong>Full Day:</strong> ${formData.full_day ? 'Yes' : 'No'}</p>
+            ${!formData.full_day ? `<p><strong>Time:</strong> ${formData.start_time} - ${formData.end_time}</p>` : ''}
+            <p><strong>Total Hours:</strong> ${formData.total_hours}</p>
             <p><strong>Use PTO:</strong> ${formData.use_pto ? 'Yes' : 'No'}</p>
             <p><strong>Reason:</strong> ${formData.reason_notes}</p>
             <p>Please review in Google Sheets and mark Yes/No in the approval column.</p>
@@ -102,10 +105,13 @@ export default function TimeOff() {
         first_name: "",
         last_name: "",
         work_email: "",
+        submission_date: new Date().toISOString().split('T')[0],
+        full_day: true,
         start_date: "",
         end_date: "",
         start_time: "",
         end_time: "",
+        total_hours: "",
         reason_notes: "",
         use_pto: false
       });
@@ -197,6 +203,28 @@ export default function TimeOff() {
               </div>
 
               <div className="space-y-4">
+                {/* Submission Date */}
+                <div>
+                  <Label htmlFor="submission_date">Request Date (Today's Date) *</Label>
+                  <Input
+                    id="submission_date"
+                    type="date"
+                    value={formData.submission_date}
+                    onChange={(e) => setFormData({...formData, submission_date: e.target.value})}
+                    required
+                  />
+                </div>
+
+                {/* Full Day Toggle */}
+                <div className="flex items-center space-x-3">
+                  <Switch
+                    id="full_day"
+                    checked={formData.full_day}
+                    onCheckedChange={(checked) => setFormData({...formData, full_day: checked})}
+                  />
+                  <Label htmlFor="full_day" className="font-medium">Full Day</Label>
+                </div>
+
                 {/* Dates */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -221,28 +249,63 @@ export default function TimeOff() {
                   </div>
                 </div>
 
-                {/* Times */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="start_time">Start Time *</Label>
-                    <Input
-                      id="start_time"
-                      type="time"
-                      value={formData.start_time}
-                      onChange={(e) => setFormData({...formData, start_time: e.target.value})}
-                      required
-                    />
+                {/* Times - Only show if not full day */}
+                {!formData.full_day && (
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
+                    <div className="flex items-start gap-2 mb-3">
+                      <div className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-xs font-bold">i</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-blue-900 text-sm">Time Entry Example</p>
+                        <p className="text-blue-800 text-sm mt-1">
+                          <span className="font-medium">Example:</span> If you work 6:00 AM - 12:00 PM and want 2 hours off, enter:
+                        </p>
+                        <p className="text-blue-800 text-sm">Start Time: 10:00 AM (when your leave begins)</p>
+                        <p className="text-blue-800 text-sm">End Time: 12:00 PM (when your leave ends)</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="end_time">End Time *</Label>
-                    <Input
-                      id="end_time"
-                      type="time"
-                      value={formData.end_time}
-                      onChange={(e) => setFormData({...formData, end_time: e.target.value})}
-                      required
-                    />
+                )}
+
+                {!formData.full_day && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="start_time">Start Time *</Label>
+                      <Input
+                        id="start_time"
+                        type="time"
+                        value={formData.start_time}
+                        onChange={(e) => setFormData({...formData, start_time: e.target.value})}
+                        required={!formData.full_day}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="end_time">End Time *</Label>
+                      <Input
+                        id="end_time"
+                        type="time"
+                        value={formData.end_time}
+                        onChange={(e) => setFormData({...formData, end_time: e.target.value})}
+                        required={!formData.full_day}
+                      />
+                    </div>
                   </div>
+                )}
+
+                {/* Total Hours */}
+                <div>
+                  <Label htmlFor="total_hours">Total Hours *</Label>
+                  <Input
+                    id="total_hours"
+                    type="number"
+                    step="0.5"
+                    min="0"
+                    value={formData.total_hours}
+                    onChange={(e) => setFormData({...formData, total_hours: e.target.value})}
+                    placeholder="Enter total hours (e.g., 8 for full day)"
+                    required
+                  />
                 </div>
 
                 {/* Reason */}
