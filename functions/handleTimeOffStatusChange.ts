@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
         console.log(`Resend API Key exists: ${!!Deno.env.get('RESEND_API_KEY')}`);
         
         const emailResult = await resend.emails.send({
-          from: 'CCS Time Off <onboarding@resend.dev>',
+          from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
           to: request.work_email,
           subject: 'Time-Off Request Approved ✓',
           html: `
@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
     if (request.status === 'denied') {
       console.log(`Sending denial email to: ${request.work_email}`);
       const emailResult = await resend.emails.send({
-        from: 'CCS Time Off <onboarding@resend.dev>',
+        from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
         to: request.work_email,
         subject: 'Time-Off Request Update',
         html: `
