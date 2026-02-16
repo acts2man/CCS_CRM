@@ -41,7 +41,8 @@ export default function TimeOff() {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 5000
       });
       return;
     }
@@ -50,7 +51,8 @@ export default function TimeOff() {
       toast({
         title: "Invalid Input",
         description: "Please provide at least 10 characters for your reason.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 5000
       });
       return;
     }
@@ -93,7 +95,8 @@ export default function TimeOff() {
 
       toast({
         title: "Request Submitted!",
-        description: "Your time-off request has been submitted. Admin will be notified automatically."
+        description: "Your time-off request has been submitted. Admin will be notified automatically.",
+        duration: 5000
       });
 
       // Reset form
@@ -117,7 +120,8 @@ export default function TimeOff() {
       toast({
         title: "Submission Failed",
         description: "There was an error submitting your request. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 5000
       });
     } finally {
       setLoading(false);
