@@ -41,14 +41,17 @@ Deno.serve(async (req) => {
       request.end_date, // D: End Date
       formatTime(request.start_time), // E: Start Time
       formatTime(request.end_time), // F: End Time
-      request.total_hours || '', // G: Total Hours
-      request.reason_notes // H: Reason
+      request.full_day ? 'Yes' : 'No', // G: Full Day
+      request.use_pto ? 'Yes' : 'No', // H: PTO
+      request.total_hours || '', // I: Total Hours
+      request.reason_notes, // J: Reason
+      '' // K: Approved/Subnote
     ];
 
     // Append to sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Sheet1!A:H', // A-H columns
+      range: 'Sheet1!A:K', // A-K columns
       valueInputOption: 'RAW',
       resource: {
         values: [rowData],
