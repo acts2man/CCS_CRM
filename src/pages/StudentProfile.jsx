@@ -395,7 +395,7 @@ export default function StudentProfile() {
         </TabsContent>
       </Tabs>
 
-      <EditStudentModal 
+      <EditStudentModal
         open={showEditModal}
         onOpenChange={setShowEditModal}
         student={student}
