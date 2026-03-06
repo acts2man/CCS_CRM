@@ -391,6 +391,11 @@ export default function StudentProfile() {
         </TabsContent>
       </Tabs>
 
+        <TabsContent value="medical" className="mt-6">
+          <MedicalNotesTab student={student} onStudentUpdated={loadStudentData} />
+        </TabsContent>
+      </Tabs>
+
       <EditStudentModal 
         open={showEditModal}
         onOpenChange={setShowEditModal}
