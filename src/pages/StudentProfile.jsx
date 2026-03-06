@@ -370,21 +370,44 @@ export default function StudentProfile() {
         <TabsContent value="documents" className="mt-6">
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-xl font-bold mb-4">Documents</h2>
-              {documents.length === 0 ? (
-                <p className="text-gray-500">No documents available.</p>
+              <h2 className="text-xl font-bold mb-4">Documents & Reports</h2>
+              {studentDocs.length === 0 && documents.length === 0 ? (
+                <p className="text-gray-500">No documents on file for this student.</p>
               ) : (
                 <div className="space-y-2">
+                  {studentDocs.map((doc) => (
+                    <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-slate-500" />
+                        <div>
+                          <div className="font-medium">{doc.title}</div>
+                          <div className="text-xs text-gray-500">
+                            By {doc.submitted_by_name || doc.submitted_by}
+                            {doc.created_date && ` · ${new Date(doc.created_date).toLocaleDateString()}`}
+                          </div>
+                        </div>
+                      </div>
+                      <Badge className={
+                        doc.parent_acknowledged ? 'bg-green-100 text-green-800' :
+                        doc.parent_notified ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-600'
+                      }>
+                        {doc.parent_acknowledged ? 'Acknowledged' : doc.parent_notified ? 'Parent Notified' : 'Submitted'}
+                      </Badge>
+                    </div>
+                  ))}
                   {documents.map((doc) => (
                     <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center gap-3">
                         <FileText className="h-5 w-5 text-gray-400" />
                         <div>
                           <div className="font-medium">{doc.name}</div>
-                          <div className="text-sm text-gray-600">{doc.type}</div>
+                          <div className="text-sm text-gray-600">{doc.file_type}</div>
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm">View</Button>
+                      {doc.file_url && (
+                        <Button variant="ghost" size="sm" onClick={() => window.open(doc.file_url, '_blank')}>View</Button>
+                      )}
                     </div>
                   ))}
                 </div>
