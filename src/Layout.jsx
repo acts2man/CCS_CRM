@@ -47,12 +47,13 @@ export default function Layout({ children, currentPageName }) {
         { name: 'Students', href: 'Students', icon: Users },
         { name: 'Attendance', href: 'Attendance', icon: Calendar },
         { name: 'Grading', href: 'Grading', icon: BookOpen },
+        { name: 'Gradebook', href: 'Gradebook', icon: BookOpen },
         { name: 'Documents', href: 'Documents', icon: FileText },
         { name: 'Reports', href: 'ReportCenter', icon: FileSpreadsheet },
         { name: 'Time Off', href: 'TimeOff', icon: Calendar },
         { name: 'Chat', href: 'Chat', icon: MessageSquare },
         { name: 'Email', href: 'Email', icon: Mail },
-      ];
+        ];
     }
     
     // Admin navigation
@@ -66,7 +67,7 @@ export default function Layout({ children, currentPageName }) {
       { name: 'Reports', href: 'ReportCenter', icon: FileSpreadsheet },
       { name: 'Billing', href: 'Billing', icon: DollarSign },
       { name: 'Gradebook', href: 'Gradebook', icon: BookOpen },
-      { name: 'Courses', href: 'Courses', icon: BookOpen },
+      { name: 'Courses', href: 'Courses', icon: GraduationCap },
       { name: 'Time Off', href: 'TimeOff', icon: Calendar },
       { name: 'Chat', href: 'Chat', icon: MessageSquare },
       { name: 'Email', href: 'Email', icon: Mail },
