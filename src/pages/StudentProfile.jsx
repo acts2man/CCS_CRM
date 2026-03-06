@@ -308,6 +308,10 @@ export default function StudentProfile() {
           </div>
         </TabsContent>
 
+        <TabsContent value="enrollment" className="mt-6">
+          <ClassEnrollmentTab studentId={studentId} />
+        </TabsContent>
+
         <TabsContent value="grades" className="mt-6">
           <Card>
             <CardContent className="pt-6">
