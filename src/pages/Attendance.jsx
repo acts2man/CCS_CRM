@@ -11,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Users, UserCheck, UserX, Clock, Search, Save, ChevronLeft, ChevronRight, Settings, Zap } from 'lucide-react';
+import { Users, UserCheck, UserX, Clock, Search, Save, ChevronLeft, ChevronRight, Settings, Zap, Flame } from 'lucide-react';
+import FireDrillMode from '@/components/attendance/FireDrillMode';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, getDay } from 'date-fns';
 
 export default function Attendance() {
