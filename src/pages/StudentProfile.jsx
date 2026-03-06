@@ -31,6 +31,7 @@ export default function StudentProfile() {
   const [grades, setGrades] = useState([]);
   const [attendance, setAttendance] = useState([]);
   const [documents, setDocuments] = useState([]);
+  const [studentDocs, setStudentDocs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
 
