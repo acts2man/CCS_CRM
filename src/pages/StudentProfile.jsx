@@ -68,6 +68,7 @@ export default function StudentProfile() {
       setGrades(gradesData);
       setAttendance(attendanceData);
       setDocuments(documentsData);
+      setStudentDocs(studentDocsData);
     } catch (error) {
       console.error("Error loading student data:", error);
     } finally {
