@@ -224,6 +224,7 @@ export default function StudentProfile() {
           <TabsTrigger value="grades">Grades</TabsTrigger>
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="billing">Billing</TabsTrigger>
           <TabsTrigger value="medical">Medical Notes</TabsTrigger>
         </TabsList>
 
@@ -415,6 +416,10 @@ export default function StudentProfile() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="billing" className="mt-6">
+          <StudentBillingTab studentId={studentId} studentName={`${student.first_name} ${student.last_name}`} />
         </TabsContent>
 
         <TabsContent value="medical" className="mt-6">
