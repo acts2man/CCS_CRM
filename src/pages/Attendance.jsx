@@ -27,6 +27,7 @@ export default function Attendance() {
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [monthAttendance, setMonthAttendance] = useState([]);
   const [user, setUser] = useState(null);
+  const [fireDrillMode, setFireDrillMode] = useState(false);
 
   useEffect(() => {
     loadUser();
