@@ -389,7 +389,6 @@ export default function StudentProfile() {
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
 
         <TabsContent value="medical" className="mt-6">
           <MedicalNotesTab student={student} onStudentUpdated={loadStudentData} />
