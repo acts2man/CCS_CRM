@@ -46,12 +46,13 @@ export default function StudentProfile() {
 
   const loadStudentData = async () => {
     try {
-      const [studentData, gradesData, attendanceData, documentsData, parentsData] = await Promise.all([
+      const [studentData, gradesData, attendanceData, documentsData, parentsData, studentDocsData] = await Promise.all([
         base44.entities.Student.filter({ id: studentId }),
         base44.entities.Grade.filter({ student_id: studentId }),
         base44.entities.Attendance.filter({ student_id: studentId }),
         base44.entities.Document.filter({ student_id: studentId }),
-        base44.entities.Parent.list()
+        base44.entities.Parent.list(),
+        base44.entities.StudentDocument.filter({ student_id: studentId }, '-created_date', 50),
       ]);
 
       if (studentData.length > 0) {
