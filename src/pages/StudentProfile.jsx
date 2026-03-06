@@ -23,6 +23,7 @@ import {
 import EditStudentModal from "@/components/students/EditStudentModal";
 import ClassEnrollmentTab from "@/components/students/ClassEnrollmentTab";
 import MedicalNotesTab from "@/components/students/MedicalNotesTab";
+import StudentBillingTab from "@/components/students/StudentBillingTab";
 
 export default function StudentProfile() {
   const navigate = useNavigate();
