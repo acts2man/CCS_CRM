@@ -67,6 +67,9 @@ import Teachers from './pages/Teachers';
 import TimeOff from './pages/TimeOff';
 import Tutorials from './pages/Tutorials';
 import WorkflowBuilder from './pages/WorkflowBuilder';
+import Billing from './pages/Billing';
+import Gradebook from './pages/Gradebook';
+import Courses from './pages/Courses';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +94,9 @@ export const PAGES = {
     "TimeOff": TimeOff,
     "Tutorials": Tutorials,
     "WorkflowBuilder": WorkflowBuilder,
+    "Billing": Billing,
+    "Gradebook": Gradebook,
+    "Courses": Courses,
 }
 
 export const pagesConfig = {
