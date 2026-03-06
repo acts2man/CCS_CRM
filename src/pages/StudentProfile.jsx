@@ -21,6 +21,8 @@ import {
   Loader2
 } from "lucide-react";
 import EditStudentModal from "@/components/students/EditStudentModal";
+import ClassEnrollmentTab from "@/components/students/ClassEnrollmentTab";
+import MedicalNotesTab from "@/components/students/MedicalNotesTab";
 
 export default function StudentProfile() {
   const navigate = useNavigate();
