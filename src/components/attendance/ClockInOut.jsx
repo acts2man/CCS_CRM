@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Loader2, Search, LogIn, LogOut, History, Edit2 } from 'lucide-react';
+import { Loader2, Search, LogIn, LogOut, History, Edit2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/components/ui/use-toast';
+import { useState, useEffect } from 'react';
 
 const TARDY_CUTOFF = '08:30'; // Default tardy cutoff time
 
@@ -23,10 +24,39 @@ export default function ClockInOut() {
   const [showAuditModal, setShowAuditModal] = useState(null);
   const [showEditModal, setShowEditModal] = useState(null);
   const [editForm, setEditForm] = useState({ clock_in_time: '', clock_out_time: '', notes: '' });
+  const [elapsedTimes, setElapsedTimes] = useState({});
 
   useEffect(() => {
     loadData();
   }, [selectedDate]);
+
+  // Running timer for elapsed time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedTimes(prev => {
+        const newTimes = { ...prev };
+        clockRecords.forEach(record => {
+          if (record.clock_in_time && !record.clock_out_time) {
+            const [inHours, inMinutes, inSeconds] = record.clock_in_time.split(':').map(Number);
+            const inTotalSeconds = inHours * 3600 + inMinutes * 60 + inSeconds;
+            
+            // Get current PST time
+            const now = new Date();
+            const pstTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+            const currentSeconds = pstTime.getHours() * 3600 + pstTime.getMinutes() * 60 + pstTime.getSeconds();
+            
+            const diffSeconds = Math.max(0, currentSeconds - inTotalSeconds);
+            const hours = Math.floor(diffSeconds / 3600);
+            const minutes = Math.floor((diffSeconds % 3600) / 60);
+            const seconds = diffSeconds % 60;
+            newTimes[record.student_id] = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+          }
+        });
+        return newTimes;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [clockRecords]);
 
   const loadData = async () => {
     const currentUser = await base44.auth.me();
@@ -50,7 +80,8 @@ export default function ClockInOut() {
 
   const handleClockIn = async (student) => {
     const now = new Date();
-    const clockInTime = format(now, 'HH:mm:ss');
+    const pstTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    const clockInTime = format(pstTime, 'HH:mm:ss');
     const isTardy = clockInTime > TARDY_CUTOFF;
 
     const record = getClockRecord(student.id);
@@ -102,12 +133,21 @@ export default function ClockInOut() {
 
   const handleClockOut = async (student) => {
     const now = new Date();
-    const clockOutTime = format(now, 'HH:mm:ss');
+    const pstTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    const clockOutTime = format(pstTime, 'HH:mm:ss');
 
     const record = getClockRecord(student.id);
     if (record) {
+      // Calculate duration
+      const [inHours, inMinutes, inSeconds] = record.clock_in_time.split(':').map(Number);
+      const [outHours, outMinutes, outSeconds] = clockOutTime.split(':').map(Number);
+      const inTotalSeconds = inHours * 3600 + inMinutes * 60 + inSeconds;
+      const outTotalSeconds = outHours * 3600 + outMinutes * 60 + outSeconds;
+      const durationMinutes = Math.round((outTotalSeconds - inTotalSeconds) / 60);
+
       await base44.entities.StudentClockInOut.update(record.id, {
-        clock_out_time: clockOutTime
+        clock_out_time: clockOutTime,
+        duration_minutes: Math.max(0, durationMinutes)
       });
       // Audit
       await base44.entities.ClockInOutAudit.create({
@@ -246,9 +286,21 @@ export default function ClockInOut() {
                         <div className="font-semibold">{record.clock_in_time || '—'}</div>
                         {record.is_tardy && <Badge className="mt-1 bg-yellow-100 text-yellow-800">Tardy</Badge>}
                       </div>
+                      {record.clock_in_time && !record.clock_out_time && (
+                        <div className="text-center">
+                          <div className="text-xs text-gray-500 flex items-center justify-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            Elapsed
+                          </div>
+                          <div className="font-semibold text-green-600 font-mono">{elapsedTimes[student.id] || '00:00:00'}</div>
+                        </div>
+                      )}
                       <div className="text-center">
                         <div className="text-xs text-gray-500">Clock Out</div>
                         <div className="font-semibold">{record.clock_out_time || '—'}</div>
+                        {record.clock_out_time && record.duration_minutes && (
+                          <Badge className="mt-1 bg-blue-100 text-blue-800">{record.duration_minutes} min</Badge>
+                        )}
                       </div>
                     </div>
                   )}
