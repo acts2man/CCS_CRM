@@ -217,20 +217,26 @@ Deno.serve(async (req) => {
     // Send SMS via Pingram
     if (parent.phone) {
       const smsBody = buildSMS(copy, parentName, studentName, doc.title, submittedBy);
-      // Normalize phone to E.164 format (+1XXXXXXXXXX)
       const digits = parent.phone.replace(/\D/g, '');
       const formattedPhone = digits.startsWith('1') ? `+${digits}` : `+1${digits}`;
-      const smsResp = await fetch('https://api.pingroom.com/v1/sms/send', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${PINGRAM_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ to: formattedPhone, message: smsBody }),
-      });
-      const smsResult = await smsResp.json().catch(() => ({}));
-      console.log('Pingram SMS result:', JSON.stringify(smsResult));
-      smsCount++;
+
+      const pingram = new Pingram({ apiKey: Deno.env.get('PINGRAM_API_KEY') });
+      try {
+        await pingram.send({
+          type: 'calvary_school_sms',
+          to: {
+            id: parent.email || formattedPhone,
+            number: formattedPhone,
+          },
+          sms: {
+            message: smsBody,
+          },
+        });
+        console.log('Pingram SMS sent to:', formattedPhone);
+        smsCount++;
+      } catch (smsErr) {
+        console.error('Pingram SMS error:', smsErr.message);
+      }
     }
   }
 
