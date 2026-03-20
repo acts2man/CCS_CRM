@@ -246,25 +246,6 @@ export default function Documents() {
         students={students}
         onSent={loadData}
       />
-      <AccidentReportModal
-        open={showAccidentReport}
-        onOpenChange={setShowAccidentReport}
-        students={students}
-        onSent={loadData}
-      />
-      <BehaviorReportModal
-        open={showBehaviorReport}
-        onOpenChange={setShowBehaviorReport}
-        students={students}
-        teachers={teachers}
-        onSent={loadData}
-      />
-      <SchoolBehaviorReportModal
-        open={showSchoolBehaviorReport}
-        onOpenChange={setShowSchoolBehaviorReport}
-        students={students}
-        onSent={loadData}
-      />
       <DocumentDetailModal
         doc={selectedDoc}
         open={!!selectedDoc}
