@@ -5,32 +5,117 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Loader2, FileText, Download, Calendar, BarChart3, ClipboardList, BookOpen } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Loader2, FileText, Download, Calendar, BarChart3, ClipboardList, BookOpen, Eye } from 'lucide-react';
+import ReportCardView from '@/components/reports/ReportCardView';
+import GradingPeriodManager from '@/components/reports/GradingPeriodManager';
 
 export default function ReportCenter() {
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState([]);
   const [grades, setGrades] = useState([]);
+  const [classSections, setClassSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reportType, setReportType] = useState('attendance_summary');
   const [dateFrom, setDateFrom] = useState(() => { const d = new Date(); d.setMonth(d.getMonth()-1); return d.toISOString().split('T')[0]; });
   const [dateTo, setDateTo] = useState(new Date().toISOString().split('T')[0]);
   const [selectedStudentId, setSelectedStudentId] = useState('all');
+  const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [schoolYear, setSchoolYear] = useState('2025-2026');
+  const [gradingPeriods, setGradingPeriods] = useState([]);
   const [generating, setGenerating] = useState(false);
   const [reportData, setReportData] = useState(null);
+  const [livePreviewStudent, setLivePreviewStudent] = useState(null);
+  const [showPeriodManager, setShowPeriodManager] = useState(false);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [schoolYear]);
 
   const loadData = async () => {
-    const [s, a, g] = await Promise.all([
+    const [s, a, g, cs, gp] = await Promise.all([
       base44.entities.Student.filter({ enrollment_status: 'active' }),
       base44.entities.Attendance.list('-date', 500),
-      base44.entities.AssignmentGrade.list('-created_date', 500)
+      base44.entities.AssignmentGrade.list('-created_date', 500),
+      base44.entities.ClassSection.filter({ school_year: schoolYear }),
+      base44.entities.GradingPeriodConfig.filter({ school_year: schoolYear })
     ]);
     setStudents(s);
     setAttendance(a);
     setGrades(g);
+    setClassSections(cs);
+    setGradingPeriods(gp);
+    if (gp.length > 0 && !selectedPeriod) {
+      setSelectedPeriod(gp[0].id);
+    }
     setLoading(false);
+  };
+
+  // Build report card for single student
+  const generateReportCardPreview = (studentId) => {
+    const student = students.find(s => s.id === studentId);
+    if (!student) return null;
+
+    const period = gradingPeriods.find(p => p.id === selectedPeriod);
+    if (!period) return null;
+
+    const periodStart = period.start_date;
+    const periodEnd = period.end_date;
+
+    // Get attendance for period
+    const periodAttendance = attendance.filter(a => a.student_id === studentId && a.date >= periodStart && a.date <= periodEnd);
+    const present = periodAttendance.filter(a => a.status === 'present').length;
+    const absent = periodAttendance.filter(a => a.status === 'absent').length;
+    const tardy = periodAttendance.filter(a => a.status === 'tardy').length;
+    const excused = periodAttendance.filter(a => a.status === 'excused').length;
+    const totalDays = periodAttendance.length;
+    const attendanceRate = totalDays > 0 ? (present / totalDays) * 100 : 0;
+
+    // Get grades by class
+    const studentClasses = classSections.filter(c => c.student_ids?.includes(studentId));
+    const classGrades = studentClasses.map(cls => {
+      const classGrades = grades.filter(g => g.class_section_id === cls.id && g.student_id === studentId && g.status === 'graded');
+      const avg = classGrades.length ? classGrades.reduce((s, g) => s + (g.percentage || 0), 0) / classGrades.length : null;
+      const letter = avg === null ? '—' : avg >= 90 ? 'A' : avg >= 80 ? 'B' : avg >= 70 ? 'C' : avg >= 60 ? 'D' : 'F';
+      return {
+        class_id: cls.id,
+        class_name: cls.name,
+        teacher_name: cls.teacher_name,
+        number_grade: avg,
+        letter_grade: letter
+      };
+    });
+
+    const overallAvg = classGrades.filter(c => c.number_grade !== null).length > 0
+      ? classGrades.filter(c => c.number_grade !== null).reduce((s, c) => s + c.number_grade, 0) / classGrades.filter(c => c.number_grade !== null).length
+      : null;
+    const overallLetter = overallAvg === null ? '—' : overallAvg >= 90 ? 'A' : overallAvg >= 80 ? 'B' : overallAvg >= 70 ? 'C' : overallAvg >= 60 ? 'D' : 'F';
+
+    return {
+      student_id: student.id,
+      student_name: `${student.first_name} ${student.last_name}`,
+      student_grade_level: student.grade_level,
+      school_year: schoolYear,
+      reporting_period: period.period_type,
+      period_start_date: periodStart,
+      period_end_date: periodEnd,
+      classes: classGrades,
+      overall_number_grade: overallAvg,
+      overall_letter_grade: overallLetter,
+      attendance: {
+        present,
+        absent,
+        tardy,
+        excused,
+        attendance_rate: attendanceRate
+      },
+      grade_scale: {
+        A: '90-100%',
+        B: '80-89%',
+        C: '70-79%',
+        D: '60-69%',
+        F: '<60%'
+      },
+      generated_date: new Date().toISOString()
+    };
   };
 
   const generateReport = async () => {
@@ -100,56 +185,127 @@ export default function ReportCenter() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="border-b bg-white px-6 py-4">
-        <h1 className="text-2xl font-bold">Report Center</h1>
-        <p className="text-sm text-gray-500 mt-1">Generate attendance, grade, and report card reports</p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-2xl font-bold">Report Center</h1>
+            <p className="text-sm text-gray-500 mt-1">Generate attendance, grade, and report card reports</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setShowPeriodManager(true)}>
+            <Calendar className="h-4 w-4 mr-2" /> Manage Periods
+          </Button>
+        </div>
       </div>
 
       <div className="px-6 py-6 max-w-5xl mx-auto space-y-6">
-        {/* Report Builder */}
-        <Card>
-          <CardContent className="pt-5">
-            <h2 className="font-semibold mb-4">Build Report</h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Report Type</label>
-                <Select value={reportType} onValueChange={setReportType}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="attendance_summary">Attendance Summary</SelectItem>
-                    <SelectItem value="absence_report">Absence Report</SelectItem>
-                    <SelectItem value="tardy_report">Tardy Report</SelectItem>
-                    <SelectItem value="grade_report">Grade Report</SelectItem>
-                    <SelectItem value="report_card">Report Card</SelectItem>
-                  </SelectContent>
-                </Select>
+        {/* Tabs */}
+        <Tabs defaultValue="reports">
+          <TabsList>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsTrigger value="report_card">Report Card Preview</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="reports">
+            {/* Report Builder */}
+            <Card>
+              <CardContent className="pt-5">
+                <h2 className="font-semibold mb-4">Build Report</h2>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Report Type</label>
+                    <Select value={reportType} onValueChange={setReportType}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="attendance_summary">Attendance Summary</SelectItem>
+                        <SelectItem value="absence_report">Absence Report</SelectItem>
+                        <SelectItem value="tardy_report">Tardy Report</SelectItem>
+                        <SelectItem value="grade_report">Grade Report</SelectItem>
+                        <SelectItem value="report_card">Report Card</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Student</label>
+                    <Select value={selectedStudentId} onValueChange={setSelectedStudentId}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Students</SelectItem>
+                        {students.map(s => <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Date From</label>
+                    <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Date To</label>
+                    <Input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <Button className="bg-slate-900 hover:bg-slate-800" onClick={generateReport} disabled={generating}>
+                    {generating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <BarChart3 className="h-4 w-4 mr-2" />}
+                    Generate Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="report_card">
+            {/* Report Card Preview */}
+            <Card>
+              <CardContent className="pt-5 space-y-4">
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">School Year</label>
+                  <Select value={schoolYear} onValueChange={setSchoolYear}>
+                    <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2024-2025">2024–2025</SelectItem>
+                      <SelectItem value="2025-2026">2025–2026</SelectItem>
+                      <SelectItem value="2026-2027">2026–2027</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {gradingPeriods.length > 0 && (
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Grading Period</label>
+                    <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {gradingPeriods.map(p => (
+                          <SelectItem key={p.id} value={p.id}>
+                            {p.period_type} ({p.start_date} to {p.end_date})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {gradingPeriods.length === 0 && (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded p-3 text-sm text-yellow-800">
+                    ℹ️ Configure grading periods first.
+                  </div>
+                )}
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">Student</label>
+                  <Select value={livePreviewStudent?.id || ''} onValueChange={sid => setLivePreviewStudent(students.find(s => s.id === sid))}>
+                    <SelectTrigger><SelectValue placeholder="Select student to preview" /></SelectTrigger>
+                    <SelectContent>
+                      {students.map(s => <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            {livePreviewStudent && selectedPeriod && (
+              <div className="mt-6">
+                <ReportCardView reportCard={generateReportCardPreview(livePreviewStudent.id)} />
               </div>
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Student</label>
-                <Select value={selectedStudentId} onValueChange={setSelectedStudentId}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Students</SelectItem>
-                    {students.map(s => <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Date From</label>
-                <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
-              </div>
-              <div>
-                <label className="text-xs text-gray-500 mb-1 block">Date To</label>
-                <Input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} />
-              </div>
-            </div>
-            <div className="mt-4">
-              <Button className="bg-slate-900 hover:bg-slate-800" onClick={generateReport} disabled={generating}>
-                {generating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <BarChart3 className="h-4 w-4 mr-2" />}
-                Generate Report
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            )}
+          </TabsContent>
+        </Tabs>
 
         {/* Report Output */}
         {reportData && (
@@ -275,6 +431,13 @@ export default function ReportCenter() {
           </Card>
         )}
       </div>
+
+      <GradingPeriodManager
+        open={showPeriodManager}
+        onOpenChange={setShowPeriodManager}
+        schoolYear={schoolYear}
+        onSaved={() => loadData()}
+      />
     </div>
   );
 }
