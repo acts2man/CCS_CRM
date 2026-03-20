@@ -141,11 +141,26 @@ export default function StudentProfile() {
             <Pencil className="h-4 w-4 mr-2" />
             Edit Student
           </Button>
-          <Button variant="outline">
+          <Button 
+            variant="outline"
+            onClick={() => {
+              const parent = parents[0];
+              if (parent?.phone) {
+                window.location.href = `tel:${parent.phone}`;
+              } else if (parent?.email) {
+                window.location.href = `mailto:${parent.email}`;
+              } else {
+                alert('No parent contact info found. Please add a parent in the Parents tab.');
+              }
+            }}
+          >
             <Mail className="h-4 w-4 mr-2" />
             Contact Parent
           </Button>
-          <Button className="bg-slate-900 hover:bg-slate-800">
+          <Button 
+            className="bg-slate-900 hover:bg-slate-800"
+            onClick={() => window.print()}
+          >
             <FileText className="h-4 w-4 mr-2" />
             Generate Report
           </Button>
