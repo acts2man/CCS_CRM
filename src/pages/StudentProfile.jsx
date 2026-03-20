@@ -424,6 +424,10 @@ export default function StudentProfile() {
           <StudentBillingTab studentId={studentId} studentName={`${student.first_name} ${student.last_name}`} />
         </TabsContent>
 
+        <TabsContent value="parents" className="mt-6">
+          <ParentProfileTab studentId={studentId} />
+        </TabsContent>
+
         <TabsContent value="medical" className="mt-6">
           <MedicalNotesTab student={student} onStudentUpdated={loadStudentData} />
         </TabsContent>
