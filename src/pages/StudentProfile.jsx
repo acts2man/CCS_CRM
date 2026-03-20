@@ -25,6 +25,7 @@ import ClassEnrollmentTab from "@/components/students/ClassEnrollmentTab";
 import MedicalNotesTab from "@/components/students/MedicalNotesTab";
 import ParentProfileTab from "@/components/students/ParentProfileTab";
 import StudentBillingTab from "@/components/students/StudentBillingTab";
+import DocumentDetailModal from "@/components/students/DocumentDetailModal";
 
 export default function StudentProfile() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function StudentProfile() {
   const [studentDocs, setStudentDocs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState(null);
 
   const urlParams = new URLSearchParams(window.location.search);
   const studentId = urlParams.get('id');
