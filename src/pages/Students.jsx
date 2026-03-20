@@ -219,7 +219,7 @@ export default function Students() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+              </Card>
             </Link>
           ))}
         </div>
