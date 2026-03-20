@@ -6,9 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Search, FileText, Send, Trash2, BookOpen, Loader2 } from 'lucide-react';
+import { Plus, Search, FileText, Send, Trash2, School, Baby, BookOpen, Loader2 } from 'lucide-react';
 import CreateTemplateModal from '@/components/documents/CreateTemplateModal';
 import SendDocumentModal from '@/components/documents/SendDocumentModal';
+import AccidentReportModal from '@/components/documents/AccidentReportModal';
+import BehaviorReportModal from '@/components/documents/BehaviorReportModal';
+import SchoolBehaviorReportModal from '@/components/documents/SchoolBehaviorReportModal';
 import { useToast } from '@/components/ui/use-toast';
 import DocumentDetailModal from '@/components/students/DocumentDetailModal';
 
@@ -40,6 +43,9 @@ export default function Documents() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(null);
+  const [showAccidentReport, setShowAccidentReport] = useState(false);
+  const [showBehaviorReport, setShowBehaviorReport] = useState(false);
+  const [showSchoolBehaviorReport, setShowSchoolBehaviorReport] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
 
   useEffect(() => { loadData(); }, []);
@@ -164,7 +170,19 @@ export default function Documents() {
                       <Button
                        size="sm"
                        className="flex-1 bg-slate-900 hover:bg-slate-800"
-                       onClick={() => setSendTemplate(template)}
+                       onClick={() => {
+                         if (template.template_type === 'accident_report') {
+                           setShowAccidentReport(true);
+                         } else if (template.template_type === 'behavior_report') {
+                           if (template.category === 'preschool') {
+                             setShowBehaviorReport(true);
+                           } else {
+                             setShowSchoolBehaviorReport(true);
+                           }
+                         } else {
+                           setSendTemplate(template);
+                         }
+                       }}
                       >
                         <Send className="h-3 w-3 mr-1" />
                         Send to Student
@@ -243,6 +261,25 @@ export default function Documents() {
         open={!!sendTemplate}
         onOpenChange={open => { if (!open) setSendTemplate(null); }}
         template={sendTemplate}
+        students={students}
+        onSent={loadData}
+      />
+      <AccidentReportModal
+        open={showAccidentReport}
+        onOpenChange={setShowAccidentReport}
+        students={students}
+        onSent={loadData}
+      />
+      <BehaviorReportModal
+        open={showBehaviorReport}
+        onOpenChange={setShowBehaviorReport}
+        students={students}
+        teachers={teachers}
+        onSent={loadData}
+      />
+      <SchoolBehaviorReportModal
+        open={showSchoolBehaviorReport}
+        onOpenChange={setShowSchoolBehaviorReport}
         students={students}
         onSent={loadData}
       />
