@@ -26,6 +26,7 @@ import MedicalNotesTab from "@/components/students/MedicalNotesTab";
 import ParentProfileTab from "@/components/students/ParentProfileTab";
 import StudentBillingTab from "@/components/students/StudentBillingTab";
 import DocumentDetailModal from "@/components/students/DocumentDetailModal";
+import ContactCard from "@/components/students/ContactCard";
 
 export default function StudentProfile() {
   const navigate = useNavigate();
@@ -248,6 +249,9 @@ export default function StudentProfile() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 mt-6">
+          {/* Contact Information - Prominent Section */}
+          <ContactCard student={student} parents={parents} />
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Student Information */}
             <Card>
@@ -299,34 +303,6 @@ export default function StudentProfile() {
                     </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Emergency Contacts */}
-            <Card>
-              <CardContent className="pt-6">
-                <h2 className="text-xl font-bold mb-4">Emergency Contacts</h2>
-                
-                {parents.length === 0 ? (
-                  <p className="text-gray-500">No emergency contacts available.</p>
-                ) : (
-                  <div className="space-y-4">
-                    {parents.map((parent) => (
-                      <div key={parent.id} className="flex items-center justify-between">
-                        <div>
-                          <div className="font-semibold">{parent.first_name} {parent.last_name}</div>
-                          <div className="text-sm text-gray-500">{parent.relationship || 'Parent/Guardian'}</div>
-                        </div>
-                        {parent.phone && (
-                          <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Phone className="h-4 w-4" />
-                            <span>{parent.phone}</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </CardContent>
             </Card>
           </div>
