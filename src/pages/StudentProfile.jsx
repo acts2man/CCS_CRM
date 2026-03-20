@@ -397,7 +397,11 @@ export default function StudentProfile() {
               ) : (
                 <div className="space-y-2">
                   {studentDocs.map((doc) => (
-                    <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div
+                      key={doc.id}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
+                      onClick={() => setSelectedDoc(doc)}
+                    >
                       <div className="flex items-center gap-3">
                         <FileText className="h-5 w-5 text-slate-500" />
                         <div>
