@@ -73,7 +73,7 @@ function getCopy(templateType) {
   return DOC_COPY[templateType] || DOC_COPY.other;
 }
 
-function buildEmail(copy, parentName, studentName, doc, submittedBy) {
+function buildEmail(copy, parentName, studentName, doc, submittedBy, signatureLink = null) {
   const formRows = doc.form_data
     ? Object.entries(doc.form_data)
         .filter(([k, v]) => v && !Array.isArray(v) && k !== 'student_id')
@@ -144,6 +144,16 @@ function buildEmail(copy, parentName, studentName, doc, submittedBy) {
 
       ${notesRow}
 
+      ${signatureLink ? `
+      <!-- Signature Required -->
+      <div style="margin-top:24px;padding:20px 18px;background:#f0fdf4;border:2px solid #86efac;border-radius:8px;text-align:center;">
+        <p style="margin:0;color:#166534;font-size:14px;font-weight:700;">✓ Signature Required</p>
+        <p style="margin:8px 0;color:#15803d;font-size:14px;">Please acknowledge receipt of this document by clicking the button below.</p>
+        <a href="${signatureLink}" style="display:inline-block;margin-top:12px;padding:12px 28px;background:#22c55e;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:600;font-size:14px;">Sign & Acknowledge</a>
+        <p style="margin:12px 0 0;color:#4b7c59;font-size:12px;">This link expires in 30 days. You will receive a confirmation once signed.</p>
+      </div>
+      ` : ''}
+
       <!-- CTA -->
       <div style="margin-top:24px;padding:16px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;text-align:center;">
         <p style="margin:0;color:#0369a1;font-size:14px;font-weight:600;">Questions or concerns?</p>
@@ -200,8 +210,27 @@ Deno.serve(async (req) => {
   let emailCount = 0;
   let smsCount = 0;
 
+  // Fetch template to check if signature is required
+  const templates = await base44.asServiceRole.entities.DocumentTemplate.filter({ id: doc.template_id });
+  const template = templates && templates.length > 0 ? templates[0] : null;
+  const requiresSignature = template && template.require_acknowledgment;
+
   for (const parent of studentParents) {
     const parentName = parent.first_name || 'Parent';
+    let signatureLink = null;
+
+    // Generate signature token if required
+    if (requiresSignature) {
+      const tokenRes = await base44.asServiceRole.functions.invoke('generateSignatureToken', {
+        studentDocumentId: doc.id,
+        parentEmail: parent.email,
+        parentName: parentName,
+      });
+      if (tokenRes && tokenRes.data && tokenRes.data.token) {
+        const appUrl = 'https://calvary.base44.app'; // Update with your app URL
+        signatureLink = `${appUrl}/sign-document?token=${tokenRes.data.token}`;
+      }
+    }
 
     // Send Email
     if (parent.email) {
@@ -209,7 +238,7 @@ Deno.serve(async (req) => {
         from: 'Calvary Christian School <noreply@calvaryforkidscrm.com>',
         to: parent.email,
         subject: `${copy.subject} — ${studentName}`,
-        html: buildEmail(copy, parentName, studentName, doc, submittedBy),
+        html: buildEmail(copy, parentName, studentName, doc, submittedBy, signatureLink),
       });
       emailCount++;
     }
