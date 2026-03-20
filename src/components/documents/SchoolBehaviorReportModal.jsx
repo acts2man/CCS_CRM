@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 const BEHAVIOR_PROBLEMS = [
   'Disrespectful Comment',
@@ -27,14 +26,50 @@ const BEHAVIOR_PROBLEMS = [
   'Throwing Objects',
 ];
 
+const DISCIPLINE_PROCEDURES = [
+  'Student has received a verbal warning.',
+  'Student has received detention.',
+  'Parent/Teacher/Principal Conference needs to be scheduled. Please call for appointment.',
+  'Student has been suspended.',
+  'Other',
+];
+
 const ADMIN_ACTIONS = [
   'Principal has discussed this problem with your child.',
   'Parent/Teacher/Principal Conference needs to be scheduled. Please call for appointment.',
+  'Other',
 ];
 
-export default function SchoolBehaviorReportModal({ open, onOpenChange, students, onSent }) {
+function CheckItem({ label, checked, onChange }) {
+  return (
+    <label className="flex items-start gap-2.5 cursor-pointer group">
+      <div
+        onClick={onChange}
+        className={`mt-0.5 w-4 h-4 border-2 rounded-sm flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer
+          ${checked ? 'bg-slate-900 border-slate-900' : 'border-slate-400 group-hover:border-slate-700'}`}
+      >
+        {checked && (
+          <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </div>
+      <span className="text-sm text-slate-800 font-medium">{label}</span>
+    </label>
+  );
+}
+
+function SectionHeader({ title }) {
+  return (
+    <div className="bg-slate-900 text-white text-center py-2 px-4 rounded-md">
+      <span className="font-bold text-sm uppercase tracking-wide">{title}</span>
+    </div>
+  );
+}
+
+export default function SchoolBehaviorReportModal({ open, onOpenChange, students, teachers = [], onSent }) {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     student_id: '',
     br_number: '',
@@ -43,204 +78,221 @@ export default function SchoolBehaviorReportModal({ open, onOpenChange, students
     grade: '',
     teacher: '',
     location: '',
-    selected_behaviors: [],
-    explanation: '',
-    principal_discussed: false,
-    conference_needed: false,
-    other_action: '',
+    behavior_problems: [],
+    discipline_procedures: [],
+    discipline_other: '',
+    admin_actions: [],
+    admin_other: '',
+    additional_notes: '',
     parent_signature: '',
   });
 
-  const handleBehaviorToggle = (behavior) => {
-    setForm(prev => ({
-      ...prev,
-      selected_behaviors: prev.selected_behaviors.includes(behavior)
-        ? prev.selected_behaviors.filter(b => b !== behavior)
-        : [...prev.selected_behaviors, behavior]
+  const setField = (key, val) => setForm(f => ({ ...f, [key]: val }));
+
+  const toggleCheck = (key, val) => {
+    setForm(f => ({
+      ...f,
+      [key]: f[key].includes(val) ? f[key].filter(x => x !== val) : [...f[key], val],
     }));
   };
 
   const handleSubmit = async () => {
-    if (!form.student_id) {
-      toast({ title: 'Error', description: 'Please select a student' });
-      return;
-    }
+    if (!form.student_id) return;
+    setSaving(true);
+    const user = await base44.auth.me();
+    const student = students.find(s => s.id === form.student_id);
 
-    setLoading(true);
-    try {
-      const student = students.find(s => s.id === form.student_id);
-      const studentName = student ? `${student.first_name} ${student.last_name}` : 'Unknown';
+    const doc = await base44.entities.StudentDocument.create({
+      student_id: form.student_id,
+      template_type: 'behavior_report',
+      title: 'Behavior Report (School)',
+      submitted_by: user.email,
+      submitted_by_name: user.full_name,
+      form_data: { ...form },
+      notes: form.additional_notes,
+      parent_notified: false,
+      status: 'submitted',
+    });
 
-      const user = await base44.auth.me();
+    await base44.functions.invoke('sendDocumentNotification', { studentDocumentId: doc.id }).catch(() => {});
 
-      await base44.entities.StudentDocument.create({
-        student_id: form.student_id,
-        template_type: 'behavior_report',
-        title: 'Behavior Report (School)',
-        submitted_by: user.email,
-        submitted_by_name: user.full_name,
-        form_data: {
-          student_name: studentName,
-          br_number: form.br_number,
-          date: form.date,
-          time: form.time,
-          grade: form.grade,
-          teacher: form.teacher,
-          location: form.location,
-          behavior_problems: form.selected_behaviors.join(', '),
-          explanation: form.explanation,
-          principal_discussed: form.principal_discussed,
-          conference_needed: form.conference_needed,
-          other_action: form.other_action,
-        },
-        parent_notified: false,
-        status: 'submitted',
-      });
-
-      toast({ title: 'Behavior report submitted successfully' });
-      onSent();
-      onOpenChange(false);
-      setForm({
-        student_id: '',
-        br_number: '',
-        date: new Date().toISOString().split('T')[0],
-        time: '',
-        grade: '',
-        teacher: '',
-        location: '',
-        selected_behaviors: [],
-        explanation: '',
-        principal_discussed: false,
-        conference_needed: false,
-        other_action: '',
-        parent_signature: '',
-      });
-    } catch (error) {
-      toast({ title: 'Error', description: error.message });
-    } finally {
-      setLoading(false);
-    }
+    toast({ title: 'Behavior Report submitted', description: `Report filed for ${student?.first_name} ${student?.last_name}.` });
+    setSaving(false);
+    onSent();
+    onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>School Behavior Report</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-2xl max-h-[95vh] overflow-y-auto p-0">
+        {/* Header */}
+        <div className="bg-slate-900 text-white px-8 py-5 rounded-t-xl text-center">
+          <h1 className="text-xl font-black tracking-wide uppercase">Calvary Christian School</h1>
+          <p className="text-base font-bold text-slate-200 mt-0.5">Behavior Report</p>
+          <p className="text-slate-400 text-xs mt-1">4911 47th Avenue Sacramento, CA 95824 · (916) 393-3633</p>
+        </div>
 
-        <div className="space-y-6">
-          {/* Student & Report Info */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Student</label>
-            <Select value={form.student_id} onValueChange={(val) => setForm({...form, student_id: val})}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select student..." />
-              </SelectTrigger>
-              <SelectContent>
-                {students.map(s => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.first_name} {s.last_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">BR#</label>
-              <Input value={form.br_number} onChange={(e) => setForm({...form, br_number: e.target.value})} />
+        <div className="px-8 py-6 space-y-6">
+          {/* Student Info Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="col-span-2">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Student Name *</label>
+              <Select value={form.student_id} onValueChange={v => {
+                const s = students.find(st => st.id === v);
+                setForm(f => ({ ...f, student_id: v, grade: s?.grade_level || f.grade }));
+              }}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select student..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {students.map(s => (
+                    <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name} — Grade {s.grade_level}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Date</label>
-              <Input type="date" value={form.date} onChange={(e) => setForm({...form, date: e.target.value})} />
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">BR #</label>
+              <Input value={form.br_number} onChange={e => setField('br_number', e.target.value)} placeholder="e.g. 042" className="h-10" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Time</label>
-              <Input type="time" value={form.time} onChange={(e) => setForm({...form, time: e.target.value})} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Grade</label>
-              <Input value={form.grade} onChange={(e) => setForm({...form, grade: e.target.value})} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Teacher</label>
-              <Input value={form.teacher} onChange={(e) => setForm({...form, teacher: e.target.value})} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Location</label>
-              <Input value={form.location} onChange={(e) => setForm({...form, location: e.target.value})} />
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Date</label>
+              <Input type="date" value={form.date} onChange={e => setField('date', e.target.value)} className="h-10" />
             </div>
           </div>
 
-          {/* Behavior Problems */}
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Time</label>
+              <Input value={form.time} onChange={e => setField('time', e.target.value)} placeholder="e.g. 10:30 AM" className="h-10" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Grade</label>
+              <Input value={form.grade} onChange={e => setField('grade', e.target.value)} placeholder="e.g. 7" className="h-10" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Teacher</label>
+              <Select value={form.teacher} onValueChange={v => setField('teacher', v)}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select teacher..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {teachers.map(t => (
+                    <SelectItem key={t.id} value={`${t.first_name} ${t.last_name}`}>{t.first_name} {t.last_name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div>
-            <label className="block text-sm font-semibold mb-3">Description of Behavior Problem(s)</label>
-            <div className="grid grid-cols-2 gap-3">
-              {BEHAVIOR_PROBLEMS.map(behavior => (
-                <label key={behavior} className="flex items-center gap-2 cursor-pointer">
-                  <Checkbox
-                    checked={form.selected_behaviors.includes(behavior)}
-                    onCheckedChange={() => handleBehaviorToggle(behavior)}
-                  />
-                  <span className="text-sm">{behavior}</span>
-                </label>
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Location</label>
+            <Input value={form.location} onChange={e => setField('location', e.target.value)} placeholder="e.g. Classroom, Hallway, Cafeteria..." className="h-10" />
+          </div>
+
+          {/* Description of Behavior Problems */}
+          <div className="space-y-3">
+            <SectionHeader title="Description of Behavior Problem(s)" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2.5 pt-1 px-1">
+              {BEHAVIOR_PROBLEMS.map(b => (
+                <CheckItem
+                  key={b}
+                  label={b}
+                  checked={form.behavior_problems.includes(b)}
+                  onChange={() => toggleCheck('behavior_problems', b)}
+                />
               ))}
             </div>
           </div>
 
-          {/* Explanation */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Explanation of Behavior Report</label>
-            <Textarea
-              value={form.explanation}
-              onChange={(e) => setForm({...form, explanation: e.target.value})}
-              placeholder="Describe the incident..."
-              className="min-h-24"
-            />
+          {/* Classroom Discipline Procedure */}
+          <div className="space-y-3">
+            <SectionHeader title="Classroom Discipline Procedure" />
+            <div className="space-y-2.5 pt-1 px-1">
+              {DISCIPLINE_PROCEDURES.map(d => (
+                <CheckItem
+                  key={d}
+                  label={d}
+                  checked={form.discipline_procedures.includes(d)}
+                  onChange={() => toggleCheck('discipline_procedures', d)}
+                />
+              ))}
+              {form.discipline_procedures.includes('Other') && (
+                <div className="ml-6">
+                  <Input
+                    className="text-sm h-8"
+                    placeholder="Please specify..."
+                    value={form.discipline_other}
+                    onChange={e => setField('discipline_other', e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Administration Action */}
-          <div>
-            <label className="block text-sm font-semibold mb-3">Administration Action</label>
-            <div className="space-y-2">
-              {ADMIN_ACTIONS.map((action, idx) => (
-                <label key={idx} className="flex items-start gap-2 cursor-pointer">
-                  <Checkbox
-                    checked={idx === 0 ? form.principal_discussed : form.conference_needed}
-                    onCheckedChange={() => {
-                      if (idx === 0) setForm({...form, principal_discussed: !form.principal_discussed});
-                      else setForm({...form, conference_needed: !form.conference_needed});
-                    }}
-                  />
-                  <span className="text-sm">{action}</span>
-                </label>
+          <div className="space-y-3">
+            <SectionHeader title="Administration Action" />
+            <div className="space-y-2.5 pt-1 px-1">
+              {ADMIN_ACTIONS.map(a => (
+                <CheckItem
+                  key={a}
+                  label={a}
+                  checked={form.admin_actions.includes(a)}
+                  onChange={() => toggleCheck('admin_actions', a)}
+                />
               ))}
+              {form.admin_actions.includes('Other') && (
+                <div className="ml-6 space-y-2">
+                  <Input
+                    className="text-sm h-8"
+                    placeholder="Please specify..."
+                    value={form.admin_other}
+                    onChange={e => setField('admin_other', e.target.value)}
+                  />
+                  <Textarea
+                    rows={2}
+                    placeholder="Additional details..."
+                    value={form.additional_notes}
+                    onChange={e => setField('additional_notes', e.target.value)}
+                    className="text-sm resize-none"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Other Action */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Other:</label>
-            <Textarea
-              value={form.other_action}
-              onChange={(e) => setForm({...form, other_action: e.target.value})}
-              placeholder="Additional action taken..."
-              className="min-h-16"
-            />
+          {/* Additional notes if no Other checked */}
+          {!form.admin_actions.includes('Other') && (
+            <div>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Additional Notes</label>
+              <Textarea
+                rows={2}
+                placeholder="Any additional details..."
+                value={form.additional_notes}
+                onChange={e => setField('additional_notes', e.target.value)}
+                className="resize-none"
+              />
+            </div>
+          )}
+
+          {/* Parent Signature */}
+          <div className="border-t border-slate-200 pt-5 space-y-3">
+            <SectionHeader title="Parent Signature" />
+            <p className="text-xs text-slate-500 px-1">
+              Once submitted, the parent will receive a notification to review and digitally sign this report.
+            </p>
           </div>
 
-          {/* Buttons */}
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          {/* Actions */}
+          <div className="flex gap-3">
+            <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Cancel</Button>
             <Button
-              className="bg-slate-900 hover:bg-slate-800"
+              className="flex-1 bg-slate-900 hover:bg-slate-800"
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={!form.student_id || saving}
             >
-              {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              Submit Report
+              {saving ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Submitting...</> : 'Submit Behavior Report'}
             </Button>
           </div>
         </div>
