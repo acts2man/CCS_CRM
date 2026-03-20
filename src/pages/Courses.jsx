@@ -15,6 +15,7 @@ const GRADES = ['K','1','2','3','4','5','6','7','8','9','10','11','12'];
 export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [sections, setSections] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -25,6 +26,8 @@ export default function Courses() {
   useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
+    const currentUser = await base44.auth.me();
+    setUser(currentUser);
     const [c, s] = await Promise.all([base44.entities.Course.list(), base44.entities.ClassSection.list()]);
     setCourses(c);
     setSections(s);
@@ -59,12 +62,25 @@ export default function Courses() {
 
   if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="h-8 w-8 animate-spin text-blue-600" /></div>;
 
+  const isTeacher = user?.role === 'teacher';
+  if (isTeacher) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <BookOpen className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+          <p className="text-gray-500 font-medium">Admin only</p>
+          <p className="text-sm text-gray-400 mt-1">Teachers manage classes in the Gradebook module.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="border-b bg-white px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Course Catalog</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage courses offered at Calvary Christian School</p>
+          <p className="text-sm text-gray-500 mt-1">Reference only — Classes are now the primary structure</p>
         </div>
         <Button className="bg-slate-900 hover:bg-slate-800" onClick={openAdd}><Plus className="h-4 w-4 mr-2" /> Add Course</Button>
       </div>
