@@ -10,6 +10,7 @@ import { Plus, Search, FileText, Send, Trash2, School, Baby, BookOpen, Loader2 }
 import CreateTemplateModal from '@/components/documents/CreateTemplateModal';
 import SendDocumentModal from '@/components/documents/SendDocumentModal';
 import AccidentReportModal from '@/components/documents/AccidentReportModal';
+import BehaviorReportModal from '@/components/documents/BehaviorReportModal';
 import { useToast } from '@/components/ui/use-toast';
 
 const TEMPLATE_TYPE_LABELS = {
@@ -40,6 +41,7 @@ export default function Documents() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(null);
   const [showAccidentReport, setShowAccidentReport] = useState(false);
+  const [showBehaviorReport, setShowBehaviorReport] = useState(false);
 
   useEffect(() => { loadData(); }, []);
 
@@ -88,6 +90,10 @@ export default function Documents() {
           <p className="text-gray-600 mt-1">Manage templates and send documents to students</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowBehaviorReport(true)}>
+            <FileText className="h-4 w-4 mr-2" />
+            Behavior Report
+          </Button>
           <Button variant="outline" onClick={() => setShowAccidentReport(true)}>
             <FileText className="h-4 w-4 mr-2" />
             Accident Report
@@ -170,6 +176,8 @@ export default function Documents() {
                        onClick={() => {
                          if (template.template_type === 'accident_report') {
                            setShowAccidentReport(true);
+                         } else if (template.template_type === 'behavior_report') {
+                           setShowBehaviorReport(true);
                          } else {
                            setSendTemplate(template);
                          }
@@ -258,6 +266,12 @@ export default function Documents() {
       <AccidentReportModal
         open={showAccidentReport}
         onOpenChange={setShowAccidentReport}
+        students={students}
+        onSent={loadData}
+      />
+      <BehaviorReportModal
+        open={showBehaviorReport}
+        onOpenChange={setShowBehaviorReport}
         students={students}
         onSent={loadData}
       />
