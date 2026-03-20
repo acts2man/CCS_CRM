@@ -38,6 +38,7 @@ export default function Documents() {
   const [sentDocs, setSentDocs] = useState([]);
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -52,6 +53,8 @@ export default function Documents() {
 
   const loadData = async () => {
     setLoading(true);
+    const currentUser = await base44.auth.me();
+    setUser(currentUser);
     const [tmplData, docsData, studentsData, teachersData] = await Promise.all([
       base44.entities.DocumentTemplate.filter({ is_active: true }, '-created_date', 100),
       base44.entities.StudentDocument.list('-created_date', 200),
@@ -75,7 +78,10 @@ export default function Documents() {
   const filteredTemplates = templates.filter(t => {
     const matchSearch = !searchTerm || t.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchCat = categoryFilter === 'all' || t.category === categoryFilter;
-    return matchSearch && matchCat;
+    const isTeacher = user?.role === 'teacher';
+    const isAdminOnly = ['suspension_notice', 'enrollment_form'].includes(t.template_type);
+    const isVisible = !isTeacher || !isAdminOnly;
+    return matchSearch && matchCat && isVisible;
   });
 
   const getStudentName = (id) => {
