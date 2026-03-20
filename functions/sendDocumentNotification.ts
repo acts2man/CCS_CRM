@@ -216,14 +216,19 @@ Deno.serve(async (req) => {
     // Send SMS via Pingram
     if (parent.phone) {
       const smsBody = buildSMS(copy, parentName, studentName, doc.title, submittedBy);
-      await fetch('https://api.pingroom.com/v1/sms/send', {
+      // Normalize phone to E.164 format (+1XXXXXXXXXX)
+      const digits = parent.phone.replace(/\D/g, '');
+      const formattedPhone = digits.startsWith('1') ? `+${digits}` : `+1${digits}`;
+      const smsResp = await fetch('https://api.pingroom.com/v1/sms/send', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${PINGRAM_API_KEY}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ to: parent.phone, message: smsBody }),
+        body: JSON.stringify({ to: formattedPhone, message: smsBody }),
       });
+      const smsResult = await smsResp.json().catch(() => ({}));
+      console.log('Pingram SMS result:', JSON.stringify(smsResult));
       smsCount++;
     }
   }
