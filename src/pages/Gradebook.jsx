@@ -4,16 +4,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Plus, BookOpen, ChevronRight, Settings } from 'lucide-react';
+import { Loader2, Plus, BookOpen, AlertCircle } from 'lucide-react';
 import GradebookView from '@/components/gradebook/GradebookView';
-import ClassSetupModal from '@/components/gradebook/ClassSetupModal';
 
 export default function Gradebook() {
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showSetup, setShowSetup] = useState(false);
   const [schoolYear, setSchoolYear] = useState('2025-2026');
 
   useEffect(() => { loadData(); }, [schoolYear]);
@@ -47,21 +45,16 @@ export default function Gradebook() {
       <div className="border-b bg-white px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gradebook</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage assignments, grades, and grade categories per class</p>
+          <p className="text-sm text-gray-500 mt-1">Enter and view grades for your classes</p>
         </div>
-        <div className="flex gap-3 items-center">
-          <Select value={schoolYear} onValueChange={setSchoolYear}>
-            <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="2025-2026">2025–2026</SelectItem>
-              <SelectItem value="2024-2025">2024–2025</SelectItem>
-              <SelectItem value="2026-2027">2026–2027</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button className="bg-slate-900 hover:bg-slate-800" onClick={() => setShowSetup(true)}>
-            <Plus className="h-4 w-4 mr-2" /> New Class
-          </Button>
-        </div>
+        <Select value={schoolYear} onValueChange={setSchoolYear}>
+          <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="2024-2025">2024–2025</SelectItem>
+            <SelectItem value="2025-2026">2025–2026</SelectItem>
+            <SelectItem value="2026-2027">2026–2027</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex h-[calc(100vh-130px)]">
@@ -103,7 +96,6 @@ export default function Gradebook() {
         </div>
       </div>
 
-      {showSetup && <ClassSetupModal onClose={() => setShowSetup(false)} onCreated={loadData} />}
     </div>
   );
 }
