@@ -62,7 +62,7 @@ function SectionHeader({ title }) {
   );
 }
 
-export default function BehaviorReportModal({ open, onOpenChange, students, onSent }) {
+export default function BehaviorReportModal({ open, onOpenChange, students, teachers = [], onSent }) {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -167,7 +167,16 @@ export default function BehaviorReportModal({ open, onOpenChange, students, onSe
             </div>
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Teacher</label>
-              <Input value={form.teacher} onChange={e => setField('teacher', e.target.value)} placeholder="Teacher name" className="h-10" />
+              <Select value={form.teacher} onValueChange={v => setField('teacher', v)}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select teacher..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {teachers.map(t => (
+                    <SelectItem key={t.id} value={`${t.first_name} ${t.last_name}`}>{t.first_name} {t.last_name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -262,10 +271,12 @@ export default function BehaviorReportModal({ open, onOpenChange, students, onSe
             </div>
           )}
 
-          {/* Footer note */}
-          <div className="border-t border-slate-200 pt-4 flex justify-between text-xs text-slate-400 font-medium">
-            <span>White Copy: Parent</span>
-            <span>Yellow Copy: Office</span>
+          {/* Parent Signature */}
+          <div className="border-t border-slate-200 pt-5 space-y-3">
+            <SectionHeader title="Parent Signature" />
+            <p className="text-xs text-slate-500 px-1">
+              Once submitted, the parent will receive a notification to review and digitally sign this report.
+            </p>
           </div>
 
           {/* Actions */}
