@@ -35,6 +35,7 @@ export default function Documents() {
   const [templates, setTemplates] = useState([]);
   const [sentDocs, setSentDocs] = useState([]);
   const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -47,14 +48,16 @@ export default function Documents() {
 
   const loadData = async () => {
     setLoading(true);
-    const [tmplData, docsData, studentsData] = await Promise.all([
+    const [tmplData, docsData, studentsData, teachersData] = await Promise.all([
       base44.entities.DocumentTemplate.filter({ is_active: true }, '-created_date', 100),
       base44.entities.StudentDocument.list('-created_date', 200),
       base44.entities.Student.filter({ enrollment_status: 'active' }, '', 200),
+      base44.entities.Teacher.filter({ status: 'Active' }, '', 100),
     ]);
     setTemplates(tmplData);
     setSentDocs(docsData);
     setStudents(studentsData);
+    setTeachers(teachersData);
     setLoading(false);
   };
 
@@ -273,6 +276,7 @@ export default function Documents() {
         open={showBehaviorReport}
         onOpenChange={setShowBehaviorReport}
         students={students}
+        teachers={teachers}
         onSent={loadData}
       />
     </div>
