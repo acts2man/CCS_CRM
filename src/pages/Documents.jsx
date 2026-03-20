@@ -96,24 +96,10 @@ export default function Documents() {
           <h1 className="text-3xl font-bold">Document Library</h1>
           <p className="text-gray-600 mt-1">Manage templates and send documents to students</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowBehaviorReport(true)}>
-            <FileText className="h-4 w-4 mr-2" />
-            Behavior Report Preschool
-          </Button>
-          <Button variant="outline" onClick={() => setShowSchoolBehaviorReport(true)}>
-            <FileText className="h-4 w-4 mr-2" />
-            Behavior Report School
-          </Button>
-          <Button variant="outline" onClick={() => setShowAccidentReport(true)}>
-            <FileText className="h-4 w-4 mr-2" />
-            Accident Report
-          </Button>
-          <Button className="bg-slate-900 hover:bg-slate-800" onClick={() => setShowCreateModal(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Template
-          </Button>
-        </div>
+        <Button className="bg-slate-900 hover:bg-slate-800" onClick={() => setShowCreateModal(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          New Template
+        </Button>
       </div>
 
       <Tabs defaultValue="templates">
