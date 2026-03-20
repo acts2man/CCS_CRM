@@ -78,8 +78,6 @@ export default function BehaviorReportModal({ open, onOpenChange, students, teac
     discipline_other: '',
     admin_actions: [],
     admin_other: '',
-    additional_notes: '',
-    parent_signature: '',
   });
 
   const setField = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -104,7 +102,6 @@ export default function BehaviorReportModal({ open, onOpenChange, students, teac
       submitted_by: user.email,
       submitted_by_name: user.full_name,
       form_data: { ...form },
-      notes: form.additional_notes,
       parent_notified: false,
       status: 'submitted',
     });
@@ -131,7 +128,7 @@ export default function BehaviorReportModal({ open, onOpenChange, students, teac
           {/* Student Info Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="col-span-2">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Student Name *</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Name *</label>
               <Select value={form.student_id} onValueChange={v => {
                 const s = students.find(st => st.id === v);
                 setForm(f => ({ ...f, student_id: v, grade: s?.grade_level || f.grade }));
@@ -141,14 +138,14 @@ export default function BehaviorReportModal({ open, onOpenChange, students, teac
                 </SelectTrigger>
                 <SelectContent>
                   {students.map(s => (
-                    <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name} — Grade {s.grade_level}</SelectItem>
+                    <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">BR #</label>
-              <Input value={form.br_number} onChange={e => setField('br_number', e.target.value)} placeholder="e.g. 042" className="h-10" />
+              <Input value={form.br_number} onChange={e => setField('br_number', e.target.value)} placeholder="e.g. 001" className="h-10" />
             </div>
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Date</label>
@@ -157,10 +154,6 @@ export default function BehaviorReportModal({ open, onOpenChange, students, teac
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Time</label>
-              <Input value={form.time} onChange={e => setField('time', e.target.value)} placeholder="e.g. 10:30 AM" className="h-10" />
-            </div>
             <div>
               <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Grade</label>
               <Input value={form.grade} onChange={e => setField('grade', e.target.value)} placeholder="e.g. PreK" className="h-10" />
@@ -178,11 +171,15 @@ export default function BehaviorReportModal({ open, onOpenChange, students, teac
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Time</label>
+              <Input value={form.time} onChange={e => setField('time', e.target.value)} placeholder="e.g. 10:30 AM" className="h-10" />
+            </div>
           </div>
 
           <div>
             <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Location</label>
-            <Input value={form.location} onChange={e => setField('location', e.target.value)} placeholder="e.g. Classroom, Playground, Cafeteria..." className="h-10" />
+            <Input value={form.location} onChange={e => setField('location', e.target.value)} placeholder="e.g. Classroom, Playground..." className="h-10" />
           </div>
 
           {/* Description of Behavior Problems */}
@@ -238,42 +235,24 @@ export default function BehaviorReportModal({ open, onOpenChange, students, teac
                 />
               ))}
               {form.admin_actions.includes('Other') && (
-                <div className="ml-6 space-y-2">
+                <div className="ml-6">
                   <Input
                     className="text-sm h-8"
                     placeholder="Please specify..."
                     value={form.admin_other}
                     onChange={e => setField('admin_other', e.target.value)}
                   />
-                  <Textarea
-                    rows={2}
-                    placeholder="Additional details..."
-                    value={form.additional_notes}
-                    onChange={e => setField('additional_notes', e.target.value)}
-                    className="text-sm resize-none"
-                  />
                 </div>
               )}
             </div>
           </div>
 
-          {/* Additional notes if no Other checked */}
-          {!form.admin_actions.includes('Other') && (
-            <div>
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-wide block mb-1">Additional Notes</label>
-              <Textarea
-                rows={2}
-                placeholder="Any additional details..."
-                value={form.additional_notes}
-                onChange={e => setField('additional_notes', e.target.value)}
-                className="resize-none"
-              />
-            </div>
-          )}
-
           {/* Parent Signature */}
           <div className="border-t border-slate-200 pt-5 space-y-3">
             <SectionHeader title="Parent Signature" />
+            <p className="text-xs text-slate-500 px-1">
+              White Copy: Parent | Yellow Copy: Office
+            </p>
             <p className="text-xs text-slate-500 px-1">
               Once submitted, the parent will receive a notification to review and digitally sign this report.
             </p>
