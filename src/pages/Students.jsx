@@ -172,26 +172,18 @@ export default function Students() {
                     </div>
                   </div>
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
                       <Button variant="ghost" className="h-8 w-8 p-0">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link to={createPageUrl(`StudentProfile?id=${student.id}`)} className="flex items-center w-full">
-                          <Eye className="mr-2 h-4 w-4" /><span>View Profile</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleEditStudent(student)}>
+                      <DropdownMenuItem onClick={(e) => { e.preventDefault(); handleEditStudent(student); }}>
                         <Edit className="mr-2 h-4 w-4" /><span>Edit</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <FileText className="mr-2 h-4 w-4" /><span>Report Card</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         className="text-red-600"
-                        onClick={() => handleDeleteStudent(student.id)}
+                        onClick={(e) => { e.preventDefault(); handleDeleteStudent(student.id); }}
                       >
                         <Trash className="mr-2 h-4 w-4" /><span>Delete</span>
                       </DropdownMenuItem>
@@ -228,6 +220,7 @@ export default function Students() {
                 </div>
               </CardContent>
             </Card>
+            </Link>
           ))}
         </div>
       )}
