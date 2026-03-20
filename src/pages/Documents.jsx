@@ -40,9 +40,6 @@ export default function Documents() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(null);
-  const [showAccidentReport, setShowAccidentReport] = useState(false);
-  const [showBehaviorReport, setShowBehaviorReport] = useState(false);
-  const [showSchoolBehaviorReport, setShowSchoolBehaviorReport] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
 
   useEffect(() => { loadData(); }, []);
