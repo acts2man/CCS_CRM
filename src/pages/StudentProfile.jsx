@@ -226,6 +226,7 @@ export default function StudentProfile() {
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="parents">Parents</TabsTrigger>
           <TabsTrigger value="medical">Medical Notes</TabsTrigger>
         </TabsList>
 
