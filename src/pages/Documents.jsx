@@ -164,19 +164,7 @@ export default function Documents() {
                       <Button
                        size="sm"
                        className="flex-1 bg-slate-900 hover:bg-slate-800"
-                       onClick={() => {
-                         if (template.template_type === 'accident_report') {
-                           setShowAccidentReport(true);
-                         } else if (template.template_type === 'behavior_report') {
-                           if (template.category === 'preschool') {
-                             setShowBehaviorReport(true);
-                           } else {
-                             setShowSchoolBehaviorReport(true);
-                           }
-                         } else {
-                           setSendTemplate(template);
-                         }
-                       }}
+                       onClick={() => setSendTemplate(template)}
                       >
                         <Send className="h-3 w-3 mr-1" />
                         Send to Student
