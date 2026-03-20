@@ -173,26 +173,38 @@ export default function Documents() {
                       {template.require_acknowledgment && <span className="px-2 py-0.5 bg-orange-50 text-orange-700 rounded">✋ Requires ACK</span>}
                     </div>
                     <div className="flex gap-2">
-                      <Button
-                       size="sm"
-                       className="flex-1 bg-slate-900 hover:bg-slate-800"
-                       onClick={() => {
-                         if (template.template_type === 'accident_report') {
-                           setShowAccidentReport(true);
-                         } else if (template.template_type === 'behavior_report') {
-                           if (template.category === 'preschool') {
-                             setShowBehaviorReport(true);
-                           } else {
-                             setShowSchoolBehaviorReport(true);
-                           }
-                         } else {
-                           setSendTemplate(template);
-                         }
-                       }}
-                      >
-                        <Send className="h-3 w-3 mr-1" />
-                        Send to Student
-                      </Button>
+                      {template.template_type === 'suspension_notice' && user?.role !== 'admin' ? (
+                        <Button
+                          size="sm"
+                          disabled
+                          title="Only admins can send suspension notices"
+                          className="flex-1"
+                        >
+                          <Send className="h-3 w-3 mr-1" />
+                          Admin Only
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          className="flex-1 bg-slate-900 hover:bg-slate-800"
+                          onClick={() => {
+                            if (template.template_type === 'accident_report') {
+                              setShowAccidentReport(true);
+                            } else if (template.template_type === 'behavior_report') {
+                              if (template.category === 'preschool') {
+                                setShowBehaviorReport(true);
+                              } else {
+                                setShowSchoolBehaviorReport(true);
+                              }
+                            } else {
+                              setSendTemplate(template);
+                            }
+                          }}
+                        >
+                          <Send className="h-3 w-3 mr-1" />
+                          Send to Student
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         variant="ghost"

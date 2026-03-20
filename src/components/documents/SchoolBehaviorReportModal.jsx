@@ -37,6 +37,9 @@ const DISCIPLINE_PROCEDURES = [
 const ADMIN_ACTIONS = [
   'Principal has discussed this problem with your child.',
   'Parent/Teacher/Principal Conference needs to be scheduled. Please call for appointment.',
+  'In-class suspension',
+  'After-school detention',
+  'Warning issued',
   'Other',
 ];
 
@@ -79,11 +82,13 @@ export default function SchoolBehaviorReportModal({ open, onOpenChange, students
     teacher: '',
     location: '',
     behavior_problems: [],
+    behavior_other: '',
     discipline_procedures: [],
     discipline_other: '',
     admin_actions: [],
     admin_other: '',
     additional_notes: '',
+    response_required: false,
     parent_signature: '',
   });
 
@@ -102,6 +107,13 @@ export default function SchoolBehaviorReportModal({ open, onOpenChange, students
     const user = await base44.auth.me();
     const student = students.find(s => s.id === form.student_id);
 
+    const communicationLog = [{
+      type: 'submitted',
+      timestamp: new Date().toISOString(),
+      by: user.full_name,
+      details: 'Behavior report submitted'
+    }];
+
     const doc = await base44.entities.StudentDocument.create({
       student_id: form.student_id,
       template_type: 'behavior_report',
@@ -110,13 +122,18 @@ export default function SchoolBehaviorReportModal({ open, onOpenChange, students
       submitted_by_name: user.full_name,
       form_data: { ...form },
       notes: form.additional_notes,
+      response_required: form.response_required,
+      communication_log: communicationLog,
       parent_notified: false,
       status: 'submitted',
     });
 
     await base44.functions.invoke('sendDocumentNotification', { studentDocumentId: doc.id }).catch(() => {});
 
-    toast({ title: 'Behavior Report submitted', description: `Report filed for ${student?.first_name} ${student?.last_name}.` });
+    toast({ 
+      title: 'Behavior Report submitted', 
+      description: `Report filed for ${student?.first_name} ${student?.last_name}${form.response_required ? ' (Response required)' : ''}.` 
+    });
     setSaving(false);
     onSent();
     onOpenChange(false);
@@ -203,6 +220,14 @@ export default function SchoolBehaviorReportModal({ open, onOpenChange, students
                 />
               ))}
             </div>
+            <div className="ml-6 pt-2">
+              <Input
+                placeholder="Other behavior issues (if applicable)..."
+                value={form.behavior_other}
+                onChange={e => setField('behavior_other', e.target.value)}
+                className="text-sm h-8"
+              />
+            </div>
           </div>
 
           {/* Classroom Discipline Procedure */}
@@ -275,6 +300,28 @@ export default function SchoolBehaviorReportModal({ open, onOpenChange, students
               />
             </div>
           )}
+
+          {/* Workflow Options */}
+          <div className="border-t border-slate-200 pt-5 space-y-3">
+            <SectionHeader title="Workflow & Follow-up" />
+            <label className="flex items-center gap-2.5 cursor-pointer px-1">
+              <div
+                onClick={() => setField('response_required', !form.response_required)}
+                className={`w-4 h-4 border-2 rounded-sm flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer
+                  ${form.response_required ? 'bg-slate-900 border-slate-900' : 'border-slate-400 hover:border-slate-700'}`}
+              >
+                {form.response_required && (
+                  <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </div>
+              <span className="text-sm text-slate-800 font-medium">Require parent response (track confirmation)</span>
+            </label>
+            <p className="text-xs text-slate-500 px-1 ml-6">
+              If enabled, parent must acknowledge receipt and confirm they reviewed this report. Follow-up notifications will be sent if no response within 3 days.
+            </p>
+          </div>
 
           {/* Parent Signature */}
           <div className="border-t border-slate-200 pt-5 space-y-3">
