@@ -12,6 +12,7 @@ import SendDocumentModal from '@/components/documents/SendDocumentModal';
 import AccidentReportModal from '@/components/documents/AccidentReportModal';
 import BehaviorReportModal from '@/components/documents/BehaviorReportModal';
 import { useToast } from '@/components/ui/use-toast';
+import DocumentDetailModal from '@/components/students/DocumentDetailModal';
 
 const TEMPLATE_TYPE_LABELS = {
   behavior_report: 'Behavior Report',
@@ -43,6 +44,7 @@ export default function Documents() {
   const [sendTemplate, setSendTemplate] = useState(null);
   const [showAccidentReport, setShowAccidentReport] = useState(false);
   const [showBehaviorReport, setShowBehaviorReport] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState(null);
 
   useEffect(() => { loadData(); }, []);
 
@@ -218,7 +220,7 @@ export default function Documents() {
               </Card>
             ) : (
               sentDocs.map(doc => (
-                <Card key={doc.id}>
+                <Card key={doc.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setSelectedDoc(doc)}>
                   <CardContent className="py-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -278,6 +280,11 @@ export default function Documents() {
         students={students}
         teachers={teachers}
         onSent={loadData}
+      />
+      <DocumentDetailModal
+        doc={selectedDoc}
+        open={!!selectedDoc}
+        onClose={() => setSelectedDoc(null)}
       />
     </div>
   );
