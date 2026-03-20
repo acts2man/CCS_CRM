@@ -1,22 +1,27 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { FileText, User, Calendar, CheckCircle } from "lucide-react";
+import { FileText, User, Calendar, CheckCircle, MessageSquare, AlertCircle, Clock } from "lucide-react";
 
 export default function DocumentDetailModal({ doc, open, onClose }) {
   if (!doc) return null;
 
-  const statusColor = doc.parent_acknowledged
-    ? 'bg-green-100 text-green-800'
-    : doc.parent_notified
-    ? 'bg-blue-100 text-blue-800'
-    : 'bg-gray-100 text-gray-600';
+  const getStatusColor = () => {
+    if (doc.parent_responded) return 'bg-purple-100 text-purple-800';
+    if (doc.parent_acknowledged) return 'bg-green-100 text-green-800';
+    if (doc.parent_notified) return 'bg-blue-100 text-blue-800';
+    return 'bg-gray-100 text-gray-600';
+  };
 
-  const statusLabel = doc.parent_acknowledged
-    ? 'Acknowledged'
-    : doc.parent_notified
-    ? 'Parent Notified'
-    : 'Submitted';
+  const getStatusLabel = () => {
+    if (doc.parent_responded) return 'Responded';
+    if (doc.parent_acknowledged) return 'Acknowledged';
+    if (doc.parent_notified) return 'Parent Notified';
+    return 'Submitted';
+  };
+
+  const statusColor = getStatusColor();
+  const statusLabel = getStatusLabel();
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -79,11 +84,61 @@ export default function DocumentDetailModal({ doc, open, onClose }) {
             </div>
           )}
 
+          {/* Response Required Alert */}
+          {doc.response_required && !doc.parent_responded && (
+            <div className="flex items-start gap-2 text-sm text-orange-700 bg-orange-50 rounded-lg p-3">
+              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <span>Response required from parent. Follow-up will be sent if no response within 3 days.</span>
+            </div>
+          )}
+
           {/* Parent acknowledgment */}
           {doc.parent_acknowledged && doc.parent_acknowledged_at && (
             <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 rounded-lg p-3">
               <CheckCircle className="h-4 w-4" />
               <span>Parent acknowledged on {new Date(doc.parent_acknowledged_at).toLocaleDateString()}</span>
+            </div>
+          )}
+
+          {/* Parent Response */}
+          {doc.parent_responded && doc.parent_response && (
+            <div>
+              <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                <MessageSquare className="h-4 w-4" />
+                Parent Response
+              </h3>
+              <div className="bg-purple-50 rounded-lg p-3 text-sm text-gray-700 border-l-4 border-purple-400">
+                <p>{doc.parent_response}</p>
+                {doc.parent_responded_at && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Received {new Date(doc.parent_responded_at).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Communication Log */}
+          {doc.communication_log && doc.communication_log.length > 0 && (
+            <div>
+              <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                Communication History
+              </h3>
+              <div className="space-y-2">
+                {doc.communication_log
+                  .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                  .map((log, idx) => (
+                    <div key={idx} className="bg-gray-50 rounded-lg p-3 text-sm border-l-4 border-slate-300">
+                      <div className="flex items-start justify-between">
+                        <div className="font-medium text-gray-900 capitalize">{log.type?.replace(/_/g, ' ')}</div>
+                        <span className="text-xs text-gray-500">{new Date(log.timestamp).toLocaleDateString()}</span>
+                      </div>
+                      <div className="text-xs text-gray-600 mt-1">{log.details}</div>
+                      {log.by && <div className="text-xs text-gray-500 mt-1">By: {log.by}</div>}
+                    </div>
+                  ))}
+              </div>
             </div>
           )}
 
