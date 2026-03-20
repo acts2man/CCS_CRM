@@ -87,11 +87,8 @@ export default function Students() {
       student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGrade = filterGrade === null || student.grade_level === filterGrade;
-
-      // Teachers only see grades 7 and higher
-      const teacherGradeMatch = user?.role !== 'teacher' || ['7', '8', '9', '10', '11', '12'].includes(student.grade_level);
     
-    return matchesSearch && matchesGrade && teacherGradeMatch;
+    return matchesSearch && matchesGrade;
   });
 
   if (loading) {
@@ -130,18 +127,20 @@ export default function Students() {
           />
         </div>
         <div className="flex gap-2">
-          <select
-            className="px-3 py-2 bg-white border border-gray-200 rounded-md text-sm"
-            value={filterGrade || ""}
-            onChange={(e) => setFilterGrade(e.target.value || null)}
-          >
-            <option value="">All Grades</option>
-            {grades.map((grade) => (
-              <option key={grade} value={grade}>Grade {grade}</option>
-            ))}
-          </select>
-          <Button variant="outline">Export</Button>
-        </div>
+           {user?.role !== 'teacher' && (
+             <select
+               className="px-3 py-2 bg-white border border-gray-200 rounded-md text-sm"
+               value={filterGrade || ""}
+               onChange={(e) => setFilterGrade(e.target.value || null)}
+             >
+               <option value="">All Grades</option>
+               {grades.map((grade) => (
+                 <option key={grade} value={grade}>Grade {grade}</option>
+               ))}
+             </select>
+           )}
+           <Button variant="outline">Export</Button>
+         </div>
       </div>
 
       {filteredStudents.length === 0 ? (
