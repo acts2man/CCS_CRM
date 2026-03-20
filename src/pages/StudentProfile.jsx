@@ -460,6 +460,12 @@ export default function StudentProfile() {
         student={student}
         onStudentUpdated={handleStudentUpdated}
       />
+
+      <DocumentDetailModal
+        doc={selectedDoc}
+        open={!!selectedDoc}
+        onClose={() => setSelectedDoc(null)}
+      />
     </div>
   );
 }
