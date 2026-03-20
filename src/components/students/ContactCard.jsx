@@ -36,10 +36,10 @@ export default function ContactCard({ student, parents, onEmailClick, onSMSClick
         <div className="space-y-3">
           {parents.filter(p => p.is_primary_contact).length === 0
             ? parents.map((parent) => (
-                <ContactItem key={parent.id} parent={parent} onCall={handleCall} onEmail={handleEmail} onMessage={handleMessage} />
+                <ContactItem key={parent.id} parent={parent} onCall={handleCall} onEmailClick={onEmailClick} onSMSClick={onSMSClick} />
               ))
             : parents.filter(p => p.is_primary_contact).map((parent) => (
-                <ContactItem key={parent.id} parent={parent} onCall={handleCall} onEmail={handleEmail} onMessage={handleMessage} />
+                <ContactItem key={parent.id} parent={parent} onCall={handleCall} onEmailClick={onEmailClick} onSMSClick={onSMSClick} />
               ))}
         </div>
       </div>
@@ -105,7 +105,7 @@ export default function ContactCard({ student, parents, onEmailClick, onSMSClick
   );
 }
 
-function ContactItem({ parent, onCall, onEmail, onMessage }) {
+function ContactItem({ parent, onCall, onEmailClick, onSMSClick }) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="pt-6">
