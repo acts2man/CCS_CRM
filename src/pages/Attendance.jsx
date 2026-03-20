@@ -11,8 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Users, UserCheck, UserX, Clock, Search, Save, ChevronLeft, ChevronRight, Settings, Zap, Flame } from 'lucide-react';
+import { Users, UserCheck, UserX, Clock, Search, Save, ChevronLeft, ChevronRight, Settings, Zap, Flame, LogIn } from 'lucide-react';
 import FireDrillMode from '@/components/attendance/FireDrillMode';
+import ClockInOut from '@/components/attendance/ClockInOut';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, getDay } from 'date-fns';
 
 export default function Attendance() {
@@ -239,13 +240,20 @@ export default function Attendance() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="daily" className="w-full">
+      <Tabs defaultValue="class-attendance" className="w-full">
         <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
           <TabsTrigger 
-            value="daily"
+            value="class-attendance"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent"
           >
-            Daily Attendance
+            Class Attendance (Academic)
+          </TabsTrigger>
+          <TabsTrigger 
+            value="clock-in-out"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent"
+          >
+            <LogIn className="h-4 w-4 mr-2" />
+            Clock In / Out (Physical)
           </TabsTrigger>
           <TabsTrigger 
             value="calendar"
@@ -261,11 +269,12 @@ export default function Attendance() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="daily" className="space-y-6 mt-6">
+        <TabsContent value="class-attendance" className="space-y-6 mt-6">
           {/* Take Attendance Section */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-xl font-bold mb-4">Take Attendance</h2>
+              <h2 className="text-xl font-bold mb-4">Classroom Attendance</h2>
+              <p className="text-sm text-gray-600 mb-6">Record student attendance for your class (Present, Absent, Tardy, Excused)</p>
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div>
@@ -400,6 +409,10 @@ export default function Attendance() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="clock-in-out" className="mt-6">
+          <ClockInOut />
         </TabsContent>
 
         <TabsContent value="calendar" className="mt-6">
