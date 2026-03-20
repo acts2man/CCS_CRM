@@ -74,6 +74,15 @@ export default function ClockInOut() {
     setLoading(false);
   };
 
+  const convertTo12Hour = (time24) => {
+    if (!time24) return '—';
+    const [hours, minutes] = time24.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
   const getClockRecord = (studentId) => {
     return clockRecords.find(r => r.student_id === studentId);
   };
@@ -283,7 +292,7 @@ export default function ClockInOut() {
                     <div className="flex gap-4 text-sm">
                       <div className="text-center">
                         <div className="text-xs text-gray-500">Clock In</div>
-                        <div className="font-semibold">{record.clock_in_time || '—'}</div>
+                        <div className="font-semibold">{record.clock_in_time ? convertTo12Hour(record.clock_in_time) : '—'}</div>
                         {record.is_tardy && <Badge className="mt-1 bg-yellow-100 text-yellow-800">Tardy</Badge>}
                       </div>
                       {record.clock_in_time && !record.clock_out_time && (
@@ -297,7 +306,7 @@ export default function ClockInOut() {
                       )}
                       <div className="text-center">
                         <div className="text-xs text-gray-500">Clock Out</div>
-                        <div className="font-semibold">{record.clock_out_time || '—'}</div>
+                        <div className="font-semibold">{record.clock_out_time ? convertTo12Hour(record.clock_out_time) : '—'}</div>
                         {record.clock_out_time && record.duration_minutes && (
                           <Badge className="mt-1 bg-blue-100 text-blue-800">{record.duration_minutes} min</Badge>
                         )}
