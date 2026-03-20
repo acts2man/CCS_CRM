@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Loader2, Search, LogIn, LogOut, History, Edit2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/components/ui/use-toast';
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 const TARDY_CUTOFF = '08:30'; // Default tardy cutoff time
 
