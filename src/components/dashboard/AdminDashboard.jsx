@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, GraduationCap, Calendar, UserCheck } from "lucide-react";
+import { Users, GraduationCap, Calendar, UserCheck, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Progress } from "@/components/ui/progress";
+import ClassesOverview from "@/components/gradebook/ClassesOverview";
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -214,7 +215,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Access Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link to={createPageUrl("Students")}>
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="pt-6">
@@ -222,7 +223,7 @@ export default function AdminDashboard() {
                 <Users className="h-5 w-5 text-blue-600 mr-3" />
                 <div>
                   <div className="font-semibold">Students</div>
-                  <div className="text-sm text-gray-600">Manage student records and information</div>
+                  <div className="text-sm text-gray-600">Manage records</div>
                 </div>
               </div>
             </CardContent>
@@ -236,7 +237,7 @@ export default function AdminDashboard() {
                 <GraduationCap className="h-5 w-5 text-gray-600 mr-3" />
                 <div>
                   <div className="font-semibold">Teachers</div>
-                  <div className="text-sm text-gray-600">Manage teacher profiles and assignments</div>
+                  <div className="text-sm text-gray-600">Manage profiles</div>
                 </div>
               </div>
             </CardContent>
@@ -250,12 +251,31 @@ export default function AdminDashboard() {
                 <Calendar className="h-5 w-5 text-blue-600 mr-3" />
                 <div>
                   <div className="font-semibold">Attendance</div>
-                  <div className="text-sm text-gray-600">View and manage student attendance records</div>
+                  <div className="text-sm text-gray-600">View records</div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </Link>
+
+        <Link to={createPageUrl("Courses")}>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <BookOpen className="h-5 w-5 text-purple-600 mr-3" />
+                <div>
+                  <div className="font-semibold">Classes</div>
+                  <div className="text-sm text-gray-600">Manage classes</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+
+      {/* Classes Overview */}
+      <div className="pt-4">
+        <ClassesOverview />
       </div>
     </div>
   );
