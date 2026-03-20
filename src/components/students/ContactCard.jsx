@@ -1,21 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MessageSquare, User, MapPin, AlertCircle } from "lucide-react";
+import { Phone, Mail, MessageSquare, User, MapPin, AlertCircle, Send } from "lucide-react";
 
-export default function ContactCard({ student, parents }) {
+export default function ContactCard({ student, parents, onEmailClick, onSMSClick }) {
   const handleCall = (phone) => {
     if (phone) window.location.href = `tel:${phone}`;
-  };
-
-  const handleEmail = (email) => {
-    if (email) window.location.href = `mailto:${email}`;
-  };
-
-  const handleMessage = (name) => {
-    // Placeholder for messaging integration
-    alert(`Message feature for ${name} coming soon`);
   };
 
   if (!parents || parents.length === 0) {
@@ -166,7 +157,7 @@ function ContactItem({ parent, onCall, onEmail, onMessage }) {
                 size="sm"
                 variant="outline"
                 title="Call parent"
-                onClick={() => onCall(parent.phone)}
+                onClick={() => handleCall(parent.phone)}
               >
                 <Phone className="h-4 w-4" />
               </Button>
@@ -174,21 +165,23 @@ function ContactItem({ parent, onCall, onEmail, onMessage }) {
             {parent.email && (
               <Button
                 size="sm"
-                variant="outline"
-                title="Email parent"
-                onClick={() => onEmail(parent.email)}
+                className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-600"
+                title="Send email"
+                onClick={() => onEmailClick && onEmailClick(parent)}
               >
-                <Mail className="h-4 w-4" />
+                <Send className="h-4 w-4" />
               </Button>
             )}
-            <Button
-              size="sm"
-              variant="outline"
-              title="Send message"
-              onClick={() => onMessage(`${parent.first_name} ${parent.last_name}`)}
-            >
-              <MessageSquare className="h-4 w-4" />
-            </Button>
+            {parent.phone && (
+              <Button
+                size="sm"
+                className="bg-green-50 hover:bg-green-100 border-green-200 text-green-600"
+                title="Send SMS"
+                onClick={() => onSMSClick && onSMSClick(parent)}
+              >
+                <MessageSquare className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
       </CardContent>
