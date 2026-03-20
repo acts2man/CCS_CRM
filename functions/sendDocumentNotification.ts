@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 import { Resend } from 'npm:resend@4.0.0';
+import { Pingram } from 'npm:pingram';
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 const PINGRAM_API_KEY = Deno.env.get('PINGRAM_API_KEY');
