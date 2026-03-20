@@ -27,6 +27,8 @@ import ParentProfileTab from "@/components/students/ParentProfileTab";
 import StudentBillingTab from "@/components/students/StudentBillingTab";
 import DocumentDetailModal from "@/components/students/DocumentDetailModal";
 import ContactCard from "@/components/students/ContactCard";
+import QuickCommunicationModal from "@/components/students/QuickCommunicationModal";
+import CommunicationHistoryTab from "@/components/students/CommunicationHistoryTab";
 
 export default function StudentProfile() {
   const navigate = useNavigate();
@@ -39,6 +41,8 @@ export default function StudentProfile() {
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const [communicationType, setCommunicationType] = useState(null);
+  const [selectedParent, setSelectedParent] = useState(null);
 
   const urlParams = new URLSearchParams(window.location.search);
   const studentId = urlParams.get('id');
@@ -238,19 +242,31 @@ export default function StudentProfile() {
       {/* Tabs */}
       <Tabs defaultValue="overview" className="w-full">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="enrollment">Class Enrollment</TabsTrigger>
-          <TabsTrigger value="grades">Grades</TabsTrigger>
-          <TabsTrigger value="attendance">Attendance</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="billing">Billing</TabsTrigger>
-          <TabsTrigger value="parents">Parents</TabsTrigger>
-          <TabsTrigger value="medical">Medical Notes</TabsTrigger>
+         <TabsTrigger value="overview">Overview</TabsTrigger>
+         <TabsTrigger value="enrollment">Class Enrollment</TabsTrigger>
+         <TabsTrigger value="grades">Grades</TabsTrigger>
+         <TabsTrigger value="attendance">Attendance</TabsTrigger>
+         <TabsTrigger value="documents">Documents</TabsTrigger>
+         <TabsTrigger value="communications">Communications</TabsTrigger>
+         <TabsTrigger value="billing">Billing</TabsTrigger>
+         <TabsTrigger value="parents">Parents</TabsTrigger>
+         <TabsTrigger value="medical">Medical Notes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 mt-6">
           {/* Contact Information - Prominent Section */}
-          <ContactCard student={student} parents={parents} />
+          <ContactCard
+            student={student}
+            parents={parents}
+            onEmailClick={(parent) => {
+              setSelectedParent(parent);
+              setCommunicationType('email');
+            }}
+            onSMSClick={(parent) => {
+              setSelectedParent(parent);
+              setCommunicationType('sms');
+            }}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Student Information */}
@@ -417,6 +433,10 @@ export default function StudentProfile() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="communications" className="mt-6">
+          <CommunicationHistoryTab studentId={studentId} />
+        </TabsContent>
+
         <TabsContent value="billing" className="mt-6">
           <StudentBillingTab studentId={studentId} studentName={`${student.first_name} ${student.last_name}`} />
         </TabsContent>
@@ -441,6 +461,19 @@ export default function StudentProfile() {
         doc={selectedDoc}
         open={!!selectedDoc}
         onClose={() => setSelectedDoc(null)}
+      />
+
+      <QuickCommunicationModal
+        open={!!communicationType}
+        onOpenChange={(open) => {
+          if (!open) {
+            setCommunicationType(null);
+            setSelectedParent(null);
+          }
+        }}
+        type={communicationType}
+        parent={selectedParent}
+        student={student}
       />
     </div>
   );
