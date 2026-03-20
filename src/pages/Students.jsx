@@ -154,7 +154,7 @@ export default function Students() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredStudents.map((student) => (
             <Link key={student.id} to={createPageUrl(`StudentProfile?id=${student.id}`)} className="block">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
