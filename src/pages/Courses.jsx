@@ -7,30 +7,37 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Plus, BookOpen, Pencil, Trash2, Search } from 'lucide-react';
+import { Loader2, Plus, BookOpen, Pencil, Trash2, Search, Settings } from 'lucide-react';
+import ClassSetupModal from '@/components/gradebook/ClassSetupModal';
+import GradebookView from '@/components/gradebook/GradebookView';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const SUBJECTS = ['english','math','science','history','bible','art','pe','technology','music','other'];
 const GRADES = ['K','1','2','3','4','5','6','7','8','9','10','11','12'];
 
 export default function Courses() {
+  const [classes, setClasses] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [sections, setSections] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [showClassSetup, setShowClassSetup] = useState(false);
+  const [showCourseModal, setShowCourseModal] = useState(false);
   const [editCourse, setEditCourse] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [schoolYear, setSchoolYear] = useState('2025-2026');
   const [form, setForm] = useState({ name: '', code: '', description: '', subject_area: 'english', grade_levels: [], credits: 1 });
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [schoolYear]);
 
   const loadData = async () => {
     const currentUser = await base44.auth.me();
     setUser(currentUser);
-    const [c, s] = await Promise.all([base44.entities.Course.list(), base44.entities.ClassSection.list()]);
+    const [c, cls] = await Promise.all([base44.entities.Course.list(), base44.entities.ClassSection.filter({ school_year: schoolYear })]);
     setCourses(c);
-    setSections(s);
+    setClasses(cls);
+    if (cls.length > 0 && !selectedClass) setSelectedClass(cls[0]);
     setLoading(false);
   };
 
