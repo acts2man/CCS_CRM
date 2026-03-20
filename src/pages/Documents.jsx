@@ -6,12 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Search, FileText, Send, Trash2, School, Baby, BookOpen, Loader2 } from 'lucide-react';
+import { Plus, Search, FileText, Send, Trash2, BookOpen, Loader2 } from 'lucide-react';
 import CreateTemplateModal from '@/components/documents/CreateTemplateModal';
 import SendDocumentModal from '@/components/documents/SendDocumentModal';
-import AccidentReportModal from '@/components/documents/AccidentReportModal';
-import BehaviorReportModal from '@/components/documents/BehaviorReportModal';
-import SchoolBehaviorReportModal from '@/components/documents/SchoolBehaviorReportModal';
 import { useToast } from '@/components/ui/use-toast';
 import DocumentDetailModal from '@/components/students/DocumentDetailModal';
 
