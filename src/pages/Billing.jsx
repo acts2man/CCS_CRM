@@ -18,7 +18,7 @@ export default function Billing() {
   const [students, setStudents] = useState([]);
   const [balances, setBalances] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [selectedStudentFilter, setSelectedStudentFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showAddCharge, setShowAddCharge] = useState(false);
   const [showRecordPayment, setShowRecordPayment] = useState(false);
@@ -47,9 +47,9 @@ export default function Billing() {
   const overdueCount = charges.filter(c => c.status === 'unpaid' && c.due_date && new Date(c.due_date) < new Date()).length;
 
   const filteredCharges = charges.filter(c => {
-    const matchSearch = !search || (c.student_name || '').toLowerCase().includes(search.toLowerCase()) || (c.description || '').toLowerCase().includes(search.toLowerCase());
+    const matchStudent = !selectedStudentFilter || c.student_id === selectedStudentFilter;
     const matchStatus = statusFilter === 'all' || c.status === statusFilter;
-    return matchSearch && matchStatus;
+    return matchStudent && matchStatus;
   });
 
   const chargeTypeColors = {
@@ -163,10 +163,15 @@ export default function Billing() {
             <Card>
               <CardContent className="pt-4">
                 <div className="flex gap-3 mb-4">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input placeholder="Search by student or description..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
-                  </div>
+                  <Select value={selectedStudentFilter} onValueChange={setSelectedStudentFilter}>
+                    <SelectTrigger className="w-56"><SelectValue placeholder="Select a student..." /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={null}>All Students</SelectItem>
+                      {students.map(s => (
+                        <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
                     <SelectContent>
