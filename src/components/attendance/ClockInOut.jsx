@@ -92,7 +92,8 @@ export default function ClockInOut() {
         action: 'clock_in_recorded',
         new_value: clockInTime,
         edited_by: user.id,
-        edited_by_name: user.full_name
+        edited_by_name: user.full_name,
+        edited_at: new Date().toISOString()
       });
     }
     toast({ title: `${student.first_name} clocked in ${isTardy ? '(TARDY)' : ''}` });
@@ -117,7 +118,8 @@ export default function ClockInOut() {
         action: 'clock_out_recorded',
         new_value: clockOutTime,
         edited_by: user.id,
-        edited_by_name: user.full_name
+        edited_by_name: user.full_name,
+        edited_at: new Date().toISOString()
       });
       toast({ title: `${student.first_name} clocked out` });
       await loadData();
@@ -146,6 +148,7 @@ export default function ClockInOut() {
         new_value: editForm.clock_in_time,
         edited_by: user.id,
         edited_by_name: user.full_name,
+        edited_at: new Date().toISOString(),
         reason: editForm.notes
       });
       changedFields = true;
@@ -164,6 +167,7 @@ export default function ClockInOut() {
         new_value: editForm.clock_out_time,
         edited_by: user.id,
         edited_by_name: user.full_name,
+        edited_at: new Date().toISOString(),
         reason: editForm.notes
       });
       changedFields = true;
