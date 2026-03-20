@@ -11,6 +11,7 @@ import CreateTemplateModal from '@/components/documents/CreateTemplateModal';
 import SendDocumentModal from '@/components/documents/SendDocumentModal';
 import AccidentReportModal from '@/components/documents/AccidentReportModal';
 import BehaviorReportModal from '@/components/documents/BehaviorReportModal';
+import SchoolBehaviorReportModal from '@/components/documents/SchoolBehaviorReportModal';
 import { useToast } from '@/components/ui/use-toast';
 import DocumentDetailModal from '@/components/students/DocumentDetailModal';
 
@@ -44,6 +45,7 @@ export default function Documents() {
   const [sendTemplate, setSendTemplate] = useState(null);
   const [showAccidentReport, setShowAccidentReport] = useState(false);
   const [showBehaviorReport, setShowBehaviorReport] = useState(false);
+  const [showSchoolBehaviorReport, setShowSchoolBehaviorReport] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
 
   useEffect(() => { loadData(); }, []);
@@ -97,7 +99,11 @@ export default function Documents() {
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowBehaviorReport(true)}>
             <FileText className="h-4 w-4 mr-2" />
-            Behavior Report
+            Behavior Report Preschool
+          </Button>
+          <Button variant="outline" onClick={() => setShowSchoolBehaviorReport(true)}>
+            <FileText className="h-4 w-4 mr-2" />
+            Behavior Report School
           </Button>
           <Button variant="outline" onClick={() => setShowAccidentReport(true)}>
             <FileText className="h-4 w-4 mr-2" />
@@ -182,7 +188,11 @@ export default function Documents() {
                          if (template.template_type === 'accident_report') {
                            setShowAccidentReport(true);
                          } else if (template.template_type === 'behavior_report') {
-                           setShowBehaviorReport(true);
+                           if (template.category === 'preschool') {
+                             setShowBehaviorReport(true);
+                           } else {
+                             setShowSchoolBehaviorReport(true);
+                           }
                          } else {
                            setSendTemplate(template);
                          }
@@ -279,6 +289,12 @@ export default function Documents() {
         onOpenChange={setShowBehaviorReport}
         students={students}
         teachers={teachers}
+        onSent={loadData}
+      />
+      <SchoolBehaviorReportModal
+        open={showSchoolBehaviorReport}
+        onOpenChange={setShowSchoolBehaviorReport}
+        students={students}
         onSent={loadData}
       />
       <DocumentDetailModal
