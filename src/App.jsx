@@ -120,6 +120,9 @@ const AuthenticatedApp = () => {
       <Route path="/TeacherGradebook" element={<TeacherLayout><TeacherGradebook /></TeacherLayout>} />
       <Route path="/TeacherAttendance" element={<TeacherLayout><TeacherAttendance /></TeacherLayout>} />
       <Route path="/TeacherCommunications" element={<TeacherLayout><TeacherCommunications /></TeacherLayout>} />
+      <Route path="/TeacherProfile" element={<TeacherLayout><TeacherProfile /></TeacherLayout>} />
+      <Route path="/TeacherSettings" element={<TeacherLayout><TeacherSettings /></TeacherLayout>} />
+      <Route path="/StudentDirectory" element={<TeacherLayout><StudentDirectory /></TeacherLayout>} />
       
       <Route path="*" element={<PageNotFound />} />
     </Routes>
