@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function StudentDashboard() {
+  const { impersonatedStudent, stopImpersonation } = useImpersonation();
   const [student, setStudent] = useState(null);
   const [parents, setParents] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -24,7 +25,7 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     loadStudentData();
-  }, []);
+  }, [impersonatedStudent]);
 
   const loadStudentData = async () => {
     try {
