@@ -24,13 +24,16 @@ export default function StudentAssignments() {
 
   const loadAssignments = async () => {
     try {
-      const user = await base44.auth.me();
+      let studentId;
       
-      // Get student record
-      const students = await base44.entities.Student.filter({ email: user.email });
-      if (students.length === 0) return;
-      
-      const studentId = students[0].id;
+      if (impersonatedStudent) {
+        studentId = impersonatedStudent.id;
+      } else {
+        const user = await base44.auth.me();
+        const students = await base44.entities.Student.filter({ email: user.email });
+        if (students.length === 0) return;
+        studentId = students[0].id;
+      }
 
       // Get enrolled classes
       const classes = await base44.entities.ClassSection.list();
