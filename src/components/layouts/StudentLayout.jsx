@@ -87,7 +87,7 @@ export default function StudentLayout({ children }) {
         })}
         <Button 
           onClick={() => base44.auth.logout()}
-          className="w-full justify-start text-slate-700 hover:bg-slate-100 bg-transparent"
+          className="w-full justify-start text-white hover:bg-white/20 bg-transparent"
           variant="ghost"
         >
           <LogOut className="h-5 w-5 flex-shrink-0" />
