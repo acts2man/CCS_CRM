@@ -82,7 +82,9 @@ function App() {
         </Router>
         <Toaster />
         <VisualEditAgent />
+        <ImpersonationBanner />
       </QueryClientProvider>
+      </ImpersonationProvider>
     </AuthProvider>
   )
 }
