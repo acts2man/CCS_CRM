@@ -30,7 +30,7 @@ export default function StudentLayout({ children }) {
   ];
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-gradient-to-b from-slate-50 to-white text-slate-900 border-r border-slate-200">
+    <div className="flex flex-col h-full text-white border-r" style={{ backgroundColor: '#2663EB' }}>
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center">
           <img 
