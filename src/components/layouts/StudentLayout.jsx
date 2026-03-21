@@ -69,7 +69,7 @@ export default function StudentLayout({ children }) {
         </nav>
       </ScrollArea>
 
-      <Separator className="bg-slate-200" />
+      <Separator className="opacity-20" />
 
       <div className="p-2 space-y-1">
         {bottomNavigation.map((item) => {
