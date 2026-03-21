@@ -19,7 +19,20 @@ export default function ParentDocuments() {
   const loadParentData = async () => {
     try {
       const user = await base44.auth.me();
-      const myChildren = await getParentStudents(user.email);
+      
+      const { parent: parentData, error: parentError } = await getParentByUserEmail(user.email);
+      
+      if (parentError || !parentData) {
+        console.error("Parent sync error:", parentError);
+        setLoading(false);
+        return;
+      }
+      
+      const { students: myChildren, error: childrenError } = await getStudentsForParent(parentData.id);
+      
+      if (childrenError) {
+        console.error("Children fetch error:", childrenError);
+      }
       
       setChildren(myChildren);
       if (myChildren.length > 0) {
