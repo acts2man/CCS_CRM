@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
   // Send email and return in parallel — don't let email delay the response
   const emailPromise = resend.emails.send({
     from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
-    to: 'troy@reputationguardians.net',
+    to: 'calvaryforkids@gmail.com',
     subject: `⏰ New Time-Off Request — ${formData.first_name} ${formData.last_name}`,
     html: `
       <!DOCTYPE html>
