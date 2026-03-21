@@ -15,6 +15,7 @@ import TimeOffRequest from '@/pages/TimeOffRequest';
 import { ImpersonationProvider } from '@/lib/ImpersonationContext';
 import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
 import StudentLayout from '@/components/layouts/StudentLayout';
+import ParentLayout from '@/components/layouts/ParentLayout';
 import StudentDashboard from '@/pages/StudentDashboard';
 import StudentSubjects from '@/pages/StudentSubjects';
 import StudentAssignments from '@/pages/StudentAssignments';
