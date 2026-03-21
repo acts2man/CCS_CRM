@@ -15,15 +15,20 @@ export default function StudentDocuments() {
 
   const loadDocuments = async () => {
     try {
-      const user = await base44.auth.me();
+      let studentId;
       
-      // Get student record
-      const students = await base44.entities.Student.filter({ email: user.email });
-      if (students.length === 0) return;
+      if (impersonatedStudent) {
+        studentId = impersonatedStudent.id;
+      } else {
+        const user = await base44.auth.me();
+        const students = await base44.entities.Student.filter({ email: user.email });
+        if (students.length === 0) return;
+        studentId = students[0].id;
+      }
       
       // Get documents for this student
       const allDocs = await base44.entities.StudentDocument.filter({
-        student_id: students[0].id
+        student_id: studentId
       });
 
       setDocuments(allDocs);
