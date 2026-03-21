@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import Layout from '../../layout';
+import Layout from '@/layout.jsx';
 import ParentLayout from '@/components/layouts/ParentLayout';
 
 export default function DynamicLayoutWrapper({ children, currentPageName }) {
