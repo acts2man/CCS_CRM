@@ -17,13 +17,17 @@ export default function StudentSubjects() {
 
   const loadSubjects = async () => {
     try {
-      const user = await base44.auth.me();
+      let studentRecord;
       
-      // Get student record
-      const students = await base44.entities.Student.filter({ email: user.email });
-      if (students.length === 0) return;
-      
-      setStudent(students[0]);
+      if (impersonatedStudent) {
+        studentRecord = impersonatedStudent;
+      } else {
+        const user = await base44.auth.me();
+        const students = await base44.entities.Student.filter({ email: user.email });
+        if (students.length === 0) return;
+        studentRecord = students[0];
+      }
+      setStudent(studentRecord);
 
       // Get all classes
       const classes = await base44.entities.ClassSection.list();
