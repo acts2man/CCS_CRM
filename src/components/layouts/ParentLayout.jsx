@@ -30,7 +30,7 @@ export default function ParentLayout({ children }) {
   ];
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-white text-slate-900 border-r border-slate-200">
+    <div className="flex flex-col h-full bg-black text-white border-r border-slate-900">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center">
           <img 
@@ -43,7 +43,7 @@ export default function ParentLayout({ children }) {
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden lg:flex text-slate-900 hover:bg-slate-100"
+          className="hidden lg:flex text-white hover:opacity-80"
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
@@ -59,7 +59,7 @@ export default function ParentLayout({ children }) {
               <Link
                 key={item.name}
                 to={createPageUrl(item.href)}
-                className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-slate-100 text-slate-700"
+                className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-slate-900 text-white"
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
                 {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
