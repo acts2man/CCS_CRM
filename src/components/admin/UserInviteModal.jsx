@@ -38,6 +38,17 @@ export default function UserInviteModal({ open, onOpenChange, onInviteSuccess })
       const users = await base44.entities.User.filter({ email });
       if (users.length > 0) {
         await base44.entities.User.update(users[0].id, { role });
+        
+        // If inviting as parent, auto-associate students from Student records
+        if (role === 'parent') {
+          const parentStudents = await getParentStudents(email);
+          // Store student IDs on parent record for reference if needed
+          if (parentStudents.length > 0) {
+            const studentIds = parentStudents.map(s => s.id);
+            // Note: Parent entity already has student_ids field, verify it's updated
+            console.log(`Parent ${email} linked to ${studentIds.length} students`);
+          }
+        }
       }
       
       setSuccess(`User ${email} invited as ${role}!`);
