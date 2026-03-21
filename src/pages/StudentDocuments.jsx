@@ -24,9 +24,13 @@ export default function StudentDocuments() {
         studentId = impersonatedStudent.id;
       } else {
         const user = await base44.auth.me();
-        const students = await base44.entities.Student.filter({ email: user.email });
-        if (students.length === 0) return;
-        studentId = students[0].id;
+        const { student, error } = await getStudentByUserEmail(user.email);
+        if (error || !student) {
+          console.error("Student sync error:", error);
+          setLoading(false);
+          return;
+        }
+        studentId = student.id;
       }
       
       // Get documents for this student
