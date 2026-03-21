@@ -57,7 +57,14 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'approve') {
-      const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+      let accessToken;
+      try {
+        const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+        accessToken = conn.accessToken;
+      } catch (connErr) {
+        console.error('Connector error:', connErr.message);
+        return htmlPage('Authorization Error', '#dc2626', '❌', `Could not access Google Calendar. Make sure it's authorized in settings. Error: ${connErr.message}`);
+      }
 
       const eventBody = {
         summary: `${request.first_name} ${request.last_name} — Time Off`,
