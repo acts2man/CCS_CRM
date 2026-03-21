@@ -123,8 +123,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const publicPaths = ['/time-off-request', '/time-off-action'];
+  const isPublicPath = publicPaths.some(p => window.location.pathname.startsWith(p));
+
   const navigateToLogin = () => {
-    // Use the SDK's redirectToLogin method
+    if (isPublicPath) return; // Don't redirect public pages to login
     base44.auth.redirectToLogin(window.location.href);
   };
 
