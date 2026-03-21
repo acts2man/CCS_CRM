@@ -74,6 +74,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <ImpersonationProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <NavigationTracker />
