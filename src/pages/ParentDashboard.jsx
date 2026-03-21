@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { getParentStudents } from "@/lib/parentUtils";
+import { getParentWithStudents } from "@/lib/parentUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, BookOpen, DollarSign, Calendar } from "lucide-react";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function ParentDashboard() {
-  const [user, setUser] = useState(null);
+  const [parent, setParent] = useState(null);
   const [children, setChildren] = useState([]);
   const [stats, setStats] = useState({
     totalChildren: 0,
@@ -25,9 +25,12 @@ export default function ParentDashboard() {
   const loadParentData = async () => {
     try {
       const currentUser = await base44.auth.me();
-      setUser(currentUser);
       
-      const myChildren = await getParentStudents(currentUser.email);
+      // Fetch parent data using email to get synced information
+      const parentData = await getParentWithStudents(currentUser.email);
+      setParent(parentData);
+      
+      const myChildren = parentData?.students || [];
       
       setChildren(myChildren);
 
@@ -89,7 +92,7 @@ export default function ParentDashboard() {
     <div className="p-8 space-y-6">
       {/* Welcome Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Welcome, {user?.full_name || user?.email}!</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Welcome, {parent?.first_name} {parent?.last_name}!</h1>
         <p className="text-gray-600 mt-1">Overview of your children's academic progress</p>
       </div>
 
