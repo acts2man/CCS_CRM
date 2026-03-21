@@ -49,7 +49,7 @@ export default function StudentLayout({ children }) {
         </Button>
       </div>
 
-      <Separator className="bg-slate-200" />
+      <Separator className="opacity-20" />
 
       <ScrollArea className="flex-1 px-2 py-4">
         <nav className="space-y-1">
