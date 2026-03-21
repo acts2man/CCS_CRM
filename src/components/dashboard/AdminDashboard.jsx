@@ -35,28 +35,16 @@ export default function AdminDashboard() {
       const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
       const todayStr = today.toISOString().split('T')[0];
 
-      const [students, teachers, parents, attendanceToday, students30Days, teachers30Days] = await Promise.all([
+      const [students, teachers, parents] = await Promise.all([
         base44.entities.Student.filter({ enrollment_status: 'active' }),
         base44.entities.Teacher.filter({ status: 'Active' }),
-        base44.entities.Parent.list(),
-        base44.entities.Attendance.filter({ date: todayStr }),
-        base44.entities.Student.filter({ created_date: { $gte: lastMonth.toISOString() } }),
-        base44.entities.Teacher.filter({ created_date: { $gte: lastMonth.toISOString() } })
+        base44.entities.Parent.list()
       ]);
 
-      const activeStudents = students.length;
-      const presentToday = attendanceToday.filter(a => a.status === 'present').length;
-      const attendanceRate = activeStudents > 0 ? Math.round((presentToday / activeStudents) * 100) : 0;
-
       setStats({
-        students: activeStudents,
+        students: students.length,
         teachers: teachers.length,
-        parents: parents.length,
-        attendanceRate,
-        lastMonthStudents: students30Days.length,
-        lastMonthTeachers: teachers30Days.length,
-        lastMonthParents: 0,
-        lastMonthAttendance: 0
+        parents: parents.length
       });
 
       // Mock recent activities
