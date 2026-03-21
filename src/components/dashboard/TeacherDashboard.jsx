@@ -53,8 +53,6 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
       base44.entities.Attendance.filter({ date: today })
     ]);
 
-    setSubjects(allSubjects);
-
     // Count assignments with missing grades
     let missingCount = 0;
     for (const asn of allAssignments) {
