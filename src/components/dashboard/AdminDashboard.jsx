@@ -12,6 +12,8 @@ import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
+  const [showImpersonation, setShowImpersonation] = useState(false);
+  const { startImpersonation } = useImpersonation();
   const [stats, setStats] = useState({
     students: 0,
     teachers: 0,
