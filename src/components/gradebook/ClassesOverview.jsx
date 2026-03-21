@@ -4,7 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, BookOpen, Users, TrendingUp, ChevronRight } from 'lucide-react';
+import { Loader2, BookOpen, Users, TrendingUp, Pencil } from 'lucide-react';
+import EditClassModal from './EditClassModal';
 
 export default function ClassesOverview() {
   const [classes, setClasses] = useState([]);
