@@ -190,141 +190,141 @@ export default function TimeOff() {
                   </div>
 
                   <div className="space-y-4">
-                {/* Submission Date */}
-                <div>
-                  <Label htmlFor="submission_date">Request Date (Today's Date) *</Label>
-                  <Input
-                    id="submission_date"
-                    type="date"
-                    value={formData.submission_date}
-                    onChange={(e) => setFormData({...formData, submission_date: e.target.value})}
-                    required
-                  />
-                </div>
+                    {/* Submission Date */}
+                    <div>
+                      <Label htmlFor="submission_date">Request Date (Today's Date) *</Label>
+                      <Input
+                        id="submission_date"
+                        type="date"
+                        value={formData.submission_date}
+                        onChange={(e) => setFormData({...formData, submission_date: e.target.value})}
+                        required
+                      />
+                    </div>
 
-                {/* Full Day Toggle */}
-                <div className="flex items-center space-x-3">
-                  <Switch
-                    id="full_day"
-                    checked={formData.full_day}
-                    onCheckedChange={(checked) => setFormData({...formData, full_day: checked})}
-                  />
-                  <Label htmlFor="full_day" className="font-medium">Full Day</Label>
-                </div>
+                    {/* Full Day Toggle */}
+                    <div className="flex items-center space-x-3">
+                      <Switch
+                        id="full_day"
+                        checked={formData.full_day}
+                        onCheckedChange={(checked) => setFormData({...formData, full_day: checked})}
+                      />
+                      <Label htmlFor="full_day" className="font-medium">Full Day</Label>
+                    </div>
 
-                {/* Dates */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="start_date">Start Date *</Label>
-                    <Input
-                      id="start_date"
-                      type="date"
-                      value={formData.start_date}
-                      onChange={(e) => setFormData({...formData, start_date: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="end_date">End Date *</Label>
-                    <Input
-                      id="end_date"
-                      type="date"
-                      value={formData.end_date}
-                      onChange={(e) => setFormData({...formData, end_date: e.target.value})}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Times - Only show if not full day */}
-                {!formData.full_day && (
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-start gap-2 mb-3">
-                      <div className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-bold">i</span>
+                    {/* Dates */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="start_date">Start Date *</Label>
+                        <Input
+                          id="start_date"
+                          type="date"
+                          value={formData.start_date}
+                          onChange={(e) => setFormData({...formData, start_date: e.target.value})}
+                          required
+                        />
                       </div>
                       <div>
-                        <p className="font-semibold text-blue-900 text-sm">Time Entry Example</p>
-                        <p className="text-blue-800 text-sm mt-1">
-                          <span className="font-medium">Example:</span> If you work 6:00 AM - 12:00 PM and want 2 hours off, enter:
-                        </p>
-                        <p className="text-blue-800 text-sm">Start Time: 10:00 AM (when your leave begins)</p>
-                        <p className="text-blue-800 text-sm">End Time: 12:00 PM (when your leave ends)</p>
+                        <Label htmlFor="end_date">End Date *</Label>
+                        <Input
+                          id="end_date"
+                          type="date"
+                          value={formData.end_date}
+                          onChange={(e) => setFormData({...formData, end_date: e.target.value})}
+                          required
+                        />
                       </div>
                     </div>
-                  </div>
-                )}
 
-                {!formData.full_day && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Times - Only show if not full day */}
+                    {!formData.full_day && (
+                      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
+                        <div className="flex items-start gap-2 mb-3">
+                          <div className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-xs font-bold">i</span>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-blue-900 text-sm">Time Entry Example</p>
+                            <p className="text-blue-800 text-sm mt-1">
+                              <span className="font-medium">Example:</span> If you work 6:00 AM - 12:00 PM and want 2 hours off, enter:
+                            </p>
+                            <p className="text-blue-800 text-sm">Start Time: 10:00 AM (when your leave begins)</p>
+                            <p className="text-blue-800 text-sm">End Time: 12:00 PM (when your leave ends)</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {!formData.full_day && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="start_time">Start Time *</Label>
+                          <Input
+                            id="start_time"
+                            type="time"
+                            value={formData.start_time}
+                            onChange={(e) => setFormData({...formData, start_time: e.target.value})}
+                            required={!formData.full_day}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="end_time">End Time *</Label>
+                          <Input
+                            id="end_time"
+                            type="time"
+                            value={formData.end_time}
+                            onChange={(e) => setFormData({...formData, end_time: e.target.value})}
+                            required={!formData.full_day}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Total Hours */}
                     <div>
-                      <Label htmlFor="start_time">Start Time *</Label>
+                      <Label htmlFor="total_hours">Total Hours *</Label>
                       <Input
-                        id="start_time"
-                        type="time"
-                        value={formData.start_time}
-                        onChange={(e) => setFormData({...formData, start_time: e.target.value})}
-                        required={!formData.full_day}
+                        id="total_hours"
+                        type="number"
+                        step="0.5"
+                        min="0"
+                        value={formData.total_hours}
+                        onChange={(e) => setFormData({...formData, total_hours: e.target.value})}
+                        placeholder="Enter total hours (e.g., 8 for full day)"
+                        required
                       />
                     </div>
+
+                    {/* Reason */}
                     <div>
-                      <Label htmlFor="end_time">End Time *</Label>
-                      <Input
-                        id="end_time"
-                        type="time"
-                        value={formData.end_time}
-                        onChange={(e) => setFormData({...formData, end_time: e.target.value})}
-                        required={!formData.full_day}
+                      <Label htmlFor="reason_notes">Reason / Notes *</Label>
+                      <Textarea
+                        id="reason_notes"
+                        value={formData.reason_notes}
+                        onChange={(e) => setFormData({...formData, reason_notes: e.target.value})}
+                        placeholder="Please provide details about your time-off request..."
+                        rows={5}
+                        required
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        {formData.reason_notes.length}/10 characters minimum
+                      </p>
+                    </div>
+
+                    {/* Use PTO Checkbox */}
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="use_pto"
+                        checked={formData.use_pto}
+                        onCheckedChange={(checked) => setFormData({...formData, use_pto: checked})}
+                      />
+                      <Label htmlFor="use_pto" className="text-sm font-normal cursor-pointer">
+                        Use PTO if available?
+                      </Label>
                     </div>
                   </div>
-                )}
-
-                {/* Total Hours */}
-                <div>
-                  <Label htmlFor="total_hours">Total Hours *</Label>
-                  <Input
-                    id="total_hours"
-                    type="number"
-                    step="0.5"
-                    min="0"
-                    value={formData.total_hours}
-                    onChange={(e) => setFormData({...formData, total_hours: e.target.value})}
-                    placeholder="Enter total hours (e.g., 8 for full day)"
-                    required
-                  />
-                </div>
-
-                {/* Reason */}
-                <div>
-                  <Label htmlFor="reason_notes">Reason / Notes *</Label>
-                  <Textarea
-                    id="reason_notes"
-                    value={formData.reason_notes}
-                    onChange={(e) => setFormData({...formData, reason_notes: e.target.value})}
-                    placeholder="Please provide details about your time-off request..."
-                    rows={5}
-                    required
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    {formData.reason_notes.length}/10 characters minimum
-                  </p>
-                </div>
-
-                {/* Use PTO Checkbox */}
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="use_pto"
-                    checked={formData.use_pto}
-                    onCheckedChange={(checked) => setFormData({...formData, use_pto: checked})}
-                  />
-                  <Label htmlFor="use_pto" className="text-sm font-normal cursor-pointer">
-                    Use PTO if available?
-                  </Label>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                  </CardContent>
+                  </Card>
 
               {/* Submit Button */}
               <div className="flex justify-center">
