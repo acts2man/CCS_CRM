@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, BookOpen } from 'lucide-react';
-import TeacherGradebookView from '@/components/gradebook/TeacherGradebookView';
+import SubjectView from '@/components/gradebook/SubjectView';
 
 export default function Gradebook() {
   const [classes, setClasses] = useState([]);
