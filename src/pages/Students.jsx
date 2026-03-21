@@ -16,6 +16,7 @@ import {
 import { Search, Plus, MoreHorizontal, FileText, Eye, Edit, Trash, Phone, MapPin, Loader2 } from "lucide-react";
 import AddStudentModal from "@/components/students/AddStudentModal";
 import EditStudentModal from "@/components/students/EditStudentModal";
+import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function Students() {
   const [students, setStudents] = useState([]);
