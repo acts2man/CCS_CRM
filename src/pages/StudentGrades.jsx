@@ -19,13 +19,16 @@ export default function StudentGrades() {
 
   const loadGrades = async () => {
     try {
-      const user = await base44.auth.me();
+      let student;
       
-      // Get student record
-      const students = await base44.entities.Student.filter({ email: user.email });
-      if (students.length === 0) return;
-      
-      const student = students[0];
+      if (impersonatedStudent) {
+        student = impersonatedStudent;
+      } else {
+        const user = await base44.auth.me();
+        const students = await base44.entities.Student.filter({ email: user.email });
+        if (students.length === 0) return;
+        student = students[0];
+      }
       setStudentRecord(student);
 
       // Get all data needed
