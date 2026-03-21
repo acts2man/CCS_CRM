@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Plus, BookOpen, AlertCircle } from 'lucide-react';
-import GradebookView from '@/components/gradebook/GradebookView';
+import { Loader2, BookOpen } from 'lucide-react';
+import TeacherGradebookView from '@/components/gradebook/TeacherGradebookView';
 
 export default function Gradebook() {
   const [classes, setClasses] = useState([]);
@@ -34,11 +32,7 @@ export default function Gradebook() {
     setLoading(false);
   };
 
-  if (loading) return (
-    <div className="flex items-center justify-center h-64">
-      <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-    </div>
-  );
+  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="h-8 w-8 animate-spin text-blue-600" /></div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -57,45 +51,46 @@ export default function Gradebook() {
         </Select>
       </div>
 
-      <div className="flex h-[calc(100vh-130px)]">
-        {/* Class list sidebar */}
-        <div className="w-64 border-r bg-white overflow-y-auto">
-          <div className="p-3">
-            <p className="text-xs font-semibold text-gray-400 uppercase mb-2 px-2">Classes ({classes.length})</p>
-            {classes.length === 0 && (
-              <div className="text-center py-8 text-gray-400 text-sm">
-                <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-30" />
-                No classes yet
+      <div className="p-6">
+        <div className="flex h-[calc(100vh-220px)]">
+          <div className="w-64 border-r bg-white rounded-lg mr-6 overflow-y-auto">
+            <div className="p-4 space-y-1">
+              <p className="text-xs font-semibold text-gray-400 uppercase mb-3">Your Classes</p>
+              {classes.length === 0 && (
+                <div className="text-center py-8 text-gray-400 text-sm">
+                  <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-30" />
+                  No classes assigned
+                </div>
+              )}
+              {classes.map(cls => (
+                <button
+                  key={cls.id}
+                  onClick={() => setSelectedClass(cls)}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors text-sm ${
+                    selectedClass?.id === cls.id ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="font-medium">{cls.name}</div>
+                  <div className="text-xs text-gray-500">Grade {cls.grade_level}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1">
+            {selectedClass ? (
+              <TeacherGradebookView classSection={selectedClass} schoolYear={schoolYear} />
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                <div className="text-center">
+                  <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                  <p>Select a class to view subjects and grades</p>
+                </div>
               </div>
             )}
-            {classes.map(cls => (
-              <button
-                key={cls.id}
-                onClick={() => setSelectedClass(cls)}
-                className={`w-full text-left px-3 py-2.5 rounded-lg mb-1 transition-colors ${selectedClass?.id === cls.id ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'}`}
-              >
-                <div className="font-medium text-sm">{cls.name}</div>
-                <div className="text-xs text-gray-500">{cls.teacher_name || 'No teacher'} · Gr {cls.grade_level}</div>
-              </button>
-            ))}
           </div>
         </div>
-
-        {/* Gradebook main area */}
-        <div className="flex-1 overflow-auto">
-          {selectedClass ? (
-            <GradebookView classSection={selectedClass} onRefresh={loadData} />
-          ) : (
-            <div className="flex items-center justify-center h-full text-gray-400">
-              <div className="text-center">
-                <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>Select a class to view the gradebook</p>
-              </div>
-            </div>
-          )}
-        </div>
       </div>
-
     </div>
   );
 }
