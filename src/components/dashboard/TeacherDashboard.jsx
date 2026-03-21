@@ -16,6 +16,7 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
   const [pendingGrades, setPendingGrades] = useState(0);
   const [todayAttendance, setTodayAttendance] = useState({ present: 0, total: 0 });
   const [loading, setLoading] = useState(true);
+  const [selectedClass, setSelectedClass] = useState(null);
 
   useEffect(() => { loadData(); }, [impersonatedTeacher]);
 
