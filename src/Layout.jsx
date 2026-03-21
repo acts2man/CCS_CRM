@@ -96,7 +96,7 @@ export default function Layout({ children, currentPageName }) {
   const adminNavigation = getAdminNavigation();
 
   const getSupportNavigation = () => {
-    if (user?.role === 'teacher') {
+    if (isTeacherView) {
       return []; // No support section for teachers
     }
     
