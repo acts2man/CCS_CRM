@@ -91,9 +91,14 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome, {user?.full_name || 'Admin'}</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="text-gray-600 mt-1">Welcome, {user?.full_name || 'Admin'}</p>
+        </div>
+        <Button variant="outline" onClick={() => setShowImpersonation(true)} className="flex items-center gap-2">
+          <Eye className="h-4 w-4" /> View as Teacher
+        </Button>
       </div>
 
       {/* Stats Cards */}
