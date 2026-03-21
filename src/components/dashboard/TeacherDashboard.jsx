@@ -161,33 +161,25 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
         {classes.length === 0 ? (
           <Card><CardContent className="py-12 text-center text-gray-400">No classes assigned yet.</CardContent></Card>
         ) : (
-          <div className="flex h-[calc(100vh-380px)] min-h-[600px]">
-            {/* Class list sidebar */}
-            <div className="w-56 border-r bg-white rounded-l-lg overflow-y-auto flex-shrink-0">
-              <div className="p-3 space-y-1">
-                <p className="text-xs font-semibold text-gray-400 uppercase mb-2">Classes</p>
-                {classes.map(cls => (
-                  <button
-                    key={cls.id}
-                    onClick={() => setSelectedClass(cls)}
-                    className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors text-sm ${selectedClass?.id === cls.id ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'}`}
-                  >
-                    <div className="font-medium">{cls.name}</div>
-                    <div className="text-xs text-gray-500">Grade {cls.grade_level}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-            {/* Subject view */}
-            <div className="flex-1 overflow-hidden">
-              {selectedClass ? (
-                <SubjectView key={selectedClass.id} classSection={selectedClass} onRefresh={loadData} />
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-400 bg-white rounded-r-lg border">
-                  <p>Select a class to manage grades</p>
-                </div>
-              )}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {classes.map(cls => (
+              <Link key={cls.id} to={createPageUrl('Gradebook')}>
+                <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                  <CardContent className="p-5">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center">
+                        <BookOpen className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm">{cls.name}</div>
+                        <div className="text-xs text-gray-500">Grade {cls.grade_level} · {cls.student_ids?.length || 0} students</div>
+                      </div>
+                    </div>
+                    <p className="text-xs text-blue-600 font-medium mt-3">Open Gradebook →</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         )}
       </div>
