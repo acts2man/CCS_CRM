@@ -17,7 +17,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const base44 = createClientFromRequest(req);
+    // Inject App ID header so SDK works when called directly from a browser link
+    const appId = Deno.env.get('BASE44_APP_ID');
+    const patchedHeaders = new Headers(req.headers);
+    if (appId && !patchedHeaders.has('Base44-App-Id')) {
+      patchedHeaders.set('Base44-App-Id', appId);
+    }
+    const patchedReq = new Request(req.url, { method: req.method, headers: patchedHeaders });
+    const base44 = createClientFromRequest(patchedReq);
 
     // Fetch the time off request
     const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({ id: requestId });
