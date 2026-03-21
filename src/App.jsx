@@ -46,7 +46,23 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   : <>{children}</>;
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin, user } = useAuth();
+  const [roleRedirectHandled, setRoleRedirectHandled] = React.useState(false);
+
+  // Check if user needs role-based redirect on first login
+  React.useEffect(() => {
+    if (isAuthenticated && user && !roleRedirectHandled && window.location.pathname === '/') {
+      // Redirect non-admin users away from admin dashboard on first login
+      if (user.role === 'student') {
+        window.location.href = '/StudentDashboard';
+      } else if (user.role === 'parent') {
+        window.location.href = '/ParentGrades';
+      } else if (user.role === 'teacher') {
+        window.location.href = '/TeacherClasses';
+      }
+      setRoleRedirectHandled(true);
+    }
+  }, [isAuthenticated, user, roleRedirectHandled]);
 
   // Public routes bypass auth entirely
   if (window.location.pathname === '/time-off-request' || window.location.pathname === '/time-off-action') {
