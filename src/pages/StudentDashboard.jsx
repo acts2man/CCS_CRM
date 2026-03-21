@@ -146,6 +146,9 @@ export default function StudentDashboard() {
               <div className="flex-1">
                 <h1 className="text-3xl font-bold text-gray-900">{student?.first_name} {student?.last_name}</h1>
                 <p className="text-lg text-gray-600 mt-1">Grade {student?.grade_level}</p>
+                {student?.id && (
+                  <p className="text-sm text-gray-500 mt-2">Student ID: <span className="font-mono font-semibold">{student.id}</span></p>
+                )}
                 {student?.email && (
                   <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
                     <Mail className="h-4 w-4" /> {student.email}
