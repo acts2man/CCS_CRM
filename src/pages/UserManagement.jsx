@@ -152,10 +152,18 @@ export default function UserManagement() {
                       </td>
                       <td className="py-3 px-4 text-gray-600">{user.email}</td>
                       <td className="py-3 px-4">
-                        <Badge className={`${getRoleColor(user.role)} gap-1`}>
-                          {getRoleIcon(user.role)}
-                          {user.role}
-                        </Badge>
+                        <Select value={user.role} onValueChange={(newRole) => updateUserRole(user.id, newRole)}>
+                          <SelectTrigger className="w-32 h-8 text-sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="user">User</SelectItem>
+                            <SelectItem value="student">Student</SelectItem>
+                            <SelectItem value="teacher">Teacher</SelectItem>
+                            <SelectItem value="parent">Parent</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </td>
                       <td className="py-3 px-4 text-gray-600 text-xs">
                         {user.created_date ? new Date(user.created_date).toLocaleDateString() : '—'}
