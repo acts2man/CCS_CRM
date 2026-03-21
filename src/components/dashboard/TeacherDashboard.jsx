@@ -94,6 +94,12 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
     { title: "Today's Attendance", value: `${todayAttendance.present}/${todayAttendance.total}`, icon: Calendar, color: "text-purple-600", bg: "bg-purple-50", link: "Attendance" },
   ];
 
+  const [selectedClass, setSelectedClass] = useState(null);
+
+  useEffect(() => {
+    if (classes.length > 0 && !selectedClass) setSelectedClass(classes[0]);
+  }, [classes]);
+
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
@@ -131,70 +137,69 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* My Classes */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><BookOpen className="h-5 w-5" /> My Classes</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {classes.length === 0 ? (
-              <p className="text-sm text-gray-400">No classes assigned yet.</p>
-            ) : (
-              classes.map(cls => {
-                const classSubjects = subjects.filter(s => s.class_section_id === cls.id);
-                const studentCount = (cls.student_ids || []).length;
-                return (
-                  <Link key={cls.id} to={createPageUrl('Gradebook')}>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer">
-                      <div>
-                        <div className="font-medium">{cls.name}</div>
-                        <div className="text-sm text-gray-500">{classSubjects.map(s => s.name).join(', ') || 'No subjects yet'}</div>
-                      </div>
-                      <div className="text-right">
-                        <Badge variant="outline">{studentCount} students</Badge>
-                        {cls.period && <div className="text-xs text-gray-400 mt-1">Period {cls.period}</div>}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })
-            )}
-          </CardContent>
-        </Card>
+      {/* Quick Actions row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Link to={createPageUrl("Attendance")}>
+          <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+            <div className="font-medium text-sm">Take Attendance</div>
+            <div className="text-xs text-gray-500">Mark for today</div>
+          </button>
+        </Link>
+        <Link to={createPageUrl("Documents")}>
+          <button className="w-full text-left px-4 py-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
+            <div className="font-medium text-sm">Send Document</div>
+            <div className="text-xs text-gray-500">Reports & notices</div>
+          </button>
+        </Link>
+        <Link to={createPageUrl("Chat")}>
+          <button className="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+            <div className="font-medium text-sm">Message Parents</div>
+            <div className="text-xs text-gray-500">Send messages</div>
+          </button>
+        </Link>
+        <Link to={createPageUrl("TimeOff")}>
+          <button className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+            <div className="font-medium text-sm">Time Off</div>
+            <div className="text-xs text-gray-500">Request leave</div>
+          </button>
+        </Link>
+      </div>
 
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Link to={createPageUrl("Attendance")}>
-              <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                <div className="font-medium">Take Attendance</div>
-                <div className="text-sm text-gray-500">Mark attendance for today</div>
-              </button>
-            </Link>
-            <Link to={createPageUrl("Gradebook")}>
-              <button className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                <div className="font-medium">Enter Grades</div>
-                <div className="text-sm text-gray-500">Update student grades by subject</div>
-              </button>
-            </Link>
-            <Link to={createPageUrl("Documents")}>
-              <button className="w-full text-left px-4 py-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                <div className="font-medium">Send Document</div>
-                <div className="text-sm text-gray-500">Behavior reports, notices, etc.</div>
-              </button>
-            </Link>
-            <Link to={createPageUrl("Chat")}>
-              <button className="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                <div className="font-medium">Message Parents</div>
-                <div className="text-sm text-gray-500">Send messages to parents</div>
-              </button>
-            </Link>
-          </CardContent>
-        </Card>
+      {/* Gradebook section */}
+      <div>
+        <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><BookOpen className="h-5 w-5" /> My Gradebook</h2>
+        {classes.length === 0 ? (
+          <Card><CardContent className="py-12 text-center text-gray-400">No classes assigned yet.</CardContent></Card>
+        ) : (
+          <div className="flex h-[calc(100vh-460px)] min-h-[500px]">
+            {/* Class list sidebar */}
+            <div className="w-56 border-r bg-white rounded-l-lg overflow-y-auto flex-shrink-0">
+              <div className="p-3 space-y-1">
+                <p className="text-xs font-semibold text-gray-400 uppercase mb-2">Classes</p>
+                {classes.map(cls => (
+                  <button
+                    key={cls.id}
+                    onClick={() => setSelectedClass(cls)}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors text-sm ${selectedClass?.id === cls.id ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'}`}
+                  >
+                    <div className="font-medium">{cls.name}</div>
+                    <div className="text-xs text-gray-500">Grade {cls.grade_level}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Subject view */}
+            <div className="flex-1 overflow-hidden">
+              {selectedClass ? (
+                <SubjectView key={selectedClass.id} classSection={selectedClass} onRefresh={loadData} />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-400 bg-white rounded-r-lg border">
+                  <p>Select a class to manage grades</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
