@@ -28,6 +28,10 @@ import ParentGrades from '@/pages/ParentGrades';
 import ParentAssignments from '@/pages/ParentAssignments';
 import ParentAttendance from '@/pages/ParentAttendance';
 import ParentBilling from '@/pages/ParentBilling';
+import TeacherClasses from '@/pages/TeacherClasses';
+import TeacherGradebook from '@/pages/TeacherGradebook';
+import TeacherAttendance from '@/pages/TeacherAttendance';
+import TeacherCommunications from '@/pages/TeacherCommunications';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
