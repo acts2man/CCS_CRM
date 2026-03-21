@@ -72,6 +72,7 @@ export default function Layout({ children, currentPageName }) {
       { name: 'Time Off', href: 'TimeOff', icon: Calendar },
       { name: 'Chat', href: 'Chat', icon: MessageSquare },
       { name: 'Email', href: 'Email', icon: Mail },
+      { name: 'Users', href: 'UserManagement', icon: Users },
     ];
   };
 
