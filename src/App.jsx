@@ -57,8 +57,6 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      {/* Public routes - no auth required */}
-      <Route path="/time-off-request" element={<TimeOffRequest />} />
       <Route path="/" element={
         <LayoutWrapper currentPageName={mainPageKey}>
           <MainPage />
