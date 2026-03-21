@@ -12,7 +12,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { impersonatedTeacher } = useImpersonation();
+  const { impersonatedTeacher, viewMode } = useImpersonation();
 
   useEffect(() => {
     loadUser();
