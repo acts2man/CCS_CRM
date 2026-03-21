@@ -55,16 +55,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const getChangeText = (current, previous) => {
-    if (previous === 0) return null;
-    const change = ((current - previous) / previous * 100).toFixed(1);
-    const isPositive = change > 0;
-    return (
-      <span className={isPositive ? 'text-green-600' : 'text-red-600'}>
-        {isPositive ? '↑' : '↓'} {Math.abs(change)}% from last month
-      </span>
-    );
-  };
+
 
   return (
     <div className="p-8 space-y-6">
