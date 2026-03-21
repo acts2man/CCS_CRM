@@ -8,6 +8,7 @@ import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
 import { useImpersonation } from "@/lib/ImpersonationContext";
 import DocumentDetailModal from "@/components/students/DocumentDetailModal";
+import { getStudentByUserEmail, getParentsForStudent } from "@/lib/entitySyncUtils";
 
 export default function StudentDashboard() {
   const { impersonatedStudent, stopImpersonation } = useImpersonation();
