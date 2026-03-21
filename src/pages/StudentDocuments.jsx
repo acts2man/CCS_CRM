@@ -69,34 +69,36 @@ export default function StudentDocuments() {
           </Card>
         ) : (
           documents.map((doc) => (
-            <Card key={doc.id} className="hover:shadow-md transition-shadow">
+            <Card 
+              key={doc.id} 
+              className="hover:shadow-md transition-all cursor-pointer hover:border-blue-300"
+              onClick={() => setSelectedDocument(doc)}
+            >
               <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">{doc.title}</h3>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <FileText className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                      <h3 className="font-semibold text-gray-900 truncate">{doc.title}</h3>
+                    </div>
                     {doc.submitted_by_name && (
                       <p className="text-sm text-gray-600">From: {doc.submitted_by_name}</p>
                     )}
-                    {doc.notes && (
-                      <p className="text-sm text-gray-600 mt-2">{doc.notes}</p>
-                    )}
                   </div>
-                  {doc.file_url && (
-                    <a 
-                      href={doc.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ml-4 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                    >
-                      View
-                    </a>
-                  )}
+                  <ExternalLink className="h-5 w-5 text-gray-400 flex-shrink-0 mt-1" />
                 </div>
               </CardContent>
             </Card>
           ))
         )}
       </div>
+
+      {selectedDocument && (
+        <DocumentDetailModal 
+          document={selectedDocument} 
+          onClose={() => setSelectedDocument(null)}
+        />
+      )}
     </div>
   );
 }
