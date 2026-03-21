@@ -26,8 +26,10 @@ export function ImpersonationProvider({ children }) {
   return (
     <ImpersonationContext.Provider 
       value={{ 
-        impersonatedTeacher, 
-        startImpersonation, 
+        impersonatedTeacher,
+        impersonatedStudent,
+        startImpersonation,
+        startStudentImpersonation,
         stopImpersonation,
         viewMode,
         setViewMode
