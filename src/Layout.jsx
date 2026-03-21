@@ -78,7 +78,7 @@ export default function Layout({ children, currentPageName }) {
   const navigation = getNavigation();
 
   const getAdminNavigation = () => {
-    if (user?.role === 'teacher') {
+    if (isTeacherView) {
       return []; // No admin section for teachers
     }
     
