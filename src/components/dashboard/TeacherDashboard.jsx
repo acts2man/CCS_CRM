@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import SubjectView from "@/components/gradebook/SubjectView";
 
+// Teacher Dashboard
 export default function TeacherDashboard({ impersonatedTeacher }) {
   const [user, setUser] = useState(null);
   const [teacher, setTeacher] = useState(null);
