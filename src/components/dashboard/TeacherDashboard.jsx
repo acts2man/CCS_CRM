@@ -99,12 +99,6 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
     { title: "Today's Attendance", value: `${todayAttendance.present}/${todayAttendance.total}`, icon: Calendar, color: "text-purple-600", bg: "bg-purple-50", link: "Attendance" },
   ];
 
-  const [selectedClass, setSelectedClass] = useState(null);
-
-  useEffect(() => {
-    if (classes.length > 0 && !selectedClass) setSelectedClass(classes[0]);
-  }, [classes]);
-
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
