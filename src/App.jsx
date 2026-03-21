@@ -48,10 +48,10 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin, user } = useAuth();
-  const [roleRedirectHandled, setRoleRedirectHandled] = React.useState(false);
+  const [roleRedirectHandled, setRoleRedirectHandled] = useState(false);
 
   // Check if user needs role-based redirect on first login
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated && user && !roleRedirectHandled && window.location.pathname === '/') {
       // Redirect non-admin users away from admin dashboard on first login
       if (user.role === 'student') {
