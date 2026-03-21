@@ -78,7 +78,7 @@ export default function Courses() {
           </div>
           <div className="flex-1">
             {selectedClass ? (
-              <SubjectView classSection={selectedClass} onRefresh={loadData} />
+              <SubjectView key={selectedClass.id} classSection={selectedClass} onRefresh={loadData} />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-400">
                 <div className="text-center">
