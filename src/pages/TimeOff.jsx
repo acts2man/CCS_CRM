@@ -102,20 +102,38 @@ export default function TimeOff() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-6">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/45bebf8b0_71bb1844-5ca0-4a10-849d-ad0872b11863.png"
-              alt="CCS Logo"
-              className="h-20 w-20"
-            />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">CCS Time-Off Request</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Time-Off Request</h1>
           <p className="text-gray-600">
-            Request time off in under a minute. CCS admin will be notified automatically.
+            Submit your time-off request below. Check the calendar to see scheduled school events.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
+          {/* Calendar */}
+          <div className="lg:col-span-2">
+            <Card className="sticky top-8">
+              <div className="bg-blue-600 text-white p-4">
+                <h2 className="text-lg font-semibold">School Calendar</h2>
+                <p className="text-sm text-blue-100">Check dates before submitting</p>
+              </div>
+              <CardContent className="p-4">
+                <div className="overflow-x-auto">
+                  <iframe
+                    src="https://calendar.google.com/calendar/embed?src=fc26e7e11e62a246a3967bba8a33f18883ba3daf1e84d144b98d871eeeb60b0d%40group.calendar.google.com&ctz=America%2FLos_Angeles"
+                    style={{ border: 0 }}
+                    width="100%"
+                    height="500"
+                    frameBorder="0"
+                    scrolling="no"
+                  ></iframe>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Form */}
+          <div className="lg:col-span-3">
+            <form onSubmit={handleSubmit} className="space-y-6">
           {/* Employee Information */}
           <Card>
             <CardContent className="pt-6">
