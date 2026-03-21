@@ -29,7 +29,16 @@ Deno.serve(async (req) => {
       return htmlPage('Missing Parameters', '#dc2626', '❌', 'The link is missing required parameters. Please contact your administrator.');
     }
 
-    const base44 = createClientFromRequest(req);
+    // Create client WITHOUT requiring auth (this is a webhook-like endpoint)
+    let base44;
+    try {
+      base44 = createClientFromRequest(req);
+    } catch (e) {
+      // If no auth context, create service-only client
+      const { createClient } = await import('npm:@base44/sdk@0.8.21');
+      base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
+    }
+
     const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({ id: requestId });
 
     if (!requests || requests.length === 0) {
