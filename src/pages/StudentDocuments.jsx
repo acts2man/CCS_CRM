@@ -9,6 +9,7 @@ import { getStudentByUserEmail } from "@/lib/entitySyncUtils";
 export default function StudentDocuments() {
   const { impersonatedStudent } = useImpersonation();
   const [documents, setDocuments] = useState([]);
+  const [selectedDocument, setSelectedDocument] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
