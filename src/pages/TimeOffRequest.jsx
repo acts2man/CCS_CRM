@@ -208,9 +208,9 @@ export default function TimeOffRequest() {
                 </div>
               </div>
             </CardContent>
-          </Card>
+            </Card>
 
-              <div className="flex justify-center">
+            <div className="flex justify-center">
                 <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 px-8 py-3 text-lg">
                   {loading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Submitting...</> : "Submit Request"}
                 </Button>
