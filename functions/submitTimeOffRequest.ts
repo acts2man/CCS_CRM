@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
   });
 
   // Build approve/deny links — point directly to the backend function (no login required)
-  const fnBaseUrl = 'https://calvaryforkidscrm.com/api/v1/functions/approveTimeOff';
+  const fnBaseUrl = 'https://calvaryforkidscrm.com/functions/approveTimeOff';
   const approveLink = `${fnBaseUrl}?requestId=${request.id}&action=approve`;
   const denyLink = `${fnBaseUrl}?requestId=${request.id}&action=deny`;
 
