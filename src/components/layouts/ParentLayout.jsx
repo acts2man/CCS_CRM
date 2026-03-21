@@ -16,6 +16,7 @@ export default function ParentLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navigation = [
+    { name: 'Dashboard', href: 'ParentDashboard', icon: LayoutDashboard },
     { name: 'Grades', href: 'ParentGrades', icon: BookOpen },
     { name: 'Assignments', href: 'ParentAssignments', icon: FileText },
     { name: 'Attendance', href: 'ParentAttendance', icon: Calendar },
