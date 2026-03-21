@@ -174,7 +174,7 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
         {classes.length === 0 ? (
           <Card><CardContent className="py-12 text-center text-gray-400">No classes assigned yet.</CardContent></Card>
         ) : (
-          <div className="flex h-[calc(100vh-460px)] min-h-[500px]">
+          <div className="flex h-[calc(100vh-380px)] min-h-[600px]">
             {/* Class list sidebar */}
             <div className="w-56 border-r bg-white rounded-l-lg overflow-y-auto flex-shrink-0">
               <div className="p-3 space-y-1">
