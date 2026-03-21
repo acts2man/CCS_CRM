@@ -148,7 +148,6 @@ Deno.serve(async (req) => {
         `
       });
 
-      // 2. Update request status
       await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
         status: 'denied',
         user_notified: true,
