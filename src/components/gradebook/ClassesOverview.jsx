@@ -11,6 +11,7 @@ export default function ClassesOverview() {
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [schoolYear, setSchoolYear] = useState('2025-2026');
+  const [editingClass, setEditingClass] = useState(null);
 
   useEffect(() => { loadData(); }, [schoolYear]);
 
