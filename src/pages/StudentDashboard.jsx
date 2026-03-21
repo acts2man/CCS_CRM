@@ -264,6 +264,108 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Parent Information */}
+      {parents.length > 0 && (
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Parent Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {parents.map((parent) => (
+              <Card key={parent.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-4">
+                    <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <Users className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900">{parent.first_name} {parent.last_name}</p>
+                      <p className="text-xs text-gray-600 capitalize">{parent.relationship}</p>
+                      {parent.email && (
+                        <a href={`mailto:${parent.email}`} className="text-sm text-blue-600 hover:text-blue-800 truncate block">
+                          {parent.email}
+                        </a>
+                      )}
+                      {parent.phone && (
+                        <a href={`tel:${parent.phone}`} className="text-sm text-blue-600 hover:text-blue-800">
+                          {parent.phone}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Attendance */}
+      {recentAttendance.length > 0 && (
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Attendance</h2>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="space-y-3">
+                {recentAttendance.map((record) => (
+                  <div key={record.id} className="flex items-center justify-between pb-3 border-b last:border-b-0 last:pb-0">
+                    <div>
+                      <p className="font-medium text-gray-900">{format(new Date(record.date), "MMMM d, yyyy")}</p>
+                      <p className="text-sm text-gray-600">
+                        {record.clock_in_time && `In: ${record.clock_in_time}`}
+                        {record.clock_out_time && ` • Out: ${record.clock_out_time}`}
+                      </p>
+                    </div>
+                    <Badge variant={record.is_tardy ? "destructive" : "default"}>
+                      {record.is_tardy ? "Tardy" : "On Time"}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Documents */}
+      {documents.length > 0 && (
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center justify-between">
+            <span>Documents</span>
+            <Link to={createPageUrl("StudentDocuments")}>
+              <span className="text-sm text-blue-600 hover:text-blue-800 font-normal">View All</span>
+            </Link>
+          </h2>
+          <div className="space-y-3">
+            {documents.map((doc) => (
+              <Card key={doc.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="pt-6">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <FileText className="h-4 w-4 text-gray-500" />
+                        <h3 className="font-semibold text-gray-900">{doc.title}</h3>
+                      </div>
+                      {doc.submitted_by_name && (
+                        <p className="text-sm text-gray-600">From: {doc.submitted_by_name}</p>
+                      )}
+                    </div>
+                    {doc.file_url && (
+                      <a 
+                        href={doc.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors flex-shrink-0"
+                      >
+                        View
+                      </a>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
