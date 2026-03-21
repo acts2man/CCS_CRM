@@ -28,6 +28,7 @@ import StudentAnnouncements from '@/pages/StudentAnnouncements';
 import ParentGrades from '@/pages/ParentGrades';
 import ParentAssignments from '@/pages/ParentAssignments';
 import ParentAttendance from '@/pages/ParentAttendance';
+import ParentDocuments from '@/pages/ParentDocuments';
 import ParentBilling from '@/pages/ParentBilling';
 import TeacherClasses from '@/pages/TeacherClasses';
 import TeacherGradebook from '@/pages/TeacherGradebook';
