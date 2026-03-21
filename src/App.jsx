@@ -25,6 +25,15 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
 
+  // Public routes bypass auth entirely
+  if (window.location.pathname === '/time-off-request') {
+    return (
+      <Routes>
+        <Route path="/time-off-request" element={<TimeOffRequest />} />
+      </Routes>
+    );
+  }
+
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
