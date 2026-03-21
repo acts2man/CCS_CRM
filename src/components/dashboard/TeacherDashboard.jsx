@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Users, Calendar, BookOpen, ClipboardList, Loader2, GraduationCap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import SubjectView from "@/components/gradebook/SubjectView";
 
 export default function TeacherDashboard({ impersonatedTeacher }) {
   const [user, setUser] = useState(null);
