@@ -3,9 +3,11 @@ import { useImpersonation } from '@/lib/ImpersonationContext';
 import { X, Eye } from 'lucide-react';
 
 export default function ImpersonationBanner() {
-  const { impersonatedTeacher, viewMode, stopImpersonation } = useImpersonation();
+  const { impersonatedTeacher, impersonatedStudent, viewMode, stopImpersonation } = useImpersonation();
 
-  if (!impersonatedTeacher) return null;
+  // Hide banner when viewing as student (student exit button is on dashboard)
+  if (!impersonatedTeacher && !impersonatedStudent) return null;
+  if (impersonatedStudent) return null;
 
   const modeLabels = {
     teacher: 'Teacher',
