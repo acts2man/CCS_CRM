@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function ParentDashboard() {
+  const [user, setUser] = useState(null);
   const [children, setChildren] = useState([]);
   const [stats, setStats] = useState({
     totalChildren: 0,
@@ -23,8 +24,10 @@ export default function ParentDashboard() {
 
   const loadParentData = async () => {
     try {
-      const user = await base44.auth.me();
-      const myChildren = await getParentStudents(user.email);
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      
+      const myChildren = await getParentStudents(currentUser.email);
       
       setChildren(myChildren);
 
@@ -84,11 +87,20 @@ export default function ParentDashboard() {
 
   return (
     <div className="p-8 space-y-6">
-      {/* Header */}
+      {/* Welcome Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Parent Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Welcome, {user?.full_name}!</h1>
         <p className="text-gray-600 mt-1">Overview of your children's academic progress</p>
       </div>
+
+      {/* No Children Alert */}
+      {children.length === 0 && !loading && (
+        <Card className="bg-blue-50 border-blue-200">
+          <CardContent className="pt-6">
+            <p className="text-blue-900">No children linked to your account yet. Please contact the school to link your children.</p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
