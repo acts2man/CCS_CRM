@@ -21,22 +21,8 @@ const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
-const LayoutWrapper = ({ children, currentPageName }) => {
-  const { user } = useAuth();
-  
-  if (!Layout) return <>{children}</>;
-  
-  // Use ParentLayout only for parents
-  if (user?.role === 'parent') {
-    return <ParentLayout>{children}</ParentLayout>;
-  }
-  
-  // Use main Layout for everyone else
-  return <MainLayout currentPageName={currentPageName}>{children}</MainLayout>;
-};
-
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin, user } = useAuth();
 
   // Public routes bypass auth entirely
   if (window.location.pathname === '/time-off-request' || window.location.pathname === '/time-off-action') {
