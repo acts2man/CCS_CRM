@@ -103,6 +103,7 @@ export default function ParentDashboard() {
       )}
 
       {/* Stats Grid */}
+      {children.length > 0 && (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
@@ -160,6 +161,7 @@ export default function ParentDashboard() {
           </CardContent>
         </Card>
       </div>
+      )}
 
       {/* Children Overview */}
       {children.length > 0 && (
