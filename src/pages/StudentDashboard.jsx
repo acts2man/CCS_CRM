@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, BookOpen, ClipboardList, Zap, Clock, FileText, User, Mail, Phone, Users } from "lucide-react";
+import { AlertCircle, BookOpen, ClipboardList, Zap, Clock, FileText, User, Mail, Phone, Users, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
+import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function StudentDashboard() {
   const [student, setStudent] = useState(null);
