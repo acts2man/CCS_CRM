@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText } from "lucide-react";
+import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function StudentDocuments() {
+  const { impersonatedStudent } = useImpersonation();
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadDocuments();
-  }, []);
+  }, [impersonatedStudent]);
 
   const loadDocuments = async () => {
     try {
