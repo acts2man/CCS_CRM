@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, BookOpen } from 'lucide-react';
 import SubjectView from '@/components/gradebook/SubjectView';
+import { useImpersonation } from '@/lib/ImpersonationContext';
 
 export default function Gradebook() {
   const [classes, setClasses] = useState([]);
@@ -11,24 +12,34 @@ export default function Gradebook() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [schoolYear, setSchoolYear] = useState('2025-2026');
+  const { impersonatedTeacher } = useImpersonation();
 
-  useEffect(() => { loadData(); }, [schoolYear]);
+  useEffect(() => { loadData(); }, [schoolYear, impersonatedTeacher]);
 
   const loadData = async () => {
     setLoading(true);
     const currentUser = await base44.auth.me();
     setUser(currentUser);
-    const teachers = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
-    const isTeacher = teachers?.length > 0;
+
+    let teacherRecord = null;
+
+    if (impersonatedTeacher) {
+      // Admin is impersonating a teacher — show only that teacher's classes
+      teacherRecord = impersonatedTeacher;
+    } else {
+      // Check if the logged-in user is a teacher
+      const teachers = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
+      if (teachers?.length > 0) teacherRecord = teachers[0];
+    }
 
     let classSections;
-    if (isTeacher && teachers[0]) {
-      classSections = await base44.entities.ClassSection.filter({ teacher_id: teachers[0].id, school_year: schoolYear });
+    if (teacherRecord) {
+      classSections = await base44.entities.ClassSection.filter({ teacher_id: teacherRecord.id, school_year: schoolYear });
     } else {
       classSections = await base44.entities.ClassSection.filter({ school_year: schoolYear });
     }
     setClasses(classSections);
-    if (classSections.length > 0 && !selectedClass) setSelectedClass(classSections[0]);
+    setSelectedClass(classSections.length > 0 ? classSections[0] : null);
     setLoading(false);
   };
 
