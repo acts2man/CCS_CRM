@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { getParentStudents } from "@/lib/parentUtils";
+import { getParentByUserEmail, getStudentsForParent } from "@/lib/entitySyncUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText } from "lucide-react";
+import { FileText, ExternalLink } from "lucide-react";
+import DocumentDetailModal from "@/components/students/DocumentDetailModal";
 
 export default function ParentDocuments() {
   const [children, setChildren] = useState([]);
