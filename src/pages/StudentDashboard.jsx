@@ -29,13 +29,18 @@ export default function StudentDashboard() {
 
   const loadStudentData = async () => {
     try {
-      const user = await base44.auth.me();
+      // Use impersonated student if available, otherwise get logged-in student
+      let studentData;
       
-      // Get student record
-      const students = await base44.entities.Student.filter({ email: user.email });
-      if (students.length === 0) return;
+      if (impersonatedStudent) {
+        studentData = impersonatedStudent;
+      } else {
+        const user = await base44.auth.me();
+        const students = await base44.entities.Student.filter({ email: user.email });
+        if (students.length === 0) return;
+        studentData = students[0];
+      }
       
-      const studentData = students[0];
       setStudent(studentData);
 
       // Get all related data in parallel
