@@ -74,7 +74,7 @@ export default function TimeOffRequest() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <img
@@ -87,13 +87,36 @@ export default function TimeOffRequest() {
           <p className="text-gray-600">Request time off in under a minute. Admin will be notified automatically.</p>
         </div>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6 text-sm">
-            {error}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          {/* Calendar */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden sticky top-8">
+              <div className="p-4 bg-blue-600 text-white">
+                <h2 className="text-lg font-semibold">School Calendar</h2>
+                <p className="text-sm text-blue-100">Check dates before submitting</p>
+              </div>
+              <div className="p-4 overflow-x-auto">
+                <iframe
+                  src="https://calendar.google.com/calendar/embed?src=fc26e7e11e62a246a3967bba8a33f18883ba3daf1e84d144b98d871eeeb60b0d%40group.calendar.google.com&ctz=America%2FLos_Angeles"
+                  style={{ border: 0 }}
+                  width="100%"
+                  height="500"
+                  frameBorder="0"
+                  scrolling="no"
+                ></iframe>
+              </div>
+            </div>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Form */}
+          <div className="lg:col-span-3">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-6 text-sm">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
           {/* Employee Information */}
           <Card>
             <CardContent className="pt-6">
