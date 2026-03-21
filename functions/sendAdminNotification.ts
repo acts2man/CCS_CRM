@@ -4,6 +4,12 @@ const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 Deno.serve(async (req) => {
   try {
+    const appId = Deno.env.get('BASE44_APP_ID');
+    const patchedHeaders = new Headers(req.headers);
+    if (appId && !patchedHeaders.has('Base44-App-Id')) {
+      patchedHeaders.set('Base44-App-Id', appId);
+    }
+
     const { requestId, firstName, lastName, email, startDate, endDate, fullDay, startTime, endTime, totalHours, usePto, reason } = await req.json();
 
     // Build the base URL for approve/deny action links
