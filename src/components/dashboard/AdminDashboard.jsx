@@ -61,14 +61,17 @@ export default function AdminDashboard() {
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-1">Welcome, {user?.full_name || 'Admin'}</p>
-        </div>
-        <Button variant="outline" onClick={() => setShowImpersonation(true)} className="flex items-center gap-2">
-          <Eye className="h-4 w-4" /> View as Teacher
-        </Button>
-      </div>
+         <div>
+           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+           <p className="text-gray-600 mt-1">Welcome, {user?.full_name || 'Admin'}</p>
+         </div>
+         <div className="flex items-center gap-3">
+           <RoleSwitcher />
+           <Button variant="outline" onClick={() => setShowImpersonation(true)} className="flex items-center gap-2">
+             Select Person to Impersonate
+           </Button>
+         </div>
+       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
