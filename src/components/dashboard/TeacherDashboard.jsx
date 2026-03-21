@@ -19,10 +19,13 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
   const [loading, setLoading] = useState(true);
   const [selectedClass, setSelectedClass] = useState(null);
 
-  useEffect(() => { loadData(); }, [impersonatedTeacher]);
+  useEffect(() => {
+    setSelectedClass(null);
+    loadData();
+  }, [impersonatedTeacher]);
 
   useEffect(() => {
-    if (classes.length > 0 && !selectedClass) setSelectedClass(classes[0]);
+    if (classes.length > 0) setSelectedClass(classes[0]);
   }, [classes]);
 
   const loadData = async () => {
