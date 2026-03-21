@@ -83,7 +83,7 @@ export default function ImpersonationModal({ open, onClose, onSelect }) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
             className="pl-9"
-            placeholder="Search by name, email, or department..."
+            placeholder="Search by name or email..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             autoFocus
@@ -93,23 +93,23 @@ export default function ImpersonationModal({ open, onClose, onSelect }) {
         {loading ? (
           <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-blue-600" /></div>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-sm text-gray-400 py-8">No teachers found.</p>
+          <p className="text-center text-sm text-gray-400 py-8">No {viewMode}s found.</p>
         ) : (
           <div className="space-y-1 max-h-72 overflow-y-auto">
-            {filtered.map(t => (
+            {filtered.map(item => (
               <button
-                key={t.id}
-                onClick={() => { onSelect(t); onClose(); }}
+                key={item.id}
+                onClick={() => { onSelect(item); onClose(); }}
                 className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-3"
               >
                 <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                  {t.first_name?.[0]}{t.last_name?.[0]}
+                  {item.first_name?.[0]}{item.last_name?.[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium">{t.first_name} {t.last_name}</div>
-                  <div className="text-xs text-gray-500 truncate">{t.email}</div>
+                  <div className="font-medium">{getDisplayName(item)}</div>
+                  <div className="text-xs text-gray-500 truncate">{getSecondaryInfo(item)}</div>
                 </div>
-                {t.department && <Badge variant="outline" className="text-xs flex-shrink-0">{t.department}</Badge>}
+                {getTertiaryInfo(item) && <Badge variant="outline" className="text-xs flex-shrink-0">{getTertiaryInfo(item)}</Badge>}
               </button>
             ))}
           </div>
