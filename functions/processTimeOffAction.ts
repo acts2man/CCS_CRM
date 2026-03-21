@@ -3,13 +3,13 @@ import { Resend } from 'npm:resend@4.0.0';
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 const CALENDAR_ID = 'a0f63acb1d30ec35e8ca13a3f8da083f039696f1f8b419e86e1c8ec6fe983546@group.calendar.google.com';
+const APP_ID = Deno.env.get('BASE44_APP_ID');
 
 Deno.serve(async (req) => {
   try {
-    // This function is called via GET link from email - no user auth needed
     const url = new URL(req.url);
     const requestId = url.searchParams.get('requestId');
-    const action = url.searchParams.get('action'); // 'approve' or 'deny'
+    const action = url.searchParams.get('action');
 
     if (!requestId || !action) {
       return new Response(htmlPage('❌ Invalid Request', 'Missing required parameters.', '#dc2626'), {
@@ -17,16 +17,13 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Inject App ID header so SDK works when called directly from a browser link
-    const appId = Deno.env.get('BASE44_APP_ID');
+    // Always inject App ID header so SDK works when called from email links (no auth headers)
     const patchedHeaders = new Headers(req.headers);
-    if (appId && !patchedHeaders.has('Base44-App-Id')) {
-      patchedHeaders.set('Base44-App-Id', appId);
-    }
+    patchedHeaders.set('Base44-App-Id', APP_ID);
     const patchedReq = new Request(req.url, { method: req.method, headers: patchedHeaders });
     const base44 = createClientFromRequest(patchedReq);
 
-    // Fetch the time off request
+    // Fetch the time off request using service role
     const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({ id: requestId });
     if (!requests || requests.length === 0) {
       return new Response(htmlPage('❌ Not Found', 'Time-off request not found.', '#dc2626'), {
@@ -36,7 +33,6 @@ Deno.serve(async (req) => {
 
     const request = requests[0];
 
-    // Prevent double-processing
     if (request.status !== 'pending') {
       return new Response(htmlPage(
         '⚠️ Already Processed',
@@ -46,7 +42,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'approve') {
-      // 1. Add to Google Calendar
+      // Get Google Calendar access token
       const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
 
       const eventBody = {
@@ -56,7 +52,6 @@ Deno.serve(async (req) => {
       };
 
       if (request.full_day) {
-        // All-day event: end date must be day after for Google Calendar
         const endDateObj = new Date(request.end_date);
         endDateObj.setDate(endDateObj.getDate() + 1);
         const endDateStr = endDateObj.toISOString().split('T')[0];
@@ -90,7 +85,6 @@ Deno.serve(async (req) => {
       const calEvent = await calRes.json();
       console.log('Calendar event created:', calEvent.id);
 
-      // 2 & 3. Send approval email + update status in parallel
       await Promise.all([
         resend.emails.send({
           from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
@@ -126,32 +120,31 @@ Deno.serve(async (req) => {
       ), { headers: { 'Content-Type': 'text/html' } });
 
     } else if (action === 'deny') {
-      // 1. Send denial email to employee
-      await resend.emails.send({
-        from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
-        to: request.work_email,
-        subject: '❌ Time-Off Request — Update',
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 32px 24px;">
-            <div style="background: #dc2626; border-radius: 10px; padding: 24px; text-align: center; margin-bottom: 24px;">
-              <h1 style="color: white; margin: 0; font-size: 22px;">Time-Off Request Update</h1>
+      await Promise.all([
+        resend.emails.send({
+          from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
+          to: request.work_email,
+          subject: '❌ Time-Off Request — Update',
+          html: `
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 32px 24px;">
+              <div style="background: #dc2626; border-radius: 10px; padding: 24px; text-align: center; margin-bottom: 24px;">
+                <h1 style="color: white; margin: 0; font-size: 22px;">Time-Off Request Update</h1>
+              </div>
+              <p style="color: #374151; font-size: 15px;">Hi ${request.first_name},</p>
+              <p style="color: #374151; font-size: 15px;">Unfortunately, your time-off request has been denied at this time.</p>
+              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                <p style="margin: 4px 0; font-size: 14px;"><strong>Requested Dates:</strong> ${request.start_date} → ${request.end_date}</p>
+                <p style="margin: 4px 0; font-size: 14px;"><strong>Total Hours:</strong> ${request.total_hours}</p>
+              </div>
+              <p style="color: #374151; font-size: 15px;">If you have any questions, please reach out to the admin directly.</p>
             </div>
-            <p style="color: #374151; font-size: 15px;">Hi ${request.first_name},</p>
-            <p style="color: #374151; font-size: 15px;">Unfortunately, your time-off request has been denied at this time.</p>
-            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin: 20px 0;">
-              <p style="margin: 4px 0; font-size: 14px;"><strong>Requested Dates:</strong> ${request.start_date} → ${request.end_date}</p>
-              <p style="margin: 4px 0; font-size: 14px;"><strong>Total Hours:</strong> ${request.total_hours}</p>
-            </div>
-            <p style="color: #374151; font-size: 15px;">If you have any questions or would like to discuss this further, please reach out to the admin directly.</p>
-            <p style="color: #6b7280; font-size: 13px; margin-top: 24px;">Thank you for your understanding.</p>
-          </div>
-        `
-      });
-
-      await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
-        status: 'denied',
-        user_notified: true,
-      });
+          `
+        }),
+        base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
+          status: 'denied',
+          user_notified: true,
+        })
+      ]);
 
       return new Response(htmlPage(
         '❌ Request Denied',
