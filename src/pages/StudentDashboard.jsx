@@ -36,11 +36,14 @@ export default function StudentDashboard() {
       const studentData = students[0];
       setStudent(studentData);
 
-      // Get all related data
-      const [classes, assignments, grades] = await Promise.all([
+      // Get all related data in parallel
+      const [classes, assignments, grades, allParents, docs, clockInOut] = await Promise.all([
         base44.entities.ClassSection.list(),
         base44.entities.Assignment.list(),
-        base44.entities.AssignmentGrade.list()
+        base44.entities.AssignmentGrade.list(),
+        base44.entities.Parent.list(),
+        base44.entities.StudentDocument.filter({ student_id: studentData.id }),
+        base44.entities.StudentClockInOut.filter({ student_id: studentData.id })
       ]);
 
       // Filter data relevant to this student
@@ -49,6 +52,21 @@ export default function StudentDashboard() {
         enrolledClasses.some(c => c.id === a.class_section_id)
       );
       const studentGrades = grades.filter(g => g.student_id === studentData.id);
+
+      // Get parent information
+      const studentParents = allParents.filter(p => 
+        studentData.parent_ids?.includes(p.id)
+      );
+      setParents(studentParents);
+
+      // Get documents
+      setDocuments(docs.slice(0, 3));
+
+      // Get recent attendance (last 5 records)
+      const recentAttendanceData = clockInOut
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
+      setRecentAttendance(recentAttendanceData);
 
       // Calculate average grade
       const avgGrade = studentGrades.length > 0
