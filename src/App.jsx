@@ -32,6 +32,9 @@ import TeacherClasses from '@/pages/TeacherClasses';
 import TeacherGradebook from '@/pages/TeacherGradebook';
 import TeacherAttendance from '@/pages/TeacherAttendance';
 import TeacherCommunications from '@/pages/TeacherCommunications';
+import TeacherProfile from '@/pages/TeacherProfile';
+import TeacherSettings from '@/pages/TeacherSettings';
+import StudentDirectory from '@/pages/StudentDirectory';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
