@@ -6,6 +6,7 @@ import AdminDashboard from "@/components/dashboard/AdminDashboard";
 import TeacherDashboard from "@/components/dashboard/TeacherDashboard";
 import ParentDashboard from "@/components/dashboard/ParentDashboard";
 import StudentDashboard from "@/components/dashboard/StudentDashboard";
+import ParentLayout from "@/components/layouts/ParentLayout";
 import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function Dashboard() {
