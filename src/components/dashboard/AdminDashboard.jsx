@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, GraduationCap, Calendar, UserCheck, BookOpen, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Progress } from "@/components/ui/progress";
+
 import { Button } from "@/components/ui/button";
 import ClassesOverview from "@/components/gradebook/ClassesOverview";
 import ImpersonationModal from "@/components/admin/ImpersonationModal";
