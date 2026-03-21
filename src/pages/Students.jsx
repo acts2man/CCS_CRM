@@ -19,6 +19,7 @@ import EditStudentModal from "@/components/students/EditStudentModal";
 import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function Students() {
+  const { startStudentImpersonation } = useImpersonation();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
