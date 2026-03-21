@@ -86,7 +86,7 @@ export default function Dashboard() {
   }
 
   if (impersonatedTeacher && viewMode === 'parent') {
-    return <ParentDashboard />;
+    return <ParentLayout><ParentDashboard /></ParentLayout>;
   }
 
   // Normal user viewing - show based on their actual role
@@ -96,7 +96,7 @@ export default function Dashboard() {
     case "teacher":
       return <TeacherDashboard />;
     case "parent":
-      return <ParentDashboard />;
+      return <ParentLayout><ParentDashboard /></ParentLayout>;
     case "student":
       return <StudentDashboard />;
     default:
