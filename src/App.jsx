@@ -124,6 +124,7 @@ const AuthenticatedApp = () => {
       <Route path="/TeacherProfile" element={<TeacherLayout><TeacherProfile /></TeacherLayout>} />
       <Route path="/TeacherSettings" element={<TeacherLayout><TeacherSettings /></TeacherLayout>} />
       <Route path="/StudentDirectory" element={<TeacherLayout><StudentDirectory /></TeacherLayout>} />
+      <Route path="/UserManagement" element={<LayoutWrapper currentPageName="UserManagement"><UserManagement /></LayoutWrapper>} />
       
       <Route path="*" element={<PageNotFound />} />
     </Routes>
