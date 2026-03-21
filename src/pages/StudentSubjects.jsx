@@ -34,7 +34,7 @@ export default function StudentSubjects() {
       
       // Filter classes where student is enrolled
       const enrolledClasses = classes.filter(c => 
-        c.student_ids?.includes(students[0].id)
+        c.student_ids?.includes(studentRecord.id)
       );
 
       // Get all subjects
