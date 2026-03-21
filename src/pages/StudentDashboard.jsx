@@ -22,6 +22,7 @@ export default function StudentDashboard() {
     averageGrade: null
   });
   const [recentAssignments, setRecentAssignments] = useState([]);
+  const [selectedDocument, setSelectedDocument] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
