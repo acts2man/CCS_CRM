@@ -90,34 +90,34 @@ Deno.serve(async (req) => {
       const calEvent = await calRes.json();
       console.log('Calendar event created:', calEvent.id);
 
-      // 2. Send approval email to employee
-      await resend.emails.send({
-        from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
-        to: request.work_email,
-        subject: '✅ Time-Off Request Approved',
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 32px 24px;">
-            <div style="background: #16a34a; border-radius: 10px; padding: 24px; text-align: center; margin-bottom: 24px;">
-              <h1 style="color: white; margin: 0; font-size: 22px;">Your Request Was Approved! ✅</h1>
+      // 2 & 3. Send approval email + update status in parallel
+      await Promise.all([
+        resend.emails.send({
+          from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
+          to: request.work_email,
+          subject: '✅ Time-Off Request Approved',
+          html: `
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 32px 24px;">
+              <div style="background: #16a34a; border-radius: 10px; padding: 24px; text-align: center; margin-bottom: 24px;">
+                <h1 style="color: white; margin: 0; font-size: 22px;">Your Request Was Approved! ✅</h1>
+              </div>
+              <p style="color: #374151; font-size: 15px;">Hi ${request.first_name},</p>
+              <p style="color: #374151; font-size: 15px;">Great news! Your time-off request has been approved and added to the school calendar.</p>
+              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                <p style="margin: 4px 0; font-size: 14px;"><strong>Dates:</strong> ${request.start_date} → ${request.end_date}</p>
+                <p style="margin: 4px 0; font-size: 14px;"><strong>Duration:</strong> ${request.total_hours} hours (${request.full_day ? 'Full day' : 'Partial day'})</p>
+                <p style="margin: 4px 0; font-size: 14px;"><strong>PTO Used:</strong> ${request.use_pto ? 'Yes' : 'No'}</p>
+              </div>
+              <p style="color: #6b7280; font-size: 13px;">This time off has been added to the school calendar. Enjoy your time off!</p>
             </div>
-            <p style="color: #374151; font-size: 15px;">Hi ${request.first_name},</p>
-            <p style="color: #374151; font-size: 15px;">Great news! Your time-off request has been approved and added to the school calendar.</p>
-            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
-              <p style="margin: 4px 0; font-size: 14px;"><strong>Dates:</strong> ${request.start_date} → ${request.end_date}</p>
-              <p style="margin: 4px 0; font-size: 14px;"><strong>Duration:</strong> ${request.total_hours} hours (${request.full_day ? 'Full day' : 'Partial day'})</p>
-              <p style="margin: 4px 0; font-size: 14px;"><strong>PTO Used:</strong> ${request.use_pto ? 'Yes' : 'No'}</p>
-            </div>
-            <p style="color: #6b7280; font-size: 13px;">This time off has been added to the school calendar. Enjoy your time off!</p>
-          </div>
-        `
-      });
-
-      // 3. Update request status
-      await base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
-        status: 'approved',
-        user_notified: true,
-        synced_to_calendar: true,
-      });
+          `
+        }),
+        base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
+          status: 'approved',
+          user_notified: true,
+          synced_to_calendar: true,
+        })
+      ]);
 
       return new Response(htmlPage(
         '✅ Request Approved',

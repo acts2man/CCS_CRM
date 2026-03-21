@@ -1,11 +1,9 @@
 import { Resend } from 'npm:resend@4.0.0';
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
     const { requestId, firstName, lastName, email, startDate, endDate, fullDay, startTime, endTime, totalHours, usePto, reason } = await req.json();
 
     // Build the base URL for approve/deny action links
