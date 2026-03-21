@@ -38,8 +38,8 @@ Deno.serve(async (req) => {
             .request-table td { padding: 12px 0 !important; display: block !important; width: 100% !important; }
             .request-table tr td:first-child { padding-bottom: 4px !important; }
             .request-table { width: 100% !important; }
-            .button-container { display: flex !important; flex-direction: row !important; gap: 8px !important; }
-            .action-button { flex: 1 !important; display: block !important; text-align: center !important; margin: 0 !important; padding: 12px 12px !important; }
+            .button-container { display: flex !important; flex-direction: row !important; gap: 6px !important; }
+            .action-button { flex: 1 !important; display: block !important; text-align: center !important; margin: 0 !important; padding: 8px 6px !important; font-size: 12px !important; }
           }
         </style>
       </head>
