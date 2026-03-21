@@ -62,47 +62,48 @@ export default function ClassesOverview() {
           {classes.map(cls => {
             const studentCount = cls.student_ids?.length || 0;
             return (
-              <Card key={cls.id} className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card key={cls.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="pt-5">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <h3 className="font-bold text-lg">{cls.name}</h3>
                       <p className="text-sm text-gray-600">{cls.teacher_name || 'No teacher assigned'}</p>
                     </div>
-                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-gray-700" onClick={() => setEditingClass(cls)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3 mb-4">
+                  <div className="grid grid-cols-2 gap-3 mb-4">
                     <div className="bg-blue-50 rounded p-3 text-center">
                       <Users className="h-4 w-4 text-blue-600 mx-auto mb-1" />
                       <div className="text-lg font-bold text-blue-600">{studentCount}</div>
                       <div className="text-xs text-gray-600">Students</div>
                     </div>
-                    <div className="bg-purple-50 rounded p-3 text-center">
-                      <BookOpen className="h-4 w-4 text-purple-600 mx-auto mb-1" />
-                      <div className="text-lg font-bold text-purple-600">—</div>
-                      <div className="text-xs text-gray-600">Grade</div>
-                    </div>
                     <div className="bg-green-50 rounded p-3 text-center">
                       <TrendingUp className="h-4 w-4 text-green-600 mx-auto mb-1" />
-                      <div className="text-lg font-bold text-green-600">—</div>
-                      <div className="text-xs text-gray-600">Avg</div>
+                      <div className="text-lg font-bold text-green-600">{cls.grade_level ? `Gr ${cls.grade_level}` : '—'}</div>
+                      <div className="text-xs text-gray-600">Grade Level</div>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-1 mb-3">
-                    {cls.grade_level && <Badge variant="outline">Gr {cls.grade_level}</Badge>}
+                    {cls.period && <Badge variant="outline">Period {cls.period}</Badge>}
                     {cls.school_year && <Badge className="bg-gray-100 text-gray-700">{cls.school_year}</Badge>}
+                    {cls.room_number && <Badge variant="outline">Room {cls.room_number}</Badge>}
                   </div>
-
-                  <Button className="w-full bg-slate-900 hover:bg-slate-800" size="sm">
-                    View Gradebook
-                  </Button>
                 </CardContent>
               </Card>
             );
           })}
         </div>
+        {editingClass && (
+          <EditClassModal
+            classSection={editingClass}
+            onClose={() => setEditingClass(null)}
+            onSaved={() => { setEditingClass(null); loadData(); }}
+          />
+        )}
       )}
     </div>
   );
