@@ -52,7 +52,7 @@ export default function TimeOffRequest() {
       status: "pending"
     });
 
-    await base44.functions.invoke('sendAdminNotification', {
+    base44.functions.invoke('sendAdminNotification', {
       requestId: request.id,
       firstName: formData.first_name,
       lastName: formData.last_name,
