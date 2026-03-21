@@ -143,8 +143,8 @@ export default function TimeOffRequest() {
             </CardContent>
           </Card>
 
-          {/* Request Details */}
-          <Card>
+              {/* Request Details */}
+              <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
                 <Calendar className="h-5 w-5 text-blue-600" />
