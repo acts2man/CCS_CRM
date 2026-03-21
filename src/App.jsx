@@ -112,6 +112,12 @@ const AuthenticatedApp = () => {
       <Route path="/ParentAttendance" element={<ParentLayout><ParentAttendance /></ParentLayout>} />
       <Route path="/ParentBilling" element={<ParentLayout><ParentBilling /></ParentLayout>} />
       
+      {/* Teacher Dashboard Routes */}
+      <Route path="/TeacherClasses" element={<TeacherLayout><TeacherClasses /></TeacherLayout>} />
+      <Route path="/TeacherGradebook" element={<TeacherLayout><TeacherGradebook /></TeacherLayout>} />
+      <Route path="/TeacherAttendance" element={<TeacherLayout><TeacherAttendance /></TeacherLayout>} />
+      <Route path="/TeacherCommunications" element={<TeacherLayout><TeacherCommunications /></TeacherLayout>} />
+      
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
