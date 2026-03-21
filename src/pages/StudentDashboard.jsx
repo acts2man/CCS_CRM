@@ -32,28 +32,31 @@ export default function StudentDashboard() {
 
   const loadStudentData = async () => {
     try {
-      // Use impersonated student if available, otherwise get logged-in student
+      // Use impersonated student if available, otherwise get logged-in student by email
       let studentData;
       
       if (impersonatedStudent) {
         studentData = impersonatedStudent;
       } else {
         const user = await base44.auth.me();
-        const students = await base44.entities.Student.filter({ email: user.email });
-        if (students.length === 0) return;
-        studentData = students[0];
+        const { student, error } = await getStudentByUserEmail(user.email);
+        if (error || !student) {
+          console.error("Student sync error:", error);
+          return;
+        }
+        studentData = student;
       }
       
       setStudent(studentData);
 
       // Get all related data in parallel
-      const [classes, assignments, grades, allParents, docs, clockInOut] = await Promise.all([
+      const [classes, assignments, grades, docs, clockInOut, parentData] = await Promise.all([
         base44.entities.ClassSection.list(),
         base44.entities.Assignment.list(),
         base44.entities.AssignmentGrade.list(),
-        base44.entities.Parent.list(),
         base44.entities.StudentDocument.filter({ student_id: studentData.id }),
-        base44.entities.StudentClockInOut.filter({ student_id: studentData.id })
+        base44.entities.StudentClockInOut.filter({ student_id: studentData.id }),
+        getParentsForStudent(studentData.id)
       ]);
 
       // Filter data relevant to this student
@@ -63,11 +66,8 @@ export default function StudentDashboard() {
       );
       const studentGrades = grades.filter(g => g.student_id === studentData.id);
 
-      // Get parent information
-      const studentParents = allParents.filter(p => 
-        studentData.parent_ids?.includes(p.id)
-      );
-      setParents(studentParents);
+      // Set parent information via ID-based lookup
+      setParents(parentData.parents);
 
       // Get documents
       setDocuments(docs.slice(0, 3));
