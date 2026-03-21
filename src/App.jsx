@@ -16,7 +16,6 @@ import { ImpersonationProvider } from '@/lib/ImpersonationContext';
 import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
 import Layout from './layout';
 import ParentLayout from '@/components/layouts/ParentLayout';
-import { useAuth } from '@/lib/AuthContext';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
