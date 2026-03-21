@@ -6,9 +6,9 @@ export function ImpersonationProvider({ children }) {
   const [impersonatedTeacher, setImpersonatedTeacher] = useState(null);
   const [viewMode, setViewMode] = useState('admin'); // 'admin', 'teacher', 'student', 'parent'
 
-  const startImpersonation = (teacher) => {
-    setImpersonatedTeacher(teacher);
-    setViewMode('teacher');
+  const startImpersonation = (person) => {
+    setImpersonatedTeacher(person);
+    // Keep the current viewMode instead of forcing it to 'teacher'
   };
 
   const stopImpersonation = () => {
