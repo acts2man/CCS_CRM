@@ -14,6 +14,14 @@ import TimeOffAction from '@/pages/TimeOffAction';
 import TimeOffRequest from '@/pages/TimeOffRequest';
 import { ImpersonationProvider } from '@/lib/ImpersonationContext';
 import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
+import StudentLayout from '@/components/layouts/StudentLayout';
+import StudentDashboard from '@/pages/StudentDashboard';
+import StudentSubjects from '@/pages/StudentSubjects';
+import StudentAssignments from '@/pages/StudentAssignments';
+import StudentGrades from '@/pages/StudentGrades';
+import StudentTeachers from '@/pages/StudentTeachers';
+import StudentDocuments from '@/pages/StudentDocuments';
+import StudentAnnouncements from '@/pages/StudentAnnouncements';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
