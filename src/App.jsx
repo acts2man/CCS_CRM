@@ -25,6 +25,7 @@ import StudentGrades from '@/pages/StudentGrades';
 import StudentTeachers from '@/pages/StudentTeachers';
 import StudentDocuments from '@/pages/StudentDocuments';
 import StudentAnnouncements from '@/pages/StudentAnnouncements';
+import ParentDashboard from '@/pages/ParentDashboard';
 import ParentGrades from '@/pages/ParentGrades';
 import ParentAssignments from '@/pages/ParentAssignments';
 import ParentAttendance from '@/pages/ParentAttendance';
@@ -129,6 +130,7 @@ const AuthenticatedApp = () => {
       <Route path="/StudentAnnouncements" element={<StudentLayout><StudentAnnouncements /></StudentLayout>} />
       
       {/* Parent Dashboard Routes */}
+      <Route path="/ParentDashboard" element={<ParentLayout><ParentDashboard /></ParentLayout>} />
       <Route path="/ParentGrades" element={<ParentLayout><ParentGrades /></ParentLayout>} />
       <Route path="/ParentAssignments" element={<ParentLayout><ParentAssignments /></ParentLayout>} />
       <Route path="/ParentAttendance" element={<ParentLayout><ParentAttendance /></ParentLayout>} />
