@@ -5,8 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { isBefore } from "date-fns";
+import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function StudentAssignments() {
+  const { impersonatedStudent } = useImpersonation();
   const [assignments, setAssignments] = useState([]);
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
@@ -14,7 +16,7 @@ export default function StudentAssignments() {
 
   useEffect(() => {
     loadAssignments();
-  }, []);
+  }, [impersonatedStudent]);
 
   useEffect(() => {
     filterAssignments();
