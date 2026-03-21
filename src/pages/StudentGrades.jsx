@@ -3,8 +3,10 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
+import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function StudentGrades() {
+  const { impersonatedStudent } = useImpersonation();
   const [studentRecord, setStudentRecord] = useState(null);
   const [gradesBySubject, setGradesBySubject] = useState([]);
   const [overallGPA, setOverallGPA] = useState(null);
@@ -13,7 +15,7 @@ export default function StudentGrades() {
 
   useEffect(() => {
     loadGrades();
-  }, []);
+  }, [impersonatedStudent]);
 
   const loadGrades = async () => {
     try {
