@@ -107,11 +107,38 @@ export default function StudentDashboard() {
 
   return (
     <div className="p-8 space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Welcome, {student?.first_name}!</h1>
-        <p className="text-gray-600 mt-1">Grade {student?.grade_level} • Academic Dashboard</p>
-      </div>
+      {/* Profile Header */}
+      <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-6">
+            {student?.photo_url ? (
+              <img 
+                src={student.photo_url} 
+                alt={`${student.first_name} ${student.last_name}`}
+                className="h-24 w-24 rounded-lg object-cover border-4 border-white shadow-md"
+              />
+            ) : (
+              <div className="h-24 w-24 rounded-lg bg-gray-300 flex items-center justify-center border-4 border-white shadow-md">
+                <User className="h-12 w-12 text-gray-500" />
+              </div>
+            )}
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-gray-900">{student?.first_name} {student?.last_name}</h1>
+              <p className="text-lg text-gray-600 mt-1">Grade {student?.grade_level}</p>
+              {student?.email && (
+                <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
+                  <Mail className="h-4 w-4" /> {student.email}
+                </p>
+              )}
+              {student?.phone && (
+                <p className="text-sm text-gray-600 flex items-center gap-2">
+                  <Phone className="h-4 w-4" /> {student.phone}
+                </p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
