@@ -72,33 +72,14 @@ export default function ClassEnrollmentTab({ studentId }) {
 
       {/* Enrollment picker */}
       {showPicker && (
-        <Card className="border-blue-200 bg-blue-50">
-          <CardContent className="pt-4">
-            <p className="text-sm font-medium text-blue-900 mb-3">Select classes to enroll this student in:</p>
-            {unenrolledClasses.length === 0 ? (
-              <p className="text-sm text-gray-500">Student is already enrolled in all available classes for {schoolYear}.</p>
-            ) : (
-              <div className="space-y-2">
-                {unenrolledClasses.map(cls => (
-                  <div key={cls.id} className="flex items-center gap-3 p-2 bg-white rounded-lg border hover:border-blue-300 transition-colors">
-                    <Checkbox
-                      id={cls.id}
-                      onCheckedChange={() => toggleEnrollment(cls)}
-                      disabled={saving}
-                    />
-                    <label htmlFor={cls.id} className="flex-1 cursor-pointer">
-                      <div className="font-medium text-sm">{cls.name}</div>
-                      <div className="text-xs text-gray-500">{cls.teacher_name || "No teacher assigned"} · Grade {cls.grade_level}</div>
-                    </label>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="flex justify-end mt-3">
-              <Button size="sm" variant="outline" onClick={() => setShowPicker(false)}>Done</Button>
-            </div>
-          </CardContent>
-        </Card>
+        <TeacherClassPicker
+          allClasses={allClasses}
+          enrolledClassIds={enrolledClassIds}
+          saving={saving}
+          onToggle={toggleEnrollment}
+          onClose={() => setShowPicker(false)}
+          schoolYear={schoolYear}
+        />
       )}
 
       {/* Currently enrolled */}
