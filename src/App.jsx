@@ -45,8 +45,9 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
+  // Handle authentication errors (skip for public paths)
+  const isPublicPath = ['/time-off-request', '/time-off-action'].some(p => window.location.pathname.startsWith(p));
+  if (authError && !isPublicPath) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
