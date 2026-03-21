@@ -78,10 +78,7 @@ function App() {
         <QueryClientProvider client={queryClientInstance}>
           <Router>
             <NavigationTracker />
-            <Routes>
-              <Route path="/time-off-request" element={<TimeOffRequest />} />
-              <Route path="*" element={<AuthenticatedApp />} />
-            </Routes>
+            <AuthenticatedApp />
           </Router>
           <Toaster />
           <VisualEditAgent />
