@@ -58,6 +58,7 @@ export default function ClassesOverview() {
           </CardContent>
         </Card>
       ) : (
+        <>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {classes.map(cls => {
             const studentCount = cls.student_ids?.length || 0;
