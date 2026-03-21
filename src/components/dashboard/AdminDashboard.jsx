@@ -76,10 +76,7 @@ export default function AdminDashboard() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-sm text-blue-600 mb-1">Total Students</div>
-                <div className="text-3xl font-bold">{loading ? "..." : stats.students}</div>
-                <div className="text-xs text-gray-500 mt-1">
-                  {getChangeText(stats.students, stats.students - stats.lastMonthStudents)}
-                </div>
+                  <div className="text-3xl font-bold">{loading ? "..." : stats.students}</div>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Users className="h-6 w-6 text-blue-600" />
