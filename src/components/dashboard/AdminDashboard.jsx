@@ -47,13 +47,7 @@ export default function AdminDashboard() {
         parents: parents.length
       });
 
-      // Mock recent activities
-      setRecentActivities([
-        { title: "New student registration", description: "Emma Wilson", time: "Today, 10:26 AM" },
-        { title: "Grade update", description: "Mr. Johnson", time: "Yesterday, 3:45 PM" },
-        { title: "Attendance report generated", description: "Admin", time: "Yesterday, 9:15 AM" },
-        { title: "Payment received", description: "Parker Family", time: "2 days ago" }
-      ]);
+      setRecentActivities([]);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
