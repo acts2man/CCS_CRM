@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Mail, Plus, Shield, Users } from 'lucide-react';
 import UserInviteModal from '@/components/admin/UserInviteModal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
