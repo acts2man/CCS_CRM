@@ -86,6 +86,16 @@ const AuthenticatedApp = () => {
       ))}
       <Route path="/sign-document" element={<SignDocument />} />
       <Route path="/time-off-action" element={<TimeOffAction />} />
+      
+      {/* Student Dashboard Routes */}
+      <Route path="/StudentDashboard" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
+      <Route path="/StudentSubjects" element={<StudentLayout><StudentSubjects /></StudentLayout>} />
+      <Route path="/StudentAssignments" element={<StudentLayout><StudentAssignments /></StudentLayout>} />
+      <Route path="/StudentGrades" element={<StudentLayout><StudentGrades /></StudentLayout>} />
+      <Route path="/StudentTeachers" element={<StudentLayout><StudentTeachers /></StudentLayout>} />
+      <Route path="/StudentDocuments" element={<StudentLayout><StudentDocuments /></StudentLayout>} />
+      <Route path="/StudentAnnouncements" element={<StudentLayout><StudentAnnouncements /></StudentLayout>} />
+      
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
