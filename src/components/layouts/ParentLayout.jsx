@@ -17,12 +17,12 @@ export default function ParentLayout({ children }) {
 
   const navigation = [
     { name: 'Dashboard', href: 'Dashboard', icon: LayoutDashboard },
-    { name: 'Grades', href: 'Dashboard', icon: BookOpen },
-    { name: 'Assignments', href: 'Dashboard', icon: FileText },
-    { name: 'Attendance', href: 'Dashboard', icon: Calendar },
-    { name: 'Documents', href: 'Dashboard', icon: FileText },
-    { name: 'Billing', href: 'Dashboard', icon: DollarSign },
-    { name: 'Communications', href: 'Dashboard', icon: MessageSquare },
+    { name: 'Grades', href: 'ParentGrades', icon: BookOpen },
+    { name: 'Assignments', href: 'ParentAssignments', icon: FileText },
+    { name: 'Attendance', href: 'ParentAttendance', icon: Calendar },
+    { name: 'Documents', href: 'Documents', icon: FileText },
+    { name: 'Billing', href: 'ParentBilling', icon: DollarSign },
+    { name: 'Communications', href: 'Chat', icon: MessageSquare },
   ];
 
   const bottomNavigation = [
