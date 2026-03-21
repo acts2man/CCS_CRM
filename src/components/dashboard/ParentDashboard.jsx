@@ -124,12 +124,21 @@ export default function ParentDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Announcements</CardTitle>
+            <CardTitle>Children Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-sm text-gray-600">
-              No new announcements.
-            </div>
+            {childrenData.length === 0 ? (
+              <div className="text-sm text-gray-600">No children linked to your account.</div>
+            ) : (
+              <div className="space-y-3">
+                {childrenData.map((child) => (
+                  <div key={child.id} className="pb-3 border-b last:border-b-0">
+                    <div className="font-medium text-sm">{child.first_name} {child.last_name}</div>
+                    <div className="text-xs text-gray-600">Grade {child.grade_level}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
