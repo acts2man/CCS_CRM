@@ -103,24 +103,8 @@ export default function AdminDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-start justify-between">
               <div>
-                <div className="text-sm text-gray-600 mb-1">Average Attendance</div>
-                <div className="text-3xl font-bold">{loading ? "..." : stats.attendanceRate}%</div>
-                <div className="text-xs text-green-600 mt-1">↑ 1% from last month</div>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Calendar className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="text-sm text-gray-600 mb-1">Active Parents</div>
+                <div className="text-sm text-gray-600 mb-1">Total Parents</div>
                 <div className="text-3xl font-bold">{loading ? "..." : stats.parents}</div>
-                <div className="text-xs text-green-600 mt-1">↑ 12% from last month</div>
               </div>
               <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                 <UserCheck className="h-6 w-6 text-gray-600" />
