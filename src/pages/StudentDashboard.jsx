@@ -39,20 +39,8 @@ export default function StudentDashboard() {
       } else {
         const user = await base44.auth.me();
         const students = await base44.entities.Student.filter({ email: user.email });
-        if (students.length === 0) {
-          // If no student found with user email, try to get from parent relationship
-          const parents = await base44.entities.Parent.filter({ email: user.email });
-          if (parents.length === 0) return;
-          
-          const allStudents = await base44.entities.Student.list();
-          const linkedStudents = allStudents.filter(s => 
-            s.parent_ids?.includes(parents[0].id)
-          );
-          if (linkedStudents.length === 0) return;
-          studentData = linkedStudents[0];
-        } else {
-          studentData = students[0];
-        }
+        if (students.length === 0) return;
+        studentData = students[0];
       }
       
       setStudent(studentData);
