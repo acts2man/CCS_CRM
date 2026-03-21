@@ -2,42 +2,80 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, GraduationCap, Loader2 } from 'lucide-react';
+import { Search, GraduationCap, Users, UserCheck, Loader2 } from 'lucide-react';
+import { useImpersonation } from '@/lib/ImpersonationContext';
 
 export default function ImpersonationModal({ open, onClose, onSelect }) {
-  const [teachers, setTeachers] = useState([]);
+  const { viewMode } = useImpersonation();
+  const [data, setData] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (open) loadTeachers();
-  }, [open]);
+    if (open) loadData();
+  }, [open, viewMode]);
 
-  const loadTeachers = async () => {
+  const loadData = async () => {
     setLoading(true);
-    const all = await base44.entities.Teacher.list();
-    setTeachers(all);
+    let all = [];
+    
+    if (viewMode === 'teacher') {
+      all = await base44.entities.Teacher.list();
+    } else if (viewMode === 'parent') {
+      all = await base44.entities.Parent.list();
+    } else if (viewMode === 'student') {
+      all = await base44.entities.Student.list();
+    }
+    
+    setData(all);
     setLoading(false);
   };
 
-  const filtered = teachers.filter(t => {
+  const getDisplayName = (item) => {
+    return `${item.first_name} ${item.last_name}`;
+  };
+
+  const getSecondaryInfo = (item) => {
+    return item.email || '';
+  };
+
+  const getTertiaryInfo = (item) => {
+    if (viewMode === 'teacher') return item.department || '';
+    if (viewMode === 'parent') return item.relationship || '';
+    return '';
+  };
+
+  const filtered = data.filter(item => {
     const q = search.toLowerCase();
     return (
-      `${t.first_name} ${t.last_name}`.toLowerCase().includes(q) ||
-      (t.email || '').toLowerCase().includes(q) ||
-      (t.department || '').toLowerCase().includes(q)
+      getDisplayName(item).toLowerCase().includes(q) ||
+      getSecondaryInfo(item).toLowerCase().includes(q) ||
+      getTertiaryInfo(item).toLowerCase().includes(q)
     );
   });
+
+  const getIcon = () => {
+    if (viewMode === 'teacher') return <GraduationCap className="h-5 w-5 text-blue-600" />;
+    if (viewMode === 'parent') return <Users className="h-5 w-5 text-purple-600" />;
+    if (viewMode === 'student') return <UserCheck className="h-5 w-5 text-green-600" />;
+    return <GraduationCap className="h-5 w-5 text-blue-600" />;
+  };
+
+  const getTitle = () => {
+    if (viewMode === 'teacher') return 'View as Teacher';
+    if (viewMode === 'parent') return 'View as Parent';
+    if (viewMode === 'student') return 'View as Student';
+    return 'Impersonate';
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <GraduationCap className="h-5 w-5 text-blue-600" />
-            View as Teacher
+            {getIcon()}
+            {getTitle()}
           </DialogTitle>
         </DialogHeader>
 
