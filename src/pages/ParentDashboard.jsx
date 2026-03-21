@@ -26,11 +26,23 @@ export default function ParentDashboard() {
     try {
       const currentUser = await base44.auth.me();
       
-      // Fetch parent data using email to get synced information
-      const parentData = await getParentWithStudents(currentUser.email);
+      // Fetch parent by email (standardized lookup)
+      const { parent: parentData, error: parentError } = await getParentByUserEmail(currentUser.email);
+      
+      if (parentError || !parentData) {
+        console.error("Parent sync error:", parentError);
+        setLoading(false);
+        return;
+      }
+      
       setParent(parentData);
       
-      const myChildren = parentData?.students || [];
+      // Get children via ID-based lookup (standardized relationship)
+      const { students: myChildren, error: childrenError } = await getStudentsForParent(parentData.id);
+      
+      if (childrenError) {
+        console.error("Children fetch error:", childrenError);
+      }
       
       setChildren(myChildren);
 
