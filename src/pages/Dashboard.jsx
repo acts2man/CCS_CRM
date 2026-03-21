@@ -75,11 +75,20 @@ export default function Dashboard() {
     );
   }
 
-  // If admin is impersonating a teacher, show teacher dashboard for that teacher
-  if (impersonatedTeacher) {
+  // If admin is impersonating someone, use the viewMode to determine what to show
+  if (impersonatedTeacher && viewMode === 'teacher') {
     return <TeacherDashboard impersonatedTeacher={impersonatedTeacher} />;
   }
+  
+  if (impersonatedTeacher && viewMode === 'student') {
+    return <StudentDashboard />;
+  }
 
+  if (impersonatedTeacher && viewMode === 'parent') {
+    return <ParentDashboard />;
+  }
+
+  // Normal user viewing - show based on their actual role
   switch (user?.role) {
     case "admin":
       return <AdminDashboard />;
