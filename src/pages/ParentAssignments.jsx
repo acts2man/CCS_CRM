@@ -20,8 +20,20 @@ export default function ParentAssignments() {
     try {
       const user = await base44.auth.me();
       
-      // Use utility to get students associated with this parent by email
-      const myChildren = await getParentStudents(user.email);
+      // Get parent by email and their students via ID-based lookup
+      const { parent: parentData, error: parentError } = await getParentByUserEmail(user.email);
+      
+      if (parentError || !parentData) {
+        console.error("Parent sync error:", parentError);
+        setLoading(false);
+        return;
+      }
+      
+      const { students: myChildren, error: childrenError } = await getStudentsForParent(parentData.id);
+      
+      if (childrenError) {
+        console.error("Children fetch error:", childrenError);
+      }
       
       setChildren(myChildren);
       if (myChildren.length > 0) {
@@ -37,14 +49,22 @@ export default function ParentAssignments() {
 
   const loadChildAssignments = async (studentId) => {
     try {
-      const [allAssignments, assignmentGrades, classSections] = await Promise.all([
-        base44.entities.Assignment.list(),
+      const [allClasses, assignmentGrades, classSections] = await Promise.all([
+        base44.entities.ClassSection.list(),
         base44.entities.AssignmentGrade.filter({ student_id: studentId }),
         base44.entities.ClassSection.list()
       ]);
 
+      // Get only classes where the child is enrolled
+      const enrolledClasses = allClasses.filter(c => c.student_ids?.includes(studentId));
+      const enrolledClassIds = enrolledClasses.map(c => c.id);
+
+      // Get assignments only for enrolled classes
+      const allAssignments = await base44.entities.Assignment.list();
+      const childAssignments = allAssignments.filter(a => enrolledClassIds.includes(a.class_section_id));
+
       // Map assignments with grades and status
-      const assignmentsWithStatus = allAssignments.map(assignment => {
+      const assignmentsWithStatus = childAssignments.map(assignment => {
         const grade = assignmentGrades.find(g => g.assignment_id === assignment.id);
         const classSection = classSections.find(c => c.id === assignment.class_section_id);
         const dueDate = new Date(assignment.due_date);
