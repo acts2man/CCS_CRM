@@ -15,9 +15,10 @@ Deno.serve(async (req) => {
       status: 'pending'
     });
 
-    // Build approve/deny links pointing to the app page
-    const approveLink = `https://app.base44.com/apps/6934d527b5d299be1ef1388b/TimeOffAction?requestId=${request.id}&action=approve`;
-    const denyLink = `https://app.base44.com/apps/6934d527b5d299be1ef1388b/TimeOffAction?requestId=${request.id}&action=deny`;
+    // Build approve/deny links pointing to the published app
+    const appBaseUrl = 'https://calvaryforkidscrm.com';
+    const approveLink = `${appBaseUrl}/time-off-action?requestId=${request.id}&action=approve`;
+    const denyLink = `${appBaseUrl}/time-off-action?requestId=${request.id}&action=deny`;
 
     // Send admin notification email (don't await — fire and forget)
     resend.emails.send({
