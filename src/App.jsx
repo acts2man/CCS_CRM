@@ -55,22 +55,33 @@ const AuthenticatedApp = () => {
     }
   }
 
+  // Choose layout based on user role
+  const LayoutComponent = user?.role === 'parent' ? ParentLayout : (Layout ? MainLayout : null);
+  
+  // Wrapper for pages that need the main layout
+  const WithLayout = ({ children, currentPageName }) => {
+    if (!LayoutComponent) return <>{children}</>;
+    return LayoutComponent === ParentLayout 
+      ? <ParentLayout>{children}</ParentLayout>
+      : <MainLayout currentPageName={currentPageName}>{children}</MainLayout>;
+  };
+
   // Render the main app
   return (
     <Routes>
       <Route path="/" element={
-        <LayoutWrapper currentPageName={mainPageKey}>
+        <WithLayout currentPageName={mainPageKey}>
           <MainPage />
-        </LayoutWrapper>
+        </WithLayout>
       } />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
           path={`/${path}`}
           element={
-            <LayoutWrapper currentPageName={path}>
+            <WithLayout currentPageName={path}>
               <Page />
-            </LayoutWrapper>
+            </WithLayout>
           }
         />
       ))}
