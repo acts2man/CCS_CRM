@@ -287,6 +287,12 @@ export default function AdminDashboard() {
       <div className="pt-4">
         <ClassesOverview />
       </div>
+
+      <ImpersonationModal
+        open={showImpersonation}
+        onClose={() => setShowImpersonation(false)}
+        onSelect={(teacher) => startImpersonation(teacher)}
+      />
     </div>
   );
 }
