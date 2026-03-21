@@ -3,15 +3,17 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Users, Clock } from "lucide-react";
+import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function StudentSubjects() {
+  const { impersonatedStudent } = useImpersonation();
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [student, setStudent] = useState(null);
 
   useEffect(() => {
     loadSubjects();
-  }, []);
+  }, [impersonatedStudent]);
 
   const loadSubjects = async () => {
     try {
