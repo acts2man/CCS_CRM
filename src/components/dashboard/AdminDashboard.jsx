@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, GraduationCap, Calendar, UserCheck, BookOpen, Eye } from "lucide-react";
+import { Users, GraduationCap, Calendar, UserCheck, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 import { Button } from "@/components/ui/button";
 import ClassesOverview from "@/components/gradebook/ClassesOverview";
 import ImpersonationModal from "@/components/admin/ImpersonationModal";
+import RoleSwitcher from "@/components/admin/RoleSwitcher";
 import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function AdminDashboard() {
