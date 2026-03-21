@@ -164,6 +164,7 @@ export default function TeacherProfile() {
           <TabsTrigger value="subjects">Subjects</TabsTrigger>
           <TabsTrigger value="classes">Classes</TabsTrigger>
           <TabsTrigger value="activities">Activities</TabsTrigger>
+          <TabsTrigger value="timeoff">Time Off</TabsTrigger>
           <TabsTrigger value="notes">Notes</TabsTrigger>
           <TabsTrigger value="certs">Certs</TabsTrigger>
         </TabsList>
