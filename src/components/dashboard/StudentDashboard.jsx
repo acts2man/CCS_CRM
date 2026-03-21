@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Calendar, ClipboardList, Trophy } from "lucide-react";
+import { BookOpen, Calendar, ClipboardList, Trophy, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -9,11 +9,12 @@ export default function StudentDashboard() {
   const [stats, setStats] = useState({
     myClasses: 0,
     assignments: 0,
-    gpa: 0,
+    documents: 0,
     attendance: 0
   });
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [studentRecord, setStudentRecord] = useState(null);
 
   useEffect(() => {
     loadStudentData();
@@ -24,17 +25,29 @@ export default function StudentDashboard() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const [classes, grades] = await Promise.all([
-        base44.entities.Class.list(),
-        base44.entities.Grade.list()
-      ]);
+      // Find student record by email
+      const students = await base44.entities.Student.filter({ email: currentUser.email });
+      if (students.length > 0) {
+        setStudentRecord(students[0]);
+        
+        // Get classes, assignments, and documents
+        const [classSections, assignments, documents] = await Promise.all([
+          base44.entities.ClassSection.list(),
+          base44.entities.Assignment.list(),
+          base44.entities.StudentDocument.list()
+        ]);
 
-      setStats({
-        myClasses: classes.length,
-        assignments: 0,
-        gpa: 0,
-        attendance: 0
-      });
+        const studentClasses = classSections.filter(c => 
+          c.student_ids?.includes(students[0].id)
+        );
+
+        setStats({
+          myClasses: studentClasses.length,
+          assignments: assignments.length,
+          documents: documents.filter(d => d.student_id === students[0].id).length,
+          attendance: 0
+        });
+      }
     } catch (error) {
       console.error("Error loading student data:", error);
     } finally {
