@@ -4,17 +4,28 @@ const ImpersonationContext = createContext(null);
 
 export function ImpersonationProvider({ children }) {
   const [impersonatedTeacher, setImpersonatedTeacher] = useState(null);
+  const [viewMode, setViewMode] = useState('admin'); // 'admin', 'teacher', 'student', 'parent'
 
   const startImpersonation = (teacher) => {
     setImpersonatedTeacher(teacher);
+    setViewMode('teacher');
   };
 
   const stopImpersonation = () => {
     setImpersonatedTeacher(null);
+    setViewMode('admin');
   };
 
   return (
-    <ImpersonationContext.Provider value={{ impersonatedTeacher, startImpersonation, stopImpersonation }}>
+    <ImpersonationContext.Provider 
+      value={{ 
+        impersonatedTeacher, 
+        startImpersonation, 
+        stopImpersonation,
+        viewMode,
+        setViewMode
+      }}
+    >
       {children}
     </ImpersonationContext.Provider>
   );
