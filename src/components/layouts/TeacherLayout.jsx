@@ -20,9 +20,8 @@ export default function TeacherLayout({ children }) {
     { name: 'Classes', href: 'TeacherClasses', icon: BookOpen },
     { name: 'Gradebook', href: 'TeacherGradebook', icon: BarChart3 },
     { name: 'Attendance', href: 'TeacherAttendance', icon: Calendar },
-    { name: 'Students', href: 'Students', icon: Users },
-    { name: 'Communications', href: 'Chat', icon: MessageSquare },
-    { name: 'Documents', href: 'Documents', icon: FileText },
+    { name: 'Communications', href: 'TeacherCommunications', icon: MessageSquare },
+    { name: 'Student Directory', href: 'StudentDirectory', icon: Users },
   ];
 
   const bottomNavigation = [
