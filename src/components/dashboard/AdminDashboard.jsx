@@ -114,61 +114,7 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Recent Activities & System Health */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activities</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivities.map((activity, index) => (
-                <div key={index} className="flex justify-between items-start">
-                  <div>
-                    <div className="font-medium text-sm">{activity.title}</div>
-                    <div className="text-sm text-gray-600">{activity.description}</div>
-                  </div>
-                  <div className="text-xs text-gray-500">{activity.time}</div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>System Health</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Storage Usage</span>
-                  <span className="text-gray-500">65%</span>
-                </div>
-                <Progress value={65} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>User Accounts</span>
-                  <span className="text-gray-500">329/500</span>
-                </div>
-                <Progress value={66} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>API Usage</span>
-                  <span className="text-gray-500">42%</span>
-                </div>
-                <Progress value={42} className="h-2" />
-              </div>
-              <button className="text-sm text-blue-600 hover:underline mt-2">
-                View System Details
-              </button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Quick Access Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
