@@ -20,16 +20,8 @@ export default function ParentAttendance() {
     try {
       const user = await base44.auth.me();
       
-      // Find parent record
-      const parents = await base44.entities.Parent.filter({ email: user.email });
-      if (parents.length === 0) return;
-
-      const parent = parents[0];
-      const studentIds = parent.student_ids || [];
-
-      // Get student records
-      const allStudents = await base44.entities.Student.list();
-      const myChildren = allStudents.filter(s => studentIds.includes(s.id));
+      // Use utility to get students associated with this parent by email
+      const myChildren = await getParentStudents(user.email);
       
       setChildren(myChildren);
       if (myChildren.length > 0) {
