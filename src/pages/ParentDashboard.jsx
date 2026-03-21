@@ -89,7 +89,7 @@ export default function ParentDashboard() {
     <div className="p-8 space-y-6">
       {/* Welcome Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Welcome, {user?.full_name}!</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Welcome, {user?.full_name || user?.email}!</h1>
         <p className="text-gray-600 mt-1">Overview of your children's academic progress</p>
       </div>
 
