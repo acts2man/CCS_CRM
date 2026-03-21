@@ -9,6 +9,9 @@ import { format } from "date-fns";
 
 export default function StudentDashboard() {
   const [student, setStudent] = useState(null);
+  const [parents, setParents] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [recentAttendance, setRecentAttendance] = useState([]);
   const [stats, setStats] = useState({
     subjects: 0,
     assignments: 0,
