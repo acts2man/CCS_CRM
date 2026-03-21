@@ -83,7 +83,7 @@ export default function Dashboard() {
   }
   
   if (impersonatedTeacher && viewMode === 'student') {
-    return <StudentDashboard />;
+    return <StudentLayout><StudentDashboardComponent /></StudentLayout>;
   }
 
   if (impersonatedTeacher && viewMode === 'parent') {
@@ -99,7 +99,7 @@ export default function Dashboard() {
     case "parent":
       return <ParentLayout><ParentDashboard /></ParentLayout>;
     case "student":
-      return <StudentDashboard />;
+      return <StudentLayout><StudentDashboardComponent /></StudentLayout>;
     default:
       return (
         <div className="flex flex-col items-center justify-center h-64 bg-yellow-50 p-6 rounded-lg">
