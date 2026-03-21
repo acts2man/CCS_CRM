@@ -22,21 +22,22 @@ const getLetterGrade = (pct) => {
 
 export default function ReportCardPreview({ classSection, categories, assignments, students, grades }) {
   const calcFinalGrade = (studentId) => {
-    let finalGrade = 0;
-    let hasAnyGrade = false;
-    categories.forEach(cat => {
+    const gradedCategories = categories.map(cat => {
       const catAssignments = assignments.filter(a => a.grade_category_id === cat.id);
-      const catGrades = catAssignments.map(a => {
-        const g = grades.find(gr => gr.assignment_id === a.id && gr.student_id === studentId);
-        return g?.status === 'graded' ? g.percentage : null;
-      }).filter(x => x !== null);
-      if (catGrades.length > 0) {
-        hasAnyGrade = true;
-        const catAvg = catGrades.reduce((s, v) => s + v, 0) / catGrades.length;
-        finalGrade += (catAvg * (cat.weight / 100));
-      }
-    });
-    return hasAnyGrade ? finalGrade : null;
+      const catGrades = catAssignments
+        .map(a => {
+          const g = grades.find(gr => gr.assignment_id === a.id && gr.student_id === studentId);
+          return g?.status === 'graded' ? g.percentage : null;
+        })
+        .filter(x => x !== null);
+      const avg = catGrades.length > 0 ? catGrades.reduce((s, v) => s + v, 0) / catGrades.length : null;
+      return { cat, avg };
+    }).filter(({ avg }) => avg !== null);
+
+    if (gradedCategories.length === 0) return null;
+    const totalWeight = gradedCategories.reduce((sum, { cat }) => sum + (cat.weight || 0), 0);
+    if (totalWeight === 0) return null;
+    return gradedCategories.reduce((sum, { cat, avg }) => sum + avg * (cat.weight / totalWeight), 0);
   };
 
   return (
