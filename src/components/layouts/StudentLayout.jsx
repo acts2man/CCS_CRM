@@ -78,7 +78,7 @@ export default function StudentLayout({ children }) {
             <Link
               key={item.name}
               to={createPageUrl(item.href)}
-              className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-slate-100 text-slate-700"
+              className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-white/20 text-white"
             >
               <Icon className="h-5 w-5 flex-shrink-0" />
               {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
