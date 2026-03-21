@@ -22,9 +22,19 @@ const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
-const LayoutWrapper = ({ children, currentPageName }) => Layout ?
-  <DynamicLayoutWrapper currentPageName={currentPageName}>{children}</DynamicLayoutWrapper>
-  : <>{children}</>;
+const LayoutWrapper = ({ children, currentPageName }) => {
+  const { user } = useAuth();
+  
+  if (!Layout) return <>{children}</>;
+  
+  // Use ParentLayout only for parents
+  if (user?.role === 'parent') {
+    return <ParentLayout>{children}</ParentLayout>;
+  }
+  
+  // Use main Layout for everyone else
+  return <Layout currentPageName={currentPageName}>{children}</Layout>;
+};
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
