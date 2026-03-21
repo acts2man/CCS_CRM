@@ -103,20 +103,20 @@ export default function ParentDashboard() {
           <CardContent className="space-y-2">
             <Link to={createPageUrl("Students")}>
               <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                <div className="font-medium">View Children's Profiles</div>
-                <div className="text-sm text-gray-600">See grades and attendance</div>
+                <div className="font-medium">View Children's Grades</div>
+                <div className="text-sm text-gray-600">Check academic performance</div>
               </button>
             </Link>
-            <Link to={createPageUrl("Finance")}>
+            <Link to={createPageUrl("Billing")}>
               <button className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                <div className="font-medium">Make Payment</div>
-                <div className="text-sm text-gray-600">Pay tuition and fees</div>
+                <div className="font-medium">View Payments</div>
+                <div className="text-sm text-gray-600">Check account balance</div>
               </button>
             </Link>
-            <Link to={createPageUrl("Chat")}>
+            <Link to={createPageUrl("Documents")}>
               <button className="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                <div className="font-medium">Message Teachers</div>
-                <div className="text-sm text-gray-600">Communicate with staff</div>
+                <div className="font-medium">View Documents</div>
+                <div className="text-sm text-gray-600">Forms and notices from school</div>
               </button>
             </Link>
           </CardContent>
