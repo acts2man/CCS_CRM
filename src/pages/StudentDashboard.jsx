@@ -38,17 +38,7 @@ export default function StudentDashboard() {
         studentData = impersonatedStudent;
       } else {
         const user = await base44.auth.me();
-        let students = await base44.entities.Student.filter({ email: user.email });
-        
-        // If no student found by email, try fetching from parent relationship
-        if (students.length === 0 && user.role === 'parent') {
-          const parents = await base44.entities.Parent.filter({ email: user.email });
-          if (parents.length > 0) {
-            const allStudents = await base44.entities.Student.list();
-            students = allStudents.filter(s => s.parent_ids?.includes(parents[0].id));
-          }
-        }
-        
+        const students = await base44.entities.Student.filter({ email: user.email });
         if (students.length === 0) return;
         studentData = students[0];
       }
