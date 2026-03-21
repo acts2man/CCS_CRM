@@ -16,6 +16,7 @@ import { ImpersonationProvider } from '@/lib/ImpersonationContext';
 import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
 import StudentLayout from '@/components/layouts/StudentLayout';
 import ParentLayout from '@/components/layouts/ParentLayout';
+import TeacherLayout from '@/components/layouts/TeacherLayout';
 import StudentDashboard from '@/pages/StudentDashboard';
 import StudentSubjects from '@/pages/StudentSubjects';
 import StudentAssignments from '@/pages/StudentAssignments';
