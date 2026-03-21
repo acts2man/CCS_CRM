@@ -49,7 +49,7 @@ export default function ParentLayout({ children }) {
         </Button>
       </div>
 
-      <Separator className="bg-slate-200" />
+      <Separator className="bg-slate-800" />
 
       <ScrollArea className="flex-1 px-2 py-4">
         <nav className="space-y-1">
@@ -69,25 +69,25 @@ export default function ParentLayout({ children }) {
         </nav>
       </ScrollArea>
 
-      <Separator className="bg-slate-200" />
+      <Separator className="bg-slate-800" />
 
       <div className="p-2 space-y-1">
         {bottomNavigation.map((item) => {
           const Icon = item.icon;
           return (
             <Link
-              key={item.name}
-              to={createPageUrl(item.href)}
-              className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-slate-100 text-slate-700"
+             key={item.name}
+             to={createPageUrl(item.href)}
+             className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-slate-900 text-white"
             >
-              <Icon className="h-5 w-5 flex-shrink-0" />
-              {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
+             <Icon className="h-5 w-5 flex-shrink-0" />
+             {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
             </Link>
-          );
-        })}
-        <Button 
-          onClick={() => base44.auth.logout()}
-          className="w-full justify-start text-slate-700 hover:bg-slate-100 bg-transparent"
+            );
+            })}
+            <Button 
+            onClick={() => base44.auth.logout()}
+            className="w-full justify-start text-white hover:bg-slate-900 bg-transparent"
           variant="ghost"
         >
           <LogOut className="h-5 w-5 flex-shrink-0" />
