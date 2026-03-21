@@ -6,7 +6,7 @@ import { Users, Calendar, BookOpen, ClipboardList, Loader2, GraduationCap } from
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-export default function TeacherDashboard() {
+export default function TeacherDashboard({ impersonatedTeacher }) {
   const [user, setUser] = useState(null);
   const [teacher, setTeacher] = useState(null);
   const [classes, setClasses] = useState([]);
@@ -16,16 +16,22 @@ export default function TeacherDashboard() {
   const [todayAttendance, setTodayAttendance] = useState({ present: 0, total: 0 });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [impersonatedTeacher]);
 
   const loadData = async () => {
+    setLoading(true);
     const currentUser = await base44.auth.me();
     setUser(currentUser);
 
-    // Find this teacher's record
-    const teacherRecords = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
-    if (!teacherRecords?.length) { setLoading(false); return; }
-    const teacherRecord = teacherRecords[0];
+    // Use impersonated teacher if provided, otherwise find by logged-in email
+    let teacherRecord;
+    if (impersonatedTeacher) {
+      teacherRecord = impersonatedTeacher;
+    } else {
+      const teacherRecords = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
+      if (!teacherRecords?.length) { setLoading(false); return; }
+      teacherRecord = teacherRecords[0];
+    }
     setTeacher(teacherRecord);
 
     // Load this teacher's class sections
