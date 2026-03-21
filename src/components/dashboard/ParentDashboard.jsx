@@ -60,9 +60,9 @@ export default function ParentDashboard() {
 
   const statCards = [
     { title: "My Children", value: stats.myChildren, icon: Users, color: "text-blue-600", link: "Students" },
-    { title: "Upcoming Events", value: stats.upcomingEvents, icon: Calendar, color: "text-green-600", link: "Calendar" },
-    { title: "Pending Payments", value: stats.pendingPayments, icon: DollarSign, color: "text-orange-600", link: "Finance" },
-    { title: "Unread Messages", value: stats.unreadMessages, icon: BookOpen, color: "text-purple-600", link: "Chat" }
+    { title: "Classes & Assignments", value: stats.upcomingAssignments, icon: BookOpen, color: "text-green-600", link: "Courses" },
+    { title: "Pending Payments", value: stats.pendingPayments, icon: DollarSign, color: "text-orange-600", link: "Billing" },
+    { title: "Alerts", value: stats.pendingPayments > 0 ? stats.pendingPayments : 0, icon: AlertCircle, color: "text-red-600", link: "Billing" }
   ];
 
   return (
