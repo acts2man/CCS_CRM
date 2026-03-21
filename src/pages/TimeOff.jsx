@@ -67,8 +67,8 @@ export default function TimeOff() {
         status: "pending"
       });
 
-      // Send email to admin with Approve/Deny buttons
-      await base44.functions.invoke('sendAdminNotification', {
+      // Send email to admin in background (don't await - avoids timeout)
+      base44.functions.invoke('sendAdminNotification', {
         requestId: request.id,
         firstName: formData.first_name,
         lastName: formData.last_name,
