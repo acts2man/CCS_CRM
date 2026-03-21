@@ -10,6 +10,8 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import SignDocument from '@/pages/SignDocument';
+import { ImpersonationProvider } from '@/lib/ImpersonationContext';
+import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
