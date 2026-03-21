@@ -30,7 +30,15 @@ export default function UserInviteModal({ open, onOpenChange, onInviteSuccess })
     setSuccess('');
 
     try {
-      await base44.users.inviteUser(email, role);
+      // Invite as "user" (platform limitation), then update role
+      await base44.users.inviteUser(email, 'user');
+      
+      // Update the user's role in the User entity
+      const users = await base44.entities.User.filter({ email });
+      if (users.length > 0) {
+        await base44.entities.User.update(users[0].id, { role });
+      }
+      
       setSuccess(`User ${email} invited as ${role}!`);
       setEmail('');
       setRole('student');
