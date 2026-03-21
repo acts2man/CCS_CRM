@@ -38,16 +38,14 @@ export default function GradebookStudentView({ categories, assignments, students
   };
 
   const calcFinalGrade = (studentId) => {
-    let finalGrade = 0;
-    let hasAnyGrade = false;
-    categories.forEach(cat => {
-      const catAvg = calcCategoryAvg(studentId, cat.id);
-      if (catAvg !== null) {
-        hasAnyGrade = true;
-        finalGrade += (catAvg * (cat.weight / 100));
-      }
-    });
-    return hasAnyGrade ? finalGrade : null;
+    const gradedCategories = categories
+      .map(cat => ({ cat, avg: calcCategoryAvg(studentId, cat.id) }))
+      .filter(({ avg }) => avg !== null);
+    if (gradedCategories.length === 0) return null;
+    const totalWeight = gradedCategories.reduce((sum, { cat }) => sum + (cat.weight || 0), 0);
+    if (totalWeight === 0) return null;
+    const weighted = gradedCategories.reduce((sum, { cat, avg }) => sum + avg * (cat.weight / totalWeight), 0);
+    return weighted;
   };
 
   const studentFinalGrade = selectedStudent ? calcFinalGrade(selectedStudent.id) : null;
