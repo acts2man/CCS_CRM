@@ -4,6 +4,7 @@ const ImpersonationContext = createContext(null);
 
 export function ImpersonationProvider({ children }) {
   const [impersonatedTeacher, setImpersonatedTeacher] = useState(null);
+  const [impersonatedStudent, setImpersonatedStudent] = useState(null);
   const [viewMode, setViewMode] = useState('admin'); // 'admin', 'teacher', 'student', 'parent'
 
   const startImpersonation = (person) => {
@@ -11,8 +12,14 @@ export function ImpersonationProvider({ children }) {
     // Keep the current viewMode instead of forcing it to 'teacher'
   };
 
+  const startStudentImpersonation = (student) => {
+    setImpersonatedStudent(student);
+    setViewMode('student');
+  };
+
   const stopImpersonation = () => {
     setImpersonatedTeacher(null);
+    setImpersonatedStudent(null);
     setViewMode('admin');
   };
 
