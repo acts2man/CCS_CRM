@@ -236,6 +236,13 @@ export default function TeacherProfile() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="timeoff" className="mt-6">
+          <div>
+            <h2 className="text-xl font-bold mb-4">Time-Off Request History</h2>
+            <TimeOffHistory teacherEmail={teacher.email} />
+          </div>
+        </TabsContent>
+
         <TabsContent value="notes" className="mt-6">
           <Card>
             <CardContent className="pt-6">
