@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Calendar, BookOpen, DollarSign } from "lucide-react";
+import { Users, Calendar, BookOpen, DollarSign, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function ParentDashboard() {
   const [stats, setStats] = useState({
     myChildren: 0,
-    upcomingEvents: 0,
+    upcomingAssignments: 0,
     pendingPayments: 0,
     unreadMessages: 0
   });
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [childrenData, setChildrenData] = useState([]);
 
   useEffect(() => {
     loadParentData();
@@ -24,17 +25,32 @@ export default function ParentDashboard() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const [students, payments] = await Promise.all([
-        base44.entities.Student.list(),
-        base44.entities.Payment.list()
-      ]);
+      // Find parent record by email
+      const parents = await base44.entities.Parent.filter({ email: currentUser.email });
+      if (parents.length > 0) {
+        const parent = parents[0];
+        const studentIds = parent.student_ids || [];
 
-      setStats({
-        myChildren: students.length,
-        upcomingEvents: 0,
-        pendingPayments: payments.filter(p => p.status === 'pending').length,
-        unreadMessages: 0
-      });
+        // Get students, charges, and assignments
+        const [allStudents, charges, assignments] = await Promise.all([
+          base44.entities.Student.list(),
+          base44.entities.Charge.list(),
+          base44.entities.Assignment.list()
+        ]);
+
+        const myChildren = allStudents.filter(s => studentIds.includes(s.id));
+        const pendingCharges = charges.filter(c => 
+          c.status === 'unpaid' && studentIds.includes(c.student_id)
+        );
+
+        setChildrenData(myChildren);
+        setStats({
+          myChildren: myChildren.length,
+          upcomingAssignments: assignments.length,
+          pendingPayments: pendingCharges.length,
+          unreadMessages: 0
+        });
+      }
     } catch (error) {
       console.error("Error loading parent data:", error);
     } finally {
