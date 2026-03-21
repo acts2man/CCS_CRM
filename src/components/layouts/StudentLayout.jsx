@@ -43,7 +43,7 @@ export default function StudentLayout({ children }) {
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden lg:flex text-slate-900 hover:bg-slate-100"
+          className="hidden lg:flex text-white hover:opacity-80"
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
