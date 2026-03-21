@@ -14,7 +14,7 @@ import TimeOffAction from '@/pages/TimeOffAction';
 import TimeOffRequest from '@/pages/TimeOffRequest';
 import { ImpersonationProvider } from '@/lib/ImpersonationContext';
 import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
-import MainLayout from './layout.jsx';
+import MainLayout from './layout.js';
 import ParentLayout from '@/components/layouts/ParentLayout';
 
 const { Pages, Layout, mainPage } = pagesConfig;
