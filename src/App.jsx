@@ -14,15 +14,17 @@ import TimeOffAction from '@/pages/TimeOffAction';
 import TimeOffRequest from '@/pages/TimeOffRequest';
 import { ImpersonationProvider } from '@/lib/ImpersonationContext';
 import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
-import MainLayout from './layout.jsx';
-import ParentLayout from '@/components/layouts/ParentLayout';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
+const LayoutWrapper = ({ children, currentPageName }) => Layout ?
+  <Layout currentPageName={currentPageName}>{children}</Layout>
+  : <>{children}</>;
+
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin, user } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
 
   // Public routes bypass auth entirely
   if (window.location.pathname === '/time-off-request' || window.location.pathname === '/time-off-action') {
@@ -55,33 +57,22 @@ const AuthenticatedApp = () => {
     }
   }
 
-  // Choose layout based on user role
-  const LayoutComponent = user?.role === 'parent' ? ParentLayout : (Layout ? MainLayout : null);
-  
-  // Wrapper for pages that need the main layout
-  const WithLayout = ({ children, currentPageName }) => {
-    if (!LayoutComponent) return <>{children}</>;
-    return LayoutComponent === ParentLayout 
-      ? <ParentLayout>{children}</ParentLayout>
-      : <MainLayout currentPageName={currentPageName}>{children}</MainLayout>;
-  };
-
   // Render the main app
   return (
     <Routes>
       <Route path="/" element={
-        <WithLayout currentPageName={mainPageKey}>
+        <LayoutWrapper currentPageName={mainPageKey}>
           <MainPage />
-        </WithLayout>
+        </LayoutWrapper>
       } />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
           path={`/${path}`}
           element={
-            <WithLayout currentPageName={path}>
+            <LayoutWrapper currentPageName={path}>
               <Page />
-            </WithLayout>
+            </LayoutWrapper>
           }
         />
       ))}
