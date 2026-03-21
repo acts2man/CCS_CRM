@@ -75,6 +75,11 @@ export default function Dashboard() {
     );
   }
 
+  // If admin is impersonating a teacher, show teacher dashboard for that teacher
+  if (impersonatedTeacher) {
+    return <TeacherDashboard impersonatedTeacher={impersonatedTeacher} />;
+  }
+
   switch (user?.role) {
     case "admin":
       return <AdminDashboard />;
