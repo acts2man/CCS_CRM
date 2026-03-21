@@ -117,8 +117,8 @@ export default function TimeOffRequest() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Employee Information */}
-          <Card>
+              {/* Employee Information */}
+              <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
                 <User className="h-5 w-5 text-blue-600" />
