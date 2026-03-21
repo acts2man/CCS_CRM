@@ -25,7 +25,8 @@ export default function TeacherLayout({ children }) {
   ];
 
   const bottomNavigation = [
-    { name: 'Settings', href: 'Settings', icon: Settings },
+    { name: 'Profile', href: 'TeacherProfile', icon: Users },
+    { name: 'Settings', href: 'TeacherSettings', icon: Settings },
   ];
 
   const SidebarContent = () => (
