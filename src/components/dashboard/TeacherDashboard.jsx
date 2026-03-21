@@ -5,28 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import { Users, Calendar, BookOpen, ClipboardList, Loader2, GraduationCap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import SubjectView from "@/components/gradebook/SubjectView";
-
 // Teacher Dashboard
 export default function TeacherDashboard({ impersonatedTeacher }) {
   const [user, setUser] = useState(null);
   const [teacher, setTeacher] = useState(null);
   const [classes, setClasses] = useState([]);
-  const [subjects, setSubjects] = useState([]);
   const [students, setStudents] = useState([]);
   const [pendingGrades, setPendingGrades] = useState(0);
   const [todayAttendance, setTodayAttendance] = useState({ present: 0, total: 0 });
   const [loading, setLoading] = useState(true);
-  const [selectedClass, setSelectedClass] = useState(null);
 
-  useEffect(() => {
-    setSelectedClass(null);
-    loadData();
-  }, [impersonatedTeacher]);
-
-  useEffect(() => {
-    if (classes.length > 0) setSelectedClass(classes[0]);
-  }, [classes]);
+  useEffect(() => { loadData(); }, [impersonatedTeacher]);
 
   const loadData = async () => {
     setLoading(true);
