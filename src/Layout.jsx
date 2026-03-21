@@ -18,6 +18,7 @@ export default function Layout({ children, currentPageName }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const { impersonatedTeacher } = useImpersonation();
 
   React.useEffect(() => {
     loadUser();
@@ -30,7 +31,6 @@ export default function Layout({ children, currentPageName }) {
       // Check if user has a matching Teacher record
       const teachers = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
       if (teachers && teachers.length > 0) {
-        // If Teacher record exists, treat as teacher
         currentUser.role = 'teacher';
       }
       
@@ -40,9 +40,12 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
+  // Treat as teacher if impersonating OR if actually a teacher
+  const isTeacherView = !!impersonatedTeacher || user?.role === 'teacher';
+
   // Navigation based on role
   const getNavigation = () => {
-    if (user?.role === 'teacher') {
+    if (isTeacherView) {
       return [
         { name: 'Dashboard', href: 'Dashboard', icon: LayoutDashboard },
         { name: 'Students', href: 'Students', icon: Users },
