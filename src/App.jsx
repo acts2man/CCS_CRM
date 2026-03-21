@@ -131,6 +131,7 @@ const AuthenticatedApp = () => {
       <Route path="/ParentGrades" element={<ParentLayout><ParentGrades /></ParentLayout>} />
       <Route path="/ParentAssignments" element={<ParentLayout><ParentAssignments /></ParentLayout>} />
       <Route path="/ParentAttendance" element={<ParentLayout><ParentAttendance /></ParentLayout>} />
+      <Route path="/ParentDocuments" element={<ParentLayout><ParentDocuments /></ParentLayout>} />
       <Route path="/ParentBilling" element={<ParentLayout><ParentBilling /></ParentLayout>} />
       
       {/* Teacher Dashboard Routes */}
