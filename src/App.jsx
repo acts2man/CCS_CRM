@@ -100,6 +100,12 @@ const AuthenticatedApp = () => {
       <Route path="/StudentDocuments" element={<StudentLayout><StudentDocuments /></StudentLayout>} />
       <Route path="/StudentAnnouncements" element={<StudentLayout><StudentAnnouncements /></StudentLayout>} />
       
+      {/* Parent Dashboard Routes */}
+      <Route path="/ParentGrades" element={<ParentLayout><ParentGrades /></ParentLayout>} />
+      <Route path="/ParentAssignments" element={<ParentLayout><ParentAssignments /></ParentLayout>} />
+      <Route path="/ParentAttendance" element={<ParentLayout><ParentAttendance /></ParentLayout>} />
+      <Route path="/ParentBilling" element={<ParentLayout><ParentBilling /></ParentLayout>} />
+      
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
