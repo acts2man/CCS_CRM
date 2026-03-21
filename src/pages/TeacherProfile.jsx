@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Pencil, Mail, Phone, Calendar, Briefcase, Loader2 } from "lucide-react";
 import EditTeacherModal from "@/components/teachers/EditTeacherModal";
+import TimeOffHistory from "@/components/teachers/TimeOffHistory";
 
 export default function TeacherProfile() {
   const navigate = useNavigate();
