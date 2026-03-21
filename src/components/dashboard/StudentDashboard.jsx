@@ -98,22 +98,22 @@ export default function StudentDashboard() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Link to={createPageUrl("Assignments")}>
+            <Link to={createPageUrl("Gradebook")}>
               <button className="w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                <div className="font-medium">View Assignments</div>
-                <div className="text-sm text-gray-600">See your homework and projects</div>
+                <div className="font-medium">View Grades</div>
+                <div className="text-sm text-gray-600">See your academic performance</div>
               </button>
             </Link>
-            <Link to={createPageUrl("Grades")}>
+            <Link to={createPageUrl("Courses")}>
               <button className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                <div className="font-medium">Check Grades</div>
-                <div className="text-sm text-gray-600">View your academic performance</div>
+                <div className="font-medium">My Classes</div>
+                <div className="text-sm text-gray-600">View enrolled classes and assignments</div>
               </button>
             </Link>
-            <Link to={createPageUrl("Chat")}>
+            <Link to={createPageUrl("Documents")}>
               <button className="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                <div className="font-medium">Message Teachers</div>
-                <div className="text-sm text-gray-600">Ask questions or get help</div>
+                <div className="font-medium">Documents</div>
+                <div className="text-sm text-gray-600">View documents sent to you</div>
               </button>
             </Link>
           </CardContent>
