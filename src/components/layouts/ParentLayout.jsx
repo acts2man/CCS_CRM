@@ -16,13 +16,11 @@ export default function ParentLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navigation = [
-    { name: 'Dashboard', href: 'Dashboard', icon: LayoutDashboard },
     { name: 'Grades', href: 'ParentGrades', icon: BookOpen },
     { name: 'Assignments', href: 'ParentAssignments', icon: FileText },
     { name: 'Attendance', href: 'ParentAttendance', icon: Calendar },
-    { name: 'Documents', href: 'Documents', icon: FileText },
+    { name: 'Documents', href: 'ParentDocuments', icon: FileText },
     { name: 'Billing', href: 'ParentBilling', icon: DollarSign },
-    { name: 'Communications', href: 'Chat', icon: MessageSquare },
   ];
 
   const bottomNavigation = [
