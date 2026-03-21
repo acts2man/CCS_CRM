@@ -1,112 +1,220 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Loader2, Plus, Trash2, Settings } from 'lucide-react';
-import ComponentManager from './ComponentManager';
-import AddAssignmentModal from './AddAssignmentModal';
+import { Loader2, Plus, Settings, BarChart3, Users, BookOpen } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SubjectCategoryManager from './SubjectCategoryManager';
+import SubjectAddAssignmentModal from './SubjectAddAssignmentModal';
+import GradebookClassView from './GradebookClassView';
+import GradebookStudentView from './GradebookStudentView';
+import ReportCardPreview from './ReportCardPreview';
 
 export default function SubjectView({ classSection, onRefresh }) {
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [grades, setGrades] = useState([]);
+  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [subjectLoading, setSubjectLoading] = useState(false);
   const [showAddSubject, setShowAddSubject] = useState(false);
   const [newSubjectName, setNewSubjectName] = useState('');
-  const [showComponentManager, setShowComponentManager] = useState(false);
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
   const [showAddAssignment, setShowAddAssignment] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [expandedCategories, setExpandedCategories] = useState({});
+  const [activeView, setActiveView] = useState('class');
 
-  useEffect(() => { loadSubjects(); }, [classSection.id]);
+  useEffect(() => { loadInit(); }, [classSection.id]);
 
-  const loadSubjects = async () => {
+  const loadInit = async () => {
     setLoading(true);
     const subs = await base44.entities.Subject.filter({ class_section_id: classSection.id });
     setSubjects(subs);
-    if (subs.length > 0 && !selectedSubject) setSelectedSubject(subs[0]);
+
+    // Load students
+    let studs = [];
+    if (classSection.student_ids?.length) {
+      const all = await base44.entities.Student.filter({ enrollment_status: 'active' });
+      studs = all.filter(s => classSection.student_ids.includes(s.id));
+    } else {
+      studs = await base44.entities.Student.filter({ enrollment_status: 'active', grade_level: classSection.grade_level });
+    }
+    setStudents(studs);
+
+    if (subs.length > 0) {
+      setSelectedSubject(subs[0]);
+      await loadSubjectData(subs[0].id);
+    }
     setLoading(false);
+  };
+
+  const loadSubjectData = async (subjectId) => {
+    setSubjectLoading(true);
+    const [cats, asns, grds] = await Promise.all([
+      base44.entities.GradeCategory.filter({ class_section_id: classSection.id, subject_id: subjectId }),
+      base44.entities.Assignment.filter({ class_section_id: classSection.id }),
+      base44.entities.AssignmentGrade.filter({ class_section_id: classSection.id })
+    ]);
+    setCategories(cats);
+    setAssignments(asns);
+    setGrades(grds);
+    const expanded = {};
+    cats.forEach(c => { expanded[c.id] = true; });
+    setExpandedCategories(expanded);
+    setSubjectLoading(false);
+  };
+
+  const handleSubjectSelect = async (subj) => {
+    setSelectedSubject(subj);
+    setSelectedCategory(null);
+    await loadSubjectData(subj.id);
   };
 
   const addSubject = async () => {
     if (!newSubjectName.trim()) return;
-    await base44.entities.Subject.create({
+    const newSubj = await base44.entities.Subject.create({
       class_section_id: classSection.id,
       name: newSubjectName
     });
     setNewSubjectName('');
     setShowAddSubject(false);
-    loadSubjects();
+    const subs = await base44.entities.Subject.filter({ class_section_id: classSection.id });
+    setSubjects(subs);
+    setSelectedSubject(newSubj);
+    await loadSubjectData(newSubj.id);
   };
 
-  const deleteSubject = async (id) => {
-    if (!confirm('Delete this subject?')) return;
-    await base44.entities.Subject.delete(id);
-    loadSubjects();
-  };
+  const totalWeight = categories.reduce((sum, c) => sum + (c.weight || 0), 0);
 
   if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="h-8 w-8 animate-spin text-blue-600" /></div>;
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Subject tabs */}
-      <div className="flex items-center gap-2 border-b bg-white p-4 overflow-x-auto">
+    <div className="h-full flex flex-col bg-white rounded-lg border overflow-hidden">
+      {/* Subject tabs row */}
+      <div className="flex items-center gap-2 border-b bg-gray-50 px-4 py-3 overflow-x-auto flex-shrink-0">
+        {subjects.length === 0 && (
+          <span className="text-sm text-gray-400 flex items-center gap-2 mr-2">
+            <BookOpen className="h-4 w-4" /> No subjects yet
+          </span>
+        )}
         {subjects.map(subj => (
           <button
             key={subj.id}
-            onClick={() => setSelectedSubject(subj)}
-            className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
+            onClick={() => handleSubjectSelect(subj)}
+            className={`px-4 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors font-medium ${
               selectedSubject?.id === subj.id
-                ? 'bg-blue-100 text-blue-700 font-medium'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-slate-900 text-white'
+                : 'bg-white border text-gray-600 hover:bg-gray-100'
             }`}
           >
             {subj.name}
           </button>
         ))}
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => setShowAddSubject(true)}
-          className="whitespace-nowrap"
-        >
+        <Button size="sm" variant="outline" onClick={() => setShowAddSubject(true)} className="whitespace-nowrap ml-1">
           <Plus className="h-4 w-4 mr-1" /> Add Subject
         </Button>
       </div>
 
       {/* Subject content */}
       {selectedSubject ? (
-        <div className="flex-1 p-6 overflow-auto">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-bold">{selectedSubject.name}</h2>
-              <p className="text-sm text-gray-500">{classSection.name}</p>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowComponentManager(true)}
-              >
-                <Settings className="h-4 w-4 mr-1" /> Components
-              </Button>
-              <Button
-                size="sm"
-                className="bg-slate-900 hover:bg-slate-800"
-                onClick={() => setShowAddAssignment(true)}
-              >
-                <Plus className="h-4 w-4 mr-1" /> Assignment
-              </Button>
-            </div>
-          </div>
+        <div className="flex-1 flex flex-col overflow-hidden p-6">
+          {subjectLoading ? (
+            <div className="flex items-center justify-center flex-1"><Loader2 className="h-6 w-6 animate-spin text-blue-600" /></div>
+          ) : (
+            <>
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4 flex-shrink-0">
+                <div>
+                  <h2 className="text-xl font-bold">{selectedSubject.name}</h2>
+                  <p className="text-sm text-gray-500">{classSection.name} · {classSection.teacher_name} · {students.length} students</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setShowCategoryManager(true)}>
+                    <Settings className="h-4 w-4 mr-1" /> Components
+                  </Button>
+                  <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => { setSelectedCategory(null); setShowAddAssignment(true); }}>
+                    <Plus className="h-4 w-4 mr-1" /> Assignment
+                  </Button>
+                </div>
+              </div>
 
-          {/* Components and assignments will be rendered here */}
-          <div className="text-gray-400 text-center py-12">
-            <p>Components and assignments for {selectedSubject.name}</p>
-          </div>
+              {/* Weight warning */}
+              {categories.length > 0 && totalWeight !== 100 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800 mb-4 flex-shrink-0">
+                  ⚠️ Components total {totalWeight}% — must equal 100% for accurate grades.
+                </div>
+              )}
+
+              {categories.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center text-gray-400">
+                  <div className="text-center">
+                    <p className="mb-3">No grade components set up for {selectedSubject.name} yet.</p>
+                    <Button onClick={() => setShowCategoryManager(true)}>Set Up Components</Button>
+                  </div>
+                </div>
+              ) : (
+                <Tabs value={activeView} onValueChange={setActiveView} className="flex-1 flex flex-col overflow-hidden">
+                  <TabsList className="mb-4 flex-shrink-0">
+                    <TabsTrigger value="class" className="flex items-center gap-2">
+                      <BarChart3 className="h-4 w-4" /> Class View
+                    </TabsTrigger>
+                    <TabsTrigger value="student" className="flex items-center gap-2">
+                      <Users className="h-4 w-4" /> Student View
+                    </TabsTrigger>
+                    <TabsTrigger value="report" className="flex items-center gap-2">
+                      <BarChart3 className="h-4 w-4" /> Report Card
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="class" className="flex-1 overflow-auto">
+                    <GradebookClassView
+                      categories={categories}
+                      assignments={assignments}
+                      students={students}
+                      grades={grades}
+                      expandedCategories={expandedCategories}
+                      setExpandedCategories={setExpandedCategories}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                      onAddAssignment={() => setShowAddAssignment(true)}
+                      onGradeUpdated={() => loadSubjectData(selectedSubject.id)}
+                      classSection={classSection}
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="student" className="flex-1 overflow-auto">
+                    <GradebookStudentView
+                      categories={categories}
+                      assignments={assignments}
+                      students={students}
+                      grades={grades}
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="report" className="flex-1 overflow-auto">
+                    <ReportCardPreview
+                      classSection={classSection}
+                      categories={categories}
+                      assignments={assignments}
+                      students={students}
+                      grades={grades}
+                    />
+                  </TabsContent>
+                </Tabs>
+              )}
+            </>
+          )}
         </div>
       ) : (
         <div className="flex-1 flex items-center justify-center text-gray-400">
-          <p>Create a subject to get started</p>
+          <div className="text-center">
+            <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-30" />
+            <p>Add a subject to get started</p>
+          </div>
         </div>
       )}
 
@@ -129,21 +237,24 @@ export default function SubjectView({ classSection, onRefresh }) {
         </DialogContent>
       </Dialog>
 
-      {showComponentManager && selectedSubject && (
-        <ComponentManager
+      {showCategoryManager && selectedSubject && (
+        <SubjectCategoryManager
           classSection={classSection}
           subject={selectedSubject}
-          onClose={() => setShowComponentManager(false)}
-          onSaved={loadSubjects}
+          categories={categories}
+          onClose={() => setShowCategoryManager(false)}
+          onSaved={() => loadSubjectData(selectedSubject.id)}
         />
       )}
 
       {showAddAssignment && selectedSubject && (
-        <AddAssignmentModal
+        <SubjectAddAssignmentModal
           classSection={classSection}
           subject={selectedSubject}
+          categories={categories}
+          preSelectedCategory={selectedCategory}
           onClose={() => setShowAddAssignment(false)}
-          onCreated={loadSubjects}
+          onCreated={() => loadSubjectData(selectedSubject.id)}
         />
       )}
     </div>
