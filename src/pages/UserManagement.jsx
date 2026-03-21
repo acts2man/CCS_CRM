@@ -28,6 +28,15 @@ export default function UserManagement() {
     }
   };
 
+  const updateUserRole = async (userId, newRole) => {
+    try {
+      await base44.entities.User.update(userId, { role: newRole });
+      setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
+    } catch (error) {
+      console.error('Error updating user role:', error);
+    }
+  };
+
   const getRoleColor = (role) => {
     const colors = {
       admin: 'bg-red-100 text-red-800',
