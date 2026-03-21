@@ -67,31 +67,21 @@ export default function TimeOff() {
         status: "pending"
       });
 
-      // Sync to Google Sheets and send admin notification
-      try {
-        await base44.functions.invoke('syncTimeOffToSheets', { requestId: request.id });
-      } catch (syncError) {
-        console.error("Failed to sync to sheets:", syncError);
-      }
-
-      // Send email notification to admin
-      try {
-        await base44.functions.invoke('sendAdminNotification', {
-          firstName: formData.first_name,
-          lastName: formData.last_name,
-          email: formData.work_email,
-          startDate: formData.start_date,
-          endDate: formData.end_date,
-          fullDay: formData.full_day,
-          startTime: formData.start_time,
-          endTime: formData.end_time,
-          totalHours: formData.total_hours,
-          usePto: formData.use_pto,
-          reason: formData.reason_notes
-        });
-      } catch (emailError) {
-        console.error("Failed to send admin notification:", emailError);
-      }
+      // Send email to admin with Approve/Deny buttons
+      await base44.functions.invoke('sendAdminNotification', {
+        requestId: request.id,
+        firstName: formData.first_name,
+        lastName: formData.last_name,
+        email: formData.work_email,
+        startDate: formData.start_date,
+        endDate: formData.end_date,
+        fullDay: formData.full_day,
+        startTime: formData.start_time,
+        endTime: formData.end_time,
+        totalHours: formData.total_hours,
+        usePto: formData.use_pto,
+        reason: formData.reason_notes
+      });
 
       toast({
         title: "Request Submitted!",
