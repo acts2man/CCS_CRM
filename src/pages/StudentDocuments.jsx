@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText } from "lucide-react";
+import { FileText, ExternalLink } from "lucide-react";
 import { useImpersonation } from "@/lib/ImpersonationContext";
+import DocumentDetailModal from "@/components/students/DocumentDetailModal";
+import { getStudentByUserEmail } from "@/lib/entitySyncUtils";
 
 export default function StudentDocuments() {
   const { impersonatedStudent } = useImpersonation();
