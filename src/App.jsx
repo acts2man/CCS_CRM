@@ -14,7 +14,9 @@ import TimeOffAction from '@/pages/TimeOffAction';
 import TimeOffRequest from '@/pages/TimeOffRequest';
 import { ImpersonationProvider } from '@/lib/ImpersonationContext';
 import ImpersonationBanner from '@/components/admin/ImpersonationBanner';
-import DynamicLayoutWrapper from '@/components/layouts/DynamicLayoutWrapper';
+import Layout from './layout';
+import ParentLayout from '@/components/layouts/ParentLayout';
+import { useAuth } from '@/lib/AuthContext';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
