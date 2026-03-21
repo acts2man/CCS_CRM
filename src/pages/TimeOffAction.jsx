@@ -22,14 +22,12 @@ export default function TimeOffAction() {
   }, []);
 
   const processAction = async (requestId, action) => {
-    const appId = import.meta.env.VITE_APP_ID;
-    const response = await fetch(`/api/v1/functions/processTimeOffAction`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-app-id": appId },
-      body: JSON.stringify({ requestId, action }),
+    const response = await base44.functions.invoke("processTimeOffAction", {
+      requestId,
+      action,
     });
 
-    const result = await response.json();
+    const result = response.data;
 
     if (result.already_processed) {
       setStatus("already_processed");
