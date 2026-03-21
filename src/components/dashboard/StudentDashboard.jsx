@@ -56,10 +56,10 @@ export default function StudentDashboard() {
   };
 
   const statCards = [
-    { title: "My Classes", value: stats.myClasses, icon: BookOpen, color: "text-blue-600", link: "Classes" },
-    { title: "Assignments", value: stats.assignments, icon: ClipboardList, color: "text-green-600", link: "Assignments" },
-    { title: "GPA", value: stats.gpa.toFixed(2), icon: Trophy, color: "text-orange-600", link: "Grades" },
-    { title: "Attendance Rate", value: `${stats.attendance}%`, icon: Calendar, color: "text-purple-600", link: "Attendance" }
+    { title: "My Classes", value: stats.myClasses, icon: BookOpen, color: "text-blue-600", link: "Courses" },
+    { title: "Assignments", value: stats.assignments, icon: ClipboardList, color: "text-green-600", link: "Gradebook" },
+    { title: "Documents", value: stats.documents, icon: FileText, color: "text-orange-600", link: "Documents" },
+    { title: "Attendance", value: stats.attendance || "—", icon: Calendar, color: "text-purple-600", link: "Attendance" }
   ];
 
   return (
