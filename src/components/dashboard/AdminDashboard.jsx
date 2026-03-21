@@ -17,12 +17,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     students: 0,
     teachers: 0,
-    parents: 0,
-    attendanceRate: 0,
-    lastMonthStudents: 0,
-    lastMonthTeachers: 0,
-    lastMonthParents: 0,
-    lastMonthAttendance: 0
+    parents: 0
   });
   const [recentActivities, setRecentActivities] = useState([]);
   const [loading, setLoading] = useState(true);
