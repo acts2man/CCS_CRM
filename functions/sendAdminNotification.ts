@@ -11,12 +11,9 @@ Deno.serve(async (req) => {
     const approveUrl = `${appBaseUrl}?requestId=${requestId}&action=approve&token=${Deno.env.get('BASE44_APP_ID')}`;
     const denyUrl = `${appBaseUrl}?requestId=${requestId}&action=deny&token=${Deno.env.get('BASE44_APP_ID')}`;
 
-    // We'll use a simpler approach - the links call our own function endpoint
-    // Get the function base URL from the request
-    const reqUrl = new URL(req.url);
-    const functionBase = `${reqUrl.protocol}//${reqUrl.host}`;
-    const approveLink = `${functionBase}/processTimeOffAction?requestId=${requestId}&action=approve`;
-    const denyLink = `${functionBase}/processTimeOffAction?requestId=${requestId}&action=deny`;
+    // Link to the app page, which calls the function via SDK (avoids header auth issues)
+    const approveLink = `https://app.base44.com/apps/6934d527b5d299be1ef1388b/TimeOffAction?requestId=${requestId}&action=approve`;
+    const denyLink = `https://app.base44.com/apps/6934d527b5d299be1ef1388b/TimeOffAction?requestId=${requestId}&action=deny`;
 
     await resend.emails.send({
       from: 'CCS Time Off <admin@calvaryforkidscrm.com>',
