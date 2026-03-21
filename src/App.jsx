@@ -27,10 +27,11 @@ const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
 
   // Public routes bypass auth entirely
-  if (window.location.pathname === '/time-off-request') {
+  if (window.location.pathname === '/time-off-request' || window.location.pathname === '/time-off-action') {
     return (
       <Routes>
         <Route path="/time-off-request" element={<TimeOffRequest />} />
+        <Route path="/time-off-action" element={<TimeOffAction />} />
       </Routes>
     );
   }
