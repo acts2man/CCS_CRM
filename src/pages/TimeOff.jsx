@@ -143,53 +143,53 @@ export default function TimeOff() {
                   </div>
 
                   <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="first_name">First Name *</Label>
-                    <Input
-                      id="first_name"
-                      value={formData.first_name}
-                      onChange={(e) => setFormData({...formData, first_name: e.target.value})}
-                      placeholder="Enter first name"
-                      required
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="first_name">First Name *</Label>
+                        <Input
+                          id="first_name"
+                          value={formData.first_name}
+                          onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                          placeholder="Enter first name"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="last_name">Last Name *</Label>
+                        <Input
+                          id="last_name"
+                          value={formData.last_name}
+                          onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                          placeholder="Enter last name"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="work_email">Work Email *</Label>
+                      <Input
+                        id="work_email"
+                        type="email"
+                        value={formData.work_email}
+                        onChange={(e) => setFormData({...formData, work_email: e.target.value})}
+                        placeholder="Enter work email"
+                        required
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="last_name">Last Name *</Label>
-                    <Input
-                      id="last_name"
-                      value={formData.last_name}
-                      onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                      placeholder="Enter last name"
-                      required
-                    />
+                  </CardContent>
+                  </Card>
+
+                  {/* Request Details */}
+                  <Card>
+                  <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Calendar className="h-5 w-5 text-blue-600" />
+                    <h2 className="text-xl font-semibold text-gray-900">Request Details</h2>
                   </div>
-                </div>
 
-                <div>
-                  <Label htmlFor="work_email">Work Email *</Label>
-                  <Input
-                    id="work_email"
-                    type="email"
-                    value={formData.work_email}
-                    onChange={(e) => setFormData({...formData, work_email: e.target.value})}
-                    placeholder="Enter work email"
-                    required
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Request Details */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-2 mb-6">
-                <Calendar className="h-5 w-5 text-blue-600" />
-                <h2 className="text-xl font-semibold text-gray-900">Request Details</h2>
-              </div>
-
-              <div className="space-y-4">
+                  <div className="space-y-4">
                 {/* Submission Date */}
                 <div>
                   <Label htmlFor="submission_date">Request Date (Today's Date) *</Label>
