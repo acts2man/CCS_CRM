@@ -22,6 +22,10 @@ import StudentGrades from '@/pages/StudentGrades';
 import StudentTeachers from '@/pages/StudentTeachers';
 import StudentDocuments from '@/pages/StudentDocuments';
 import StudentAnnouncements from '@/pages/StudentAnnouncements';
+import ParentGrades from '@/pages/ParentGrades';
+import ParentAssignments from '@/pages/ParentAssignments';
+import ParentAttendance from '@/pages/ParentAttendance';
+import ParentBilling from '@/pages/ParentBilling';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
