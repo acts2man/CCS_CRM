@@ -134,7 +134,7 @@ export default function TimeOff() {
           {/* Form */}
           <div className="lg:col-span-3">
             <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Employee Information */}
+              {/* Employee Information */}
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
