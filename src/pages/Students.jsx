@@ -179,6 +179,9 @@ export default function Students() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={(e) => { e.preventDefault(); startStudentImpersonation(student); }}>
+                        <Eye className="mr-2 h-4 w-4" /><span>View as Student</span>
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={(e) => { e.preventDefault(); handleEditStudent(student); }}>
                         <Edit className="mr-2 h-4 w-4" /><span>Edit</span>
                       </DropdownMenuItem>
