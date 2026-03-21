@@ -32,7 +32,7 @@ const LayoutWrapper = ({ children, currentPageName }) => {
   }
   
   // Use main Layout for everyone else
-  return <Layout currentPageName={currentPageName}>{children}</Layout>;
+  return <MainLayout currentPageName={currentPageName}>{children}</MainLayout>;
 };
 
 const AuthenticatedApp = () => {
