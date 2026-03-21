@@ -14,10 +14,10 @@ Deno.serve(async (req) => {
     status: 'pending'
   });
 
-  // Build approve/deny links
-  const appBaseUrl = 'https://calvaryforkidscrm.com';
-  const approveLink = `${appBaseUrl}/time-off-action?requestId=${request.id}&action=approve`;
-  const denyLink = `${appBaseUrl}/time-off-action?requestId=${request.id}&action=deny`;
+  // Build approve/deny links — point directly to the backend function (no login required)
+  const fnBaseUrl = 'https://calvaryforkidscrm.com/api/v1/functions/approveTimeOff';
+  const approveLink = `${fnBaseUrl}?requestId=${request.id}&action=approve`;
+  const denyLink = `${fnBaseUrl}?requestId=${request.id}&action=deny`;
 
   const submittedOn = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
