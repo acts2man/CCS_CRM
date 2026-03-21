@@ -20,6 +20,10 @@ export default function TeacherDashboard({ impersonatedTeacher }) {
 
   useEffect(() => { loadData(); }, [impersonatedTeacher]);
 
+  useEffect(() => {
+    if (classes.length > 0 && !selectedClass) setSelectedClass(classes[0]);
+  }, [classes]);
+
   const loadData = async () => {
     setLoading(true);
     const currentUser = await base44.auth.me();
