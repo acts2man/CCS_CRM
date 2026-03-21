@@ -79,7 +79,7 @@ export default function Gradebook() {
 
           <div className="flex-1">
             {selectedClass ? (
-              <TeacherGradebookView key={selectedClass.id} classSection={selectedClass} schoolYear={schoolYear} />
+              <SubjectView key={selectedClass.id} classSection={selectedClass} onRefresh={loadData} />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-400">
                 <div className="text-center">
