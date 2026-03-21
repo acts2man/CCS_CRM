@@ -105,6 +105,7 @@ export default function ClassesOverview() {
             onSaved={() => { setEditingClass(null); loadData(); }}
           />
         )}
+        </>
       )}
     </div>
   );
