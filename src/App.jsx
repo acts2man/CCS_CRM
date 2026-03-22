@@ -27,6 +27,7 @@ import StudentTeachers from '@/pages/StudentTeachers';
 import StudentDocuments from '@/pages/StudentDocuments';
 import StudentAnnouncements from '@/pages/StudentAnnouncements';
 import ParentDashboard from '@/pages/ParentDashboard';
+import ParentStudents from '@/pages/ParentStudents';
 import ParentClasses from '@/pages/ParentClasses';
 import ParentGrades from '@/pages/ParentGrades';
 import ParentAssignments from '@/pages/ParentAssignments';

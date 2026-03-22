@@ -69,8 +69,8 @@ export default function ParentDocuments() {
       </div>
 
       {/* Child Selector */}
-      {children.length > 1 && (
-        <div className="flex gap-2">
+      {children.length > 0 && (
+        <div className="flex gap-2 flex-wrap">
           {children.map(child => (
             <button
               key={child.id}
