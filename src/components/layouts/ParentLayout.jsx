@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
   LayoutDashboard, BookOpen, FileText, Calendar, 
-  DollarSign, Users, Settings, 
+  DollarSign, Users, Megaphone, ClipboardList,
   ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
