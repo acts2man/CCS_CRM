@@ -149,22 +149,31 @@ export default function StudentProfile() {
             <Pencil className="h-4 w-4 mr-2" />
             Edit Student
           </Button>
-          <Button 
-            variant="outline"
-            onClick={() => {
-              const parent = parents[0];
-              if (parent?.phone) {
-                window.location.href = `tel:${parent.phone}`;
-              } else if (parent?.email) {
-                window.location.href = `mailto:${parent.email}`;
-              } else {
-                alert('No parent contact info found. Please add a parent in the Parents tab.');
-              }
-            }}
-          >
-            <Mail className="h-4 w-4 mr-2" />
-            Contact Parent
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" disabled={parents.length === 0}>
+                <Mail className="h-4 w-4 mr-2" />
+                Contact Parent
+                <ChevronDown className="h-3.5 w-3.5 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                disabled={!parents[0]?.email}
+                onClick={() => { setSelectedParent(parents[0]); setCommunicationType('email'); }}
+              >
+                <Mail className="h-4 w-4 mr-2 text-blue-600" />
+                Send Email
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={!parents[0]?.phone}
+                onClick={() => { setSelectedParent(parents[0]); setCommunicationType('sms'); }}
+              >
+                <MessageSquare className="h-4 w-4 mr-2 text-green-600" />
+                Send SMS
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button 
             className="bg-slate-900 hover:bg-slate-800"
             onClick={() => window.print()}
