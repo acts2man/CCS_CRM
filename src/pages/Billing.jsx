@@ -186,20 +186,20 @@ export default function Billing() {
                 <div className="space-y-2">
                   {filteredCharges.length === 0 && <p className="text-gray-500 text-sm py-6 text-center">No charges found.</p>}
                   {filteredCharges.map(charge => (
-                    <div key={charge.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
-                      <div className="flex items-center gap-3">
-                        <div>
-                          <div className="font-medium text-sm">{charge.student_name}</div>
-                          <div className="text-xs text-gray-500">{charge.description || charge.charge_type} {charge.due_date && `· Due ${new Date(charge.due_date).toLocaleDateString()}`}</div>
+                    <div key={charge.id} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="font-medium text-sm truncate">{charge.student_name}</div>
+                          <div className="text-xs text-gray-500 truncate">{charge.description || charge.charge_type}{charge.due_date && ` · Due ${new Date(charge.due_date).toLocaleDateString()}`}</div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Badge className={chargeTypeColors[charge.charge_type] || 'bg-gray-100 text-gray-700'}>{charge.charge_type}</Badge>
-                        <Badge className={statusColors[charge.status]}>{charge.status}</Badge>
-                        <div className="text-right">
+                        <div className="text-right flex-shrink-0">
                           <div className="font-semibold">${(charge.amount || 0).toFixed(2)}</div>
                           {charge.paid_amount > 0 && <div className="text-xs text-green-600">Paid ${charge.paid_amount.toFixed(2)}</div>}
                         </div>
+                      </div>
+                      <div className="flex gap-2 flex-wrap">
+                        <Badge className={chargeTypeColors[charge.charge_type] || 'bg-gray-100 text-gray-700'}>{charge.charge_type}</Badge>
+                        <Badge className={statusColors[charge.status]}>{charge.status}</Badge>
                       </div>
                     </div>
                   ))}
