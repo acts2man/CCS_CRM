@@ -243,30 +243,18 @@ export default function Attendance() {
 
       {/* Tabs */}
       <Tabs defaultValue="class-attendance" className="w-full">
-        <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
-          <TabsTrigger 
-            value="class-attendance"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent"
-          >
-            Class Attendance (Academic)
+        <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full h-auto">
+          <TabsTrigger value="class-attendance" className="text-xs sm:text-sm">
+            Attendance
           </TabsTrigger>
-          <TabsTrigger 
-            value="clock-in-out"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent"
-          >
-            <LogIn className="h-4 w-4 mr-2" />
-            Clock In / Out (Physical)
+          <TabsTrigger value="clock-in-out" className="text-xs sm:text-sm">
+            <LogIn className="h-3 w-3 mr-1 sm:mr-2" />
+            Clock In/Out
           </TabsTrigger>
-          <TabsTrigger 
-            value="calendar"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent"
-          >
-            Calendar View
+          <TabsTrigger value="calendar" className="text-xs sm:text-sm">
+            Calendar
           </TabsTrigger>
-          <TabsTrigger 
-            value="automation"
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-transparent"
-          >
+          <TabsTrigger value="automation" className="text-xs sm:text-sm">
             Automation
           </TabsTrigger>
         </TabsList>
