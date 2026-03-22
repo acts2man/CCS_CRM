@@ -19,6 +19,7 @@ import StudentLayout from '@/components/layouts/StudentLayout';
 import ParentLayout from '@/components/layouts/ParentLayout';
 import TeacherLayout from '@/components/layouts/TeacherLayout';
 import StudentDashboard from '@/pages/StudentDashboard';
+import StudentClasses from '@/pages/StudentClasses';
 import StudentSubjects from '@/pages/StudentSubjects';
 import StudentAssignments from '@/pages/StudentAssignments';
 import StudentGrades from '@/pages/StudentGrades';
