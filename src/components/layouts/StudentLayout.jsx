@@ -1,65 +1,71 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
   LayoutDashboard, BookOpen, FileText, Calendar, 
   ClipboardList, GraduationCap, MessageSquare,
-  Settings, ChevronLeft, ChevronRight, Menu, X, LogOut
+  Settings, ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 
+const BRAND_COLOR = '#2663EB';
+
+const navigation = [
+  { name: 'Dashboard', href: 'StudentDashboard', icon: LayoutDashboard },
+  { name: 'Subjects', href: 'StudentSubjects', icon: BookOpen },
+  { name: 'Assignments', href: 'StudentAssignments', icon: ClipboardList },
+  { name: 'Grades', href: 'StudentGrades', icon: Calendar },
+  { name: 'Teachers', href: 'StudentTeachers', icon: GraduationCap },
+  { name: 'Documents', href: 'StudentDocuments', icon: FileText },
+  { name: 'Announcements', href: 'StudentAnnouncements', icon: MessageSquare },
+];
+
+// First 4 items show in bottom tab bar, rest in "More" drawer
+const TAB_ITEMS = navigation.slice(0, 4);
+const MORE_ITEMS = navigation.slice(4);
+
 export default function StudentLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const location = useLocation();
 
-  const navigation = [
-    { name: 'Dashboard', href: 'StudentDashboard', icon: LayoutDashboard },
-    { name: 'Subjects', href: 'StudentSubjects', icon: BookOpen },
-    { name: 'Assignments', href: 'StudentAssignments', icon: ClipboardList },
-    { name: 'Grades', href: 'StudentGrades', icon: Calendar },
-    { name: 'Teachers', href: 'StudentTeachers', icon: GraduationCap },
-    { name: 'Documents', href: 'StudentDocuments', icon: FileText },
-    { name: 'Announcements', href: 'StudentAnnouncements', icon: MessageSquare },
-  ];
-
-  const bottomNavigation = [
-    { name: 'Settings', href: 'Settings', icon: Settings },
-  ];
+  const isActive = (href) => location.pathname === `/${href}`;
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full text-white border-r" style={{ backgroundColor: '#2663EB' }}>
+    <div className="flex flex-col h-full text-white border-r" style={{ backgroundColor: BRAND_COLOR }}>
       <div className="flex items-center justify-between p-4">
-        <div className="flex items-center">
-          <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
-            alt="Calvary Christian School"
-            className={!collapsed ? "h-12 w-auto" : "h-10 w-auto"}
-          />
-        </div>
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
+          alt="Calvary Christian School"
+          className={!collapsed ? "h-12 w-auto" : "h-10 w-auto"}
+        />
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden lg:flex text-white hover:opacity-80"
+          className="hidden lg:flex text-white hover:bg-white/20"
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
       </div>
-
       <Separator className="opacity-20" />
-
       <ScrollArea className="flex-1 px-2 py-4">
         <nav className="space-y-1">
           {navigation.map((item) => {
             const Icon = item.icon;
+            const active = isActive(item.href);
             return (
               <Link
                 key={item.name}
                 to={createPageUrl(item.href)}
-                className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-white/20 text-white"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${
+                  active ? 'bg-white/25 text-white font-semibold' : 'text-white/80 hover:bg-white/20 hover:text-white'
+                }`}
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
                 {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
@@ -68,30 +74,15 @@ export default function StudentLayout({ children }) {
           })}
         </nav>
       </ScrollArea>
-
       <Separator className="opacity-20" />
-
-      <div className="p-2 space-y-1">
-        {bottomNavigation.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.name}
-              to={createPageUrl(item.href)}
-              className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-white/20 text-white"
-            >
-              <Icon className="h-5 w-5 flex-shrink-0" />
-              {!collapsed && <span className="text-sm font-medium">{item.name}</span>}
-            </Link>
-          );
-        })}
+      <div className="p-2">
         <Button 
           onClick={() => base44.auth.logout()}
-          className="w-full justify-start text-white hover:bg-white/20 bg-transparent"
+          className="w-full justify-start text-white/80 hover:bg-white/20 hover:text-white bg-transparent"
           variant="ghost"
         >
           <LogOut className="h-5 w-5 flex-shrink-0" />
-          {!collapsed && <span className="text-sm font-medium">Logout</span>}
+          {!collapsed && <span className="text-sm font-medium ml-3">Logout</span>}
         </Button>
       </div>
     </div>
@@ -99,40 +90,143 @@ export default function StudentLayout({ children }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      {/* Mobile sidebar */}
-      <div className={`fixed inset-0 z-50 lg:hidden ${mobileOpen ? 'block' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-        <div className="fixed inset-y-0 left-0 w-64 bg-white">
-          <SidebarContent />
+      {/* Mobile sidebar overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
+          <div className="fixed inset-y-0 left-0 w-72 shadow-2xl" style={{ backgroundColor: BRAND_COLOR }}>
+            <div className="flex items-center justify-between p-4 border-b border-white/20">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
+                alt="Calvary Christian School"
+                className="h-12 w-auto"
+              />
+              <button onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white p-1">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <nav className="p-3 space-y-1">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.name}
+                    to={createPageUrl(item.href)}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                      active ? 'bg-white/25 text-white font-semibold' : 'text-white/80 hover:bg-white/15 hover:text-white'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <span className="text-sm font-medium">{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+            <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/20">
+              <button
+                onClick={() => base44.auth.logout()}
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-white/80 hover:bg-white/15 hover:text-white transition-colors"
+              >
+                <LogOut className="h-5 w-5" />
+                <span className="text-sm font-medium">Logout</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Desktop sidebar */}
-      <div className={`hidden lg:flex flex-col ${collapsed ? 'w-16' : 'w-64'} transition-all duration-300`}>
+      <div className={`hidden lg:flex flex-col ${collapsed ? 'w-16' : 'w-64'} transition-all duration-300 flex-shrink-0`}>
         <SidebarContent />
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Mobile header */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b">
-          <Button variant="ghost" size="icon" onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-          <div className="flex items-center">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
-              alt="Calvary Christian School"
-              className="h-12 w-auto"
-            />
-          </div>
-          <div className="w-10" />
+        <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm">
+          <button onClick={() => setMobileOpen(true)} className="p-1 rounded-lg hover:bg-gray-100">
+            <Menu className="h-6 w-6 text-gray-700" />
+          </button>
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6934d527b5d299be1ef1388b/7ba2762e9_3677bfb5-16c0-4a33-8a7d-e9784832b9bf.png"
+            alt="Calvary Christian School"
+            className="h-10 w-auto"
+          />
+          <div className="w-8" />
         </div>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto pb-20 lg:pb-0">
           {children}
         </main>
+
+        {/* Mobile bottom tab bar */}
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
+          <div className="flex items-center justify-around px-2 py-2">
+            {TAB_ITEMS.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.name}
+                  to={createPageUrl(item.href)}
+                  className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-0 ${
+                    active ? 'text-blue-600' : 'text-gray-500'
+                  }`}
+                >
+                  <Icon className={`h-5 w-5 ${active ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <span className="text-[10px] font-medium truncate">{item.name}</span>
+                </Link>
+              );
+            })}
+            {/* More button */}
+            <button
+              onClick={() => setMoreOpen(!moreOpen)}
+              className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg text-gray-500"
+            >
+              <MoreHorizontal className="h-5 w-5 text-gray-400" />
+              <span className="text-[10px] font-medium">More</span>
+            </button>
+          </div>
+        </div>
+
+        {/* "More" sheet from bottom */}
+        {moreOpen && (
+          <div className="lg:hidden fixed inset-0 z-50">
+            <div className="fixed inset-0 bg-black/40" onClick={() => setMoreOpen(false)} />
+            <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl p-4 pb-8">
+              <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-4" />
+              <nav className="space-y-1">
+                {MORE_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.href);
+                  return (
+                    <Link
+                      key={item.name}
+                      to={createPageUrl(item.href)}
+                      onClick={() => setMoreOpen(false)}
+                      className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-colors ${
+                        active ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <Icon className="h-5 w-5 flex-shrink-0" />
+                      <span className="text-sm font-medium">{item.name}</span>
+                    </Link>
+                  );
+                })}
+                <button
+                  onClick={() => base44.auth.logout()}
+                  className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <LogOut className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium">Logout</span>
+                </button>
+              </nav>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
