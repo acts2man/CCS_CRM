@@ -4,8 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function ParentSchoolCalendar() {
   // Calendar embed code will be added here
-  const calendarEmbedCode = null;
-
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center gap-3">
@@ -18,19 +16,17 @@ export default function ParentSchoolCalendar() {
         </div>
       </div>
 
-      {calendarEmbedCode ? (
-        <div className="w-full rounded-xl overflow-hidden border" style={{ minHeight: 600 }}
-          dangerouslySetInnerHTML={{ __html: calendarEmbedCode }}
+      <div className="w-full rounded-xl overflow-hidden border bg-white">
+        <iframe
+          src="https://calendar.google.com/calendar/embed?src=qk7ft793ish6p66d9u3otl6pkg%40group.calendar.google.com&ctz=America%2FLos_Angeles"
+          style={{ border: 0 }}
+          width="100%"
+          height="600"
+          frameBorder="0"
+          scrolling="no"
+          title="School Calendar"
         />
-      ) : (
-        <Card>
-          <CardContent className="pt-16 pb-16 text-center">
-            <Calendar className="h-16 w-16 text-gray-200 mx-auto mb-4" />
-            <p className="text-gray-500 font-medium">Calendar coming soon</p>
-            <p className="text-sm text-gray-400 mt-1">The school calendar will appear here once configured.</p>
-          </CardContent>
-        </Card>
-      )}
+      </div>
     </div>
   );
 }
