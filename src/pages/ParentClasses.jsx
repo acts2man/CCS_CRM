@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, User, Clock, MapPin, Mail, Phone, ChevronDown, ChevronUp, Users } from "lucide-react";
-import { getParentByUserEmail, getStudentsByIds } from "@/lib/entitySyncUtils";
+import { getParentByUserEmail, getStudentsForParent } from "@/lib/entitySyncUtils";
 
 export default function ParentClasses() {
   const [students, setStudents] = useState([]);
@@ -19,10 +19,11 @@ export default function ParentClasses() {
     try {
       const user = await base44.auth.me();
       const { parent } = await getParentByUserEmail(user.email);
-      if (!parent || !parent.student_ids?.length) { setLoading(false); return; }
-      const studs = await getStudentsByIds(parent.student_ids);
+      if (!parent) { setLoading(false); return; }
+      const { students: studs } = await getStudentsForParent(parent.id);
       setStudents(studs);
       if (studs.length > 0) setSelectedStudentId(studs[0].id);
+      else setLoading(false);
     } catch (error) {
       console.error("Error loading students:", error);
       setLoading(false);
