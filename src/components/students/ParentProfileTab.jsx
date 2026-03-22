@@ -77,10 +77,21 @@ export default function ParentProfileTab({ studentId }) {
     if (editingParent) {
       await base44.entities.Parent.update(editingParent.id, formData);
     } else {
-      await base44.entities.Parent.create({
+      // Create parent with student link
+      const newParent = await base44.entities.Parent.create({
         ...formData,
         student_ids: [studentId],
       });
+      // Also update the student's parent_ids to include this new parent
+      const student = await base44.entities.Student.filter({ id: studentId });
+      if (student && student[0]) {
+        const existingParentIds = student[0].parent_ids || [];
+        if (!existingParentIds.includes(newParent.id)) {
+          await base44.entities.Student.update(studentId, {
+            parent_ids: [...existingParentIds, newParent.id]
+          });
+        }
+      }
     }
     await loadParents();
     setSaving(false);
