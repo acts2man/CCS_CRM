@@ -12,14 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+
 import { Plus, Search, Mail, Phone, Eye, Edit, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -132,13 +125,13 @@ export default function Teachers() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
         <div>
-          <h1 className="text-3xl font-bold">Teachers</h1>
-          <p className="text-gray-600 mt-1">Manage faculty members and their information</p>
+          <h1 className="text-2xl md:text-3xl font-bold">Teachers</h1>
+          <p className="text-gray-600 mt-1">Manage faculty members</p>
         </div>
         <Button 
-          className="bg-slate-900 hover:bg-slate-800"
+          className="bg-slate-900 hover:bg-slate-800 self-start"
           onClick={() => setShowAddModal(true)}
         >
           <Plus className="h-4 w-4 mr-2" />
