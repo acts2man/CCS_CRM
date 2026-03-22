@@ -121,7 +121,7 @@ export default function SubjectView({ classSection, onRefresh }) {
 
       {/* Subject content */}
       {selectedSubject ? (
-        <div className="flex-1 flex flex-col overflow-hidden p-6">
+        <div className="flex-1 flex flex-col overflow-hidden p-3 md:p-6">
           {subjectLoading ? (
             <div className="flex items-center justify-center flex-1"><Loader2 className="h-6 w-6 animate-spin text-blue-600" /></div>
           ) : (
