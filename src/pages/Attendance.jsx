@@ -163,16 +163,18 @@ export default function Attendance() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {fireDrillMode && <FireDrillMode onClose={() => setFireDrillMode(false)} />}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Attendance Management</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl md:text-3xl font-bold">Attendance</h1>
         <Button
           onClick={() => setFireDrillMode(true)}
-          className="bg-red-600 hover:bg-red-700 text-white"
+          className="bg-red-600 hover:bg-red-700 text-white text-sm"
+          size="sm"
         >
-          <Flame className="h-4 w-4 mr-2" />
-          Fire Drill Mode
+          <Flame className="h-4 w-4 mr-1" />
+          <span className="hidden sm:inline">Fire Drill</span>
+          <span className="sm:hidden">🔥</span>
         </Button>
       </div>
 
