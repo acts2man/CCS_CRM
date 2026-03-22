@@ -1,6 +1,5 @@
 import React from "react";
 import { Calendar } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function ParentSchoolCalendar() {
   // Calendar embed code will be added here
