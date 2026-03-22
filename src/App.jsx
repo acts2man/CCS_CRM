@@ -124,6 +124,7 @@ const AuthenticatedApp = () => {
       
       {/* Student Dashboard Routes */}
       <Route path="/StudentDashboard" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
+      <Route path="/StudentClasses" element={<StudentLayout><StudentClasses /></StudentLayout>} />
       <Route path="/StudentSubjects" element={<StudentLayout><StudentSubjects /></StudentLayout>} />
       <Route path="/StudentAssignments" element={<StudentLayout><StudentAssignments /></StudentLayout>} />
       <Route path="/StudentGrades" element={<StudentLayout><StudentGrades /></StudentLayout>} />
