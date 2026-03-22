@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Pencil, 
   Mail, 
+  MessageSquare,
   FileText, 
   TrendingUp, 
   Calendar as CalendarIcon, 
@@ -18,8 +19,10 @@ import {
   MapPin,
   AlertTriangle,
   Phone,
-  Loader2
+  Loader2,
+  ChevronDown
 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import EditStudentModal from "@/components/students/EditStudentModal";
 import ClassEnrollmentTab from "@/components/students/ClassEnrollmentTab";
 import MedicalNotesTab from "@/components/students/MedicalNotesTab";
