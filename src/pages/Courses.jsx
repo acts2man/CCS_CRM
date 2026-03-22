@@ -33,29 +33,60 @@ export default function Courses() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="border-b bg-white px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="border-b bg-white px-4 md:px-6 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold">Classes</h1>
-            <p className="text-sm text-gray-500 mt-1">Create and manage classes, subjects, components, and assignments</p>
+            <h1 className="text-xl md:text-2xl font-bold">Classes</h1>
+            <p className="text-sm text-gray-500 mt-1 hidden sm:block">Manage classes, subjects, and assignments</p>
           </div>
           <div className="flex gap-2">
             <Select value={schoolYear} onValueChange={setSchoolYear}>
-              <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="2024-2025">2024–2025</SelectItem>
                 <SelectItem value="2025-2026">2025–2026</SelectItem>
                 <SelectItem value="2026-2027">2026–2027</SelectItem>
               </SelectContent>
             </Select>
-            <Button className="bg-slate-900 hover:bg-slate-800" onClick={() => setShowClassSetup(true)}><Plus className="h-4 w-4 mr-2" /> New Class</Button>
+            <Button className="bg-slate-900 hover:bg-slate-800" onClick={() => setShowClassSetup(true)}>
+              <Plus className="h-4 w-4 mr-1" /> New Class
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="p-6">
-        <div className="flex h-[calc(100vh-220px)]">
-          <div className="w-64 border-r bg-white rounded-lg mr-6 overflow-y-auto">
+      <div className="p-4 md:p-6 flex flex-col gap-4">
+        {/* Mobile: horizontal pill selector. Desktop: sidebar + content */}
+        
+        {/* Mobile class selector */}
+        <div className="md:hidden">
+          {classes.length === 0 ? (
+            <div className="text-center py-6 text-gray-400 text-sm">
+              <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-30" />
+              No classes yet — create one above
+            </div>
+          ) : (
+            <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+              {classes.map(cls => (
+                <button
+                  key={cls.id}
+                  onClick={() => handleClassSelect(cls)}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm border transition-colors text-left ${
+                    selectedClass?.id === cls.id
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300'
+                  }`}
+                >
+                  <div className="font-medium whitespace-nowrap">{cls.name}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Desktop: sidebar + content */}
+        <div className="hidden md:flex h-[calc(100vh-220px)]">
+          <div className="w-64 border-r bg-white rounded-lg mr-6 overflow-y-auto flex-shrink-0">
             <div className="p-4 space-y-1">
               <p className="text-xs font-semibold text-gray-400 uppercase mb-3">Classes</p>
               {classes.length === 0 && (
@@ -76,7 +107,7 @@ export default function Courses() {
               ))}
             </div>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-auto">
             {selectedClass ? (
               <SubjectView key={selectedClass.id} classSection={selectedClass} onRefresh={loadData} />
             ) : (
@@ -88,6 +119,20 @@ export default function Courses() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Mobile: selected class content */}
+        <div className="md:hidden">
+          {selectedClass ? (
+            <SubjectView key={selectedClass.id} classSection={selectedClass} onRefresh={loadData} />
+          ) : classes.length > 0 ? (
+            <div className="flex items-center justify-center py-12 text-gray-400">
+              <div className="text-center">
+                <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                <p className="text-sm">Select a class above</p>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
 
