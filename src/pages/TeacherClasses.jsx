@@ -20,17 +20,15 @@ export default function TeacherClasses() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      // Get teacher record by email
-      const teachers = await base44.entities.Teacher.filter({ email: currentUser.email });
-      if (teachers.length > 0) {
-        const teacher = teachers[0];
-        
-        // Get all class sections taught by this teacher
-        const allClasses = await base44.entities.ClassSection.list();
-        const teacherClasses = allClasses.filter(c => c.teacher_id === teacher.id);
-        
-        setClasses(teacherClasses);
+      const { teacher, error } = await getTeacherByUserEmail(currentUser.email);
+      if (error || !teacher) {
+        console.error("Teacher sync error:", error);
+        return;
       }
+
+      const allClasses = await base44.entities.ClassSection.list();
+      const teacherClasses = allClasses.filter(c => c.teacher_id === teacher.id);
+      setClasses(teacherClasses);
     } catch (error) {
       console.error("Error loading teacher classes:", error);
     } finally {

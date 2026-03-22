@@ -19,9 +19,9 @@ export default function TeacherProfile() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const teachers = await base44.entities.Teacher.filter({ email: currentUser.email });
-      if (teachers.length > 0) {
-        setTeacher(teachers[0]);
+      const { teacher, error } = await getTeacherByUserEmail(currentUser.email);
+      if (!error && teacher) {
+        setTeacher(teacher);
       }
     } catch (error) {
       console.error("Error loading profile:", error);
