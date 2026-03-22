@@ -42,6 +42,18 @@ export async function getStudentsForParent(parentId) {
   }
 }
 
+export async function getTeacherByUserEmail(userEmail) {
+  try {
+    const teachers = await base44.entities.Teacher.filter({ email: userEmail });
+    if (teachers.length === 0) {
+      return { teacher: null, error: `No Teacher record found with email: ${userEmail}` };
+    }
+    return { teacher: teachers[0], error: null };
+  } catch (error) {
+    return { teacher: null, error: `Failed to fetch teacher: ${error.message}` };
+  }
+}
+
 export async function getParentsForStudent(studentId) {
   try {
     // Get student to get parent_ids

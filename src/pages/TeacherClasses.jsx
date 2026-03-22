@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, BookOpen, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
 
 export default function TeacherClasses() {
   const [user, setUser] = useState(null);

@@ -124,6 +124,14 @@ export default function AddTeacherModal({ open, onOpenChange, onTeacherAdded }) 
 
       await base44.entities.Teacher.create(teacherData);
 
+      // Invite teacher as a user with 'teacher' role
+      try {
+        await base44.users.inviteUser(formData.email, "teacher");
+      } catch (inviteError) {
+        // User may already exist — not a fatal error
+        console.warn("Could not invite teacher user:", inviteError.message);
+      }
+
       // Reset form
       setFormData({
         first_name: "",

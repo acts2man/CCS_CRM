@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Briefcase, User } from "lucide-react";
+import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
 
 export default function TeacherProfile() {
   const [teacher, setTeacher] = useState(null);
