@@ -278,7 +278,7 @@ export default function Attendance() {
               <h2 className="text-xl font-bold mb-4">Classroom Attendance</h2>
               <p className="text-sm text-gray-600 mb-6">Record student attendance for your class (Present, Absent, Tardy, Excused)</p>
               
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Date</label>
                   <Input
@@ -301,7 +301,7 @@ export default function Attendance() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
+                <div className="col-span-2 md:col-span-1">
                   <label className="text-sm font-medium mb-2 block">Search Student</label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -313,7 +313,7 @@ export default function Attendance() {
                     />
                   </div>
                 </div>
-                <div className="flex items-end">
+                <div className="col-span-2 md:col-span-1 flex items-end">
                   <Button 
                     onClick={saveAllAttendance}
                     disabled={Object.keys(pendingChanges).length === 0}
