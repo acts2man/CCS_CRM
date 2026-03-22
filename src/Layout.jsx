@@ -27,7 +27,7 @@ const ADMIN_NAV = [
   { name: 'Bulletin Board', href: 'BulletinBoard', icon: Megaphone },
   { name: 'School Forms', href: 'SchoolForms', icon: FileSpreadsheet },
   { name: 'Chat', href: 'Chat', icon: MessageSquare },
-  { name: 'Email', href: 'Email', icon: Mail },
+  { name: 'Communications', href: 'Email', icon: Mail },
   { name: 'Users', href: 'UserManagement', icon: Users },
 ];
 
