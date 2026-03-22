@@ -71,18 +71,18 @@ export default function Billing() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="border-b bg-white px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="border-b bg-white px-4 md:px-6 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Billing & Accounts Receivable</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900">Billing & AR</h1>
             <p className="text-sm text-gray-500 mt-1">Manage tuition, fees, and payment tracking</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => { setShowRecordPayment(true); setSelectedStudentId(null); }}>
-              <DollarSign className="h-4 w-4 mr-2" /> Record Payment
+            <Button variant="outline" size="sm" onClick={() => { setShowRecordPayment(true); setSelectedStudentId(null); }}>
+              <DollarSign className="h-4 w-4 mr-1" /> Payment
             </Button>
-            <Button className="bg-slate-900 hover:bg-slate-800" onClick={() => { setShowAddCharge(true); setSelectedStudentId(null); }}>
-              <Plus className="h-4 w-4 mr-2" /> Add Charge
+            <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => { setShowAddCharge(true); setSelectedStudentId(null); }}>
+              <Plus className="h-4 w-4 mr-1" /> Charge
             </Button>
           </div>
         </div>
