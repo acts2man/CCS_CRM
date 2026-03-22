@@ -14,6 +14,9 @@ import { Separator } from '@/components/ui/separator';
 const navigation = [
   { name: 'Dashboard', href: 'ParentDashboard', icon: LayoutDashboard },
   { name: 'Students', href: 'ParentStudents', icon: Users },
+  { name: 'Bulletin Board', href: 'ParentBulletin', icon: Megaphone },
+  { name: 'Calendar', href: 'ParentSchoolCalendar', icon: Calendar },
+  { name: 'Forms', href: 'ParentForms', icon: ClipboardList },
   { name: 'Classes', href: 'ParentClasses', icon: BookOpen },
   { name: 'Grades', href: 'ParentGrades', icon: BookOpen },
   { name: 'Assignments', href: 'ParentAssignments', icon: FileText },

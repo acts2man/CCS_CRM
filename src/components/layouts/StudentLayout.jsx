@@ -15,6 +15,7 @@ const BRAND_COLOR = '#2663EB';
 
 const navigation = [
   { name: 'Dashboard', href: 'StudentDashboard', icon: LayoutDashboard },
+  { name: 'Bulletin Board', href: 'StudentBulletin', icon: Megaphone },
   { name: 'Classes', href: 'StudentClasses', icon: BookOpen },
   { name: 'Assignments', href: 'StudentAssignments', icon: ClipboardList },
   { name: 'Grades', href: 'StudentGrades', icon: Calendar },
