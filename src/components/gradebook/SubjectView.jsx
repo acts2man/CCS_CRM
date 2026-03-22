@@ -127,17 +127,17 @@ export default function SubjectView({ classSection, onRefresh }) {
           ) : (
             <>
               {/* Header */}
-              <div className="flex items-center justify-between mb-4 flex-shrink-0">
-                <div>
-                  <h2 className="text-xl font-bold">{selectedSubject.name}</h2>
-                  <p className="text-sm text-gray-500">{classSection.name} · {classSection.teacher_name} · {students.length} students</p>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 flex-shrink-0">
+                <div className="min-w-0">
+                  <h2 className="text-lg md:text-xl font-bold">{selectedSubject.name}</h2>
+                  <p className="text-xs md:text-sm text-gray-500 truncate">{classSection.name} · {students.length} students</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-shrink-0">
                   <Button variant="outline" size="sm" onClick={() => setShowCategoryManager(true)}>
-                    <Settings className="h-4 w-4 mr-1" /> Components
+                    <Settings className="h-4 w-4 mr-1" /> <span className="hidden sm:inline">Components</span><span className="sm:hidden">Setup</span>
                   </Button>
                   <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => { setSelectedCategory(null); setShowAddAssignment(true); }}>
-                    <Plus className="h-4 w-4 mr-1" /> Assignment
+                    <Plus className="h-4 w-4 mr-1" /> <span className="hidden sm:inline">Assignment</span><span className="sm:hidden">Add</span>
                   </Button>
                 </div>
               </div>
