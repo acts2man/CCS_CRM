@@ -4,8 +4,8 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
   LayoutDashboard, BookOpen, FileText, Calendar, 
-  ClipboardList, GraduationCap, MessageSquare,
-  Settings, ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal
+  ClipboardList, MessageSquare,
+  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -15,10 +15,9 @@ const BRAND_COLOR = '#2663EB';
 
 const navigation = [
   { name: 'Dashboard', href: 'StudentDashboard', icon: LayoutDashboard },
-  { name: 'Subjects', href: 'StudentSubjects', icon: BookOpen },
+  { name: 'Classes', href: 'StudentClasses', icon: BookOpen },
   { name: 'Assignments', href: 'StudentAssignments', icon: ClipboardList },
   { name: 'Grades', href: 'StudentGrades', icon: Calendar },
-  { name: 'Teachers', href: 'StudentTeachers', icon: GraduationCap },
   { name: 'Documents', href: 'StudentDocuments', icon: FileText },
   { name: 'Announcements', href: 'StudentAnnouncements', icon: MessageSquare },
 ];
