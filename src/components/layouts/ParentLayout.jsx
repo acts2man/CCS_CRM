@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 
 const navigation = [
   { name: 'Dashboard', href: 'ParentDashboard', icon: LayoutDashboard },
+  { name: 'Classes', href: 'ParentClasses', icon: BookOpen },
   { name: 'Grades', href: 'ParentGrades', icon: BookOpen },
   { name: 'Assignments', href: 'ParentAssignments', icon: FileText },
   { name: 'Attendance', href: 'ParentAttendance', icon: Calendar },
