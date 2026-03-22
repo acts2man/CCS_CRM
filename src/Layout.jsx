@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, GraduationCap, Calendar, BookOpen, 
   FileText, DollarSign, MessageSquare, Mail, Settings, 
   HelpCircle, ChevronLeft, ChevronRight, BarChart3, Shield,
-  Zap, FileSpreadsheet, Puzzle, UserCog, Menu, X, LogOut, MoreHorizontal
+  Zap, FileSpreadsheet, Puzzle, UserCog, Menu, X, LogOut, MoreHorizontal, Megaphone
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
