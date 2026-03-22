@@ -330,17 +330,17 @@ export default function Attendance() {
                 {filteredStudents.map((student) => {
                   const status = getAttendanceStatus(student.id);
                   return (
-                    <div key={student.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div key={student.id} className="p-3 border rounded-lg space-y-2">
                       <div>
                         <div className="font-semibold">{student.first_name} {student.last_name}</div>
                         <div className="text-sm text-gray-600">Grade {student.grade_level}</div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="grid grid-cols-4 gap-1.5">
                         <Button
                           size="sm"
                           variant={status === 'present' ? 'default' : 'outline'}
                           onClick={() => markAttendance(student.id, 'present')}
-                          className={status === 'present' ? 'bg-green-600 hover:bg-green-700' : ''}
+                          className={`text-xs ${status === 'present' ? 'bg-green-600 hover:bg-green-700' : ''}`}
                         >
                           Present
                         </Button>
@@ -348,7 +348,7 @@ export default function Attendance() {
                           size="sm"
                           variant={status === 'absent' ? 'default' : 'outline'}
                           onClick={() => markAttendance(student.id, 'absent')}
-                          className={status === 'absent' ? 'bg-red-600 hover:bg-red-700' : ''}
+                          className={`text-xs ${status === 'absent' ? 'bg-red-600 hover:bg-red-700' : ''}`}
                         >
                           Absent
                         </Button>
@@ -356,7 +356,7 @@ export default function Attendance() {
                           size="sm"
                           variant={status === 'tardy' ? 'default' : 'outline'}
                           onClick={() => markAttendance(student.id, 'tardy')}
-                          className={status === 'tardy' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}
+                          className={`text-xs ${status === 'tardy' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}`}
                         >
                           Tardy
                         </Button>
@@ -364,7 +364,7 @@ export default function Attendance() {
                           size="sm"
                           variant={status === 'excused' ? 'default' : 'outline'}
                           onClick={() => markAttendance(student.id, 'excused')}
-                          className={status === 'excused' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                          className={`text-xs ${status === 'excused' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
                         >
                           Excused
                         </Button>
