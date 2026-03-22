@@ -139,10 +139,14 @@ const AuthenticatedApp = () => {
       <Route path="/StudentTeachers" element={<StudentLayout><StudentTeachers /></StudentLayout>} />
       <Route path="/StudentDocuments" element={<StudentLayout><StudentDocuments /></StudentLayout>} />
       <Route path="/StudentAnnouncements" element={<StudentLayout><StudentAnnouncements /></StudentLayout>} />
+      <Route path="/StudentBulletin" element={<StudentLayout><StudentBulletin /></StudentLayout>} />
       
       {/* Parent Dashboard Routes */}
       <Route path="/ParentDashboard" element={<ParentLayout><ParentDashboard /></ParentLayout>} />
       <Route path="/ParentStudents" element={<ParentLayout><ParentStudents /></ParentLayout>} />
+      <Route path="/ParentBulletin" element={<ParentLayout><ParentBulletin /></ParentLayout>} />
+      <Route path="/ParentSchoolCalendar" element={<ParentLayout><ParentSchoolCalendar /></ParentLayout>} />
+      <Route path="/ParentForms" element={<ParentLayout><ParentForms /></ParentLayout>} />
       <Route path="/ParentClasses" element={<ParentLayout><ParentClasses /></ParentLayout>} />
       <Route path="/ParentGrades" element={<ParentLayout><ParentGrades /></ParentLayout>} />
       <Route path="/ParentAssignments" element={<ParentLayout><ParentAssignments /></ParentLayout>} />
@@ -160,6 +164,8 @@ const AuthenticatedApp = () => {
       <Route path="/StudentDirectory" element={<TeacherLayout><StudentDirectory /></TeacherLayout>} />
       <Route path="/UserManagement" element={<LayoutWrapper currentPageName="UserManagement"><UserManagement /></LayoutWrapper>} />
       <Route path="/DataHealthCheck" element={<LayoutWrapper currentPageName="DataHealthCheck"><DataHealthCheck /></LayoutWrapper>} />
+      <Route path="/BulletinBoard" element={<LayoutWrapper currentPageName="BulletinBoard"><BulletinBoard /></LayoutWrapper>} />
+      <Route path="/SchoolForms" element={<LayoutWrapper currentPageName="SchoolForms"><SchoolForms /></LayoutWrapper>} />
       
       <Route path="*" element={<PageNotFound />} />
     </Routes>
