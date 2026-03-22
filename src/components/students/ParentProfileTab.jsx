@@ -102,11 +102,17 @@ export default function ParentProfileTab({ studentId }) {
   const handleDelete = async (parentId) => {
     if (!window.confirm("Remove this parent from the student profile?")) return;
     const parent = parents.find(p => p.id === parentId);
-    const updatedIds = (parent.student_ids || []).filter(id => id !== studentId);
-    if (updatedIds.length === 0) {
+    const updatedParentStudentIds = (parent.student_ids || []).filter(id => id !== studentId);
+    if (updatedParentStudentIds.length === 0) {
       await base44.entities.Parent.delete(parentId);
     } else {
-      await base44.entities.Parent.update(parentId, { student_ids: updatedIds });
+      await base44.entities.Parent.update(parentId, { student_ids: updatedParentStudentIds });
+    }
+    // Also remove this parent from the student's parent_ids
+    const student = await base44.entities.Student.filter({ id: studentId });
+    if (student && student[0]) {
+      const updatedStudentParentIds = (student[0].parent_ids || []).filter(id => id !== parentId);
+      await base44.entities.Student.update(studentId, { parent_ids: updatedStudentParentIds });
     }
     await loadParents();
     toast({ title: "Parent removed" });
