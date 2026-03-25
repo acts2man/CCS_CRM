@@ -152,7 +152,12 @@ export default function UserManagement() {
                       </td>
                       <td className="py-3 px-4 text-gray-600">{user.email}</td>
                       <td className="py-3 px-4">
-                        <Select value={user.role} onValueChange={(newRole) => updateUserRole(user.id, newRole)}>
+                        <Select 
+                          value={user.role || 'user'} 
+                          onValueChange={(newRole) => {
+                            if (newRole !== user.role) updateUserRole(user.id, newRole);
+                          }}
+                        >
                           <SelectTrigger className="w-32 h-8 text-sm">
                             <SelectValue />
                           </SelectTrigger>

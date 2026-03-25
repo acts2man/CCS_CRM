@@ -59,6 +59,12 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   : <>{children}</>;
 
 const RoleRedirect = ({ user }) => {
+  // Wait until user is loaded before redirecting
+  if (!user) return (
+    <div className="fixed inset-0 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+    </div>
+  );
   if (user?.role === 'student') return <Navigate to="/StudentDashboard" replace />;
   if (user?.role === 'parent') return <Navigate to="/ParentGrades" replace />;
   if (user?.role === 'teacher') return <Navigate to="/TeacherClasses" replace />;
