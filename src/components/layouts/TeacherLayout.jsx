@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
   BookOpen, BarChart3, Calendar, 
-  Users, MessageSquare, Settings, 
+  Users, MessageSquare, Settings, FileText,
   ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal, User, ArrowLeft, LayoutDashboard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ const navigation = [
   { name: 'Gradebook', href: 'TeacherGradebook', icon: BarChart3 },
   { name: 'Attendance', href: 'TeacherAttendance', icon: Calendar },
   { name: 'Students', href: 'StudentDirectory', icon: Users },
+  { name: 'Documents', href: 'TeacherDocuments', icon: FileText },
   { name: 'Messages', href: 'TeacherCommunications', icon: MessageSquare },
   { name: 'Profile', href: 'TeacherProfile', icon: User },
   { name: 'Settings', href: 'TeacherSettings', icon: Settings },
