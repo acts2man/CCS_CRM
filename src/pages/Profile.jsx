@@ -41,12 +41,13 @@ export default function Profile() {
       const reader = new FileReader();
       reader.onload = async () => {
         try {
-          const { file_url } = await base44.integrations.Core.UploadFile({ file: reader.result });
-          setAvatar(file_url);
-          await base44.auth.updateMe({ avatar: file_url });
+          const base64Avatar = reader.result;
+          setAvatar(base64Avatar);
+          await base44.auth.updateMe({ avatar: base64Avatar });
           setMessage('Avatar uploaded successfully');
           setTimeout(() => setMessage(''), 3000);
           if (fileInputRef.current) fileInputRef.current.value = '';
+          setSaving(false);
         } catch (error) {
           console.error('Error uploading avatar:', error);
           setMessage('Failed to upload avatar');
@@ -57,7 +58,7 @@ export default function Profile() {
         setMessage('Failed to read file');
         setSaving(false);
       };
-      reader.readAsArrayBuffer(file);
+      reader.readAsDataURL(file);
     } catch (error) {
       console.error('Error uploading avatar:', error);
       setMessage('Failed to upload avatar');
