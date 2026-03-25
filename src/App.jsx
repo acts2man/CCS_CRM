@@ -50,6 +50,7 @@ import TeacherSettings from '@/pages/TeacherSettings';
 import StudentDirectory from '@/pages/StudentDirectory';
 import UserManagement from '@/pages/UserManagement';
 import DataHealthCheck from '@/pages/DataHealthCheck';
+import Profile from '@/pages/Profile';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -161,6 +162,7 @@ const AuthenticatedApp = () => {
       <Route path="/DataHealthCheck" element={<LayoutWrapper currentPageName="DataHealthCheck"><DataHealthCheck /></LayoutWrapper>} />
       <Route path="/BulletinBoard" element={<LayoutWrapper currentPageName="BulletinBoard"><BulletinBoard /></LayoutWrapper>} />
       <Route path="/SchoolForms" element={<LayoutWrapper currentPageName="SchoolForms"><SchoolForms /></LayoutWrapper>} />
+      <Route path="/Profile" element={<LayoutWrapper currentPageName="Profile"><Profile /></LayoutWrapper>} />
       
       <Route path="*" element={<PageNotFound />} />
     </Routes>
