@@ -9,6 +9,12 @@ export default function TeacherClasses() {
   const [classes, setClasses] = useState([]);
   const { teacherId, loading: teacherLoading } = useTeacherId();
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  
+  const getNavUrl = (path) => {
+    const teacherIdParam = new URLSearchParams(location.search).get('teacherId');
+    return teacherIdParam ? `/${path}?teacherId=${teacherIdParam}` : `/${path}`;
+  };
 
   useEffect(() => {
     if (teacherLoading) return;
