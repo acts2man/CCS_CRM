@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { supabase } from '@/api/supabaseClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,30 +38,26 @@ export default function Profile() {
 
     setSaving(true);
     try {
-      if (!user?.id) throw new Error('User ID not found');
-      
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      
-      const { data, error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(fileName, file, { upsert: true });
-      
-      if (uploadError) throw uploadError;
-      
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(data.path);
-      
-      setAvatar(publicUrl);
-      await base44.auth.updateMe({ avatar: publicUrl });
-      setMessage('Avatar uploaded successfully');
-      setTimeout(() => setMessage(''), 3000);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const base64Data = reader.result;
+          setAvatar(base64Data);
+          await base44.auth.updateMe({ avatar: base64Data });
+          setMessage('Avatar uploaded successfully');
+          setTimeout(() => setMessage(''), 3000);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          setSaving(false);
+        } catch (error) {
+          console.error('Error saving avatar:', error);
+          setMessage('Failed to save avatar');
+          setSaving(false);
+        }
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
-      console.error('Error uploading avatar:', error);
-      setMessage('Failed to upload avatar');
-    } finally {
+      console.error('Error reading file:', error);
+      setMessage('Failed to read file');
       setSaving(false);
     }
   };
