@@ -32,6 +32,7 @@ import DocumentDetailModal from "@/components/students/DocumentDetailModal";
 import ContactCard from "@/components/students/ContactCard";
 import QuickCommunicationModal from "@/components/students/QuickCommunicationModal";
 import CommunicationHistoryTab from "@/components/students/CommunicationHistoryTab";
+import TeacherAssignmentTab from "@/components/students/TeacherAssignmentTab";
 
 export default function StudentProfile() {
   const navigate = useNavigate();
@@ -262,8 +263,9 @@ export default function StudentProfile() {
          <TabsTrigger value="communications">Communications</TabsTrigger>
          <TabsTrigger value="billing">Billing</TabsTrigger>
          <TabsTrigger value="parents">Parents</TabsTrigger>
+         <TabsTrigger value="teachers">Teachers</TabsTrigger>
          <TabsTrigger value="medical">Medical Notes</TabsTrigger>
-        </TabsList>
+         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 mt-6">
           {/* Contact Information - Prominent Section */}
@@ -455,6 +457,10 @@ export default function StudentProfile() {
 
         <TabsContent value="parents" className="mt-6">
           <ParentProfileTab studentId={studentId} />
+        </TabsContent>
+
+        <TabsContent value="teachers" className="mt-6">
+          <TeacherAssignmentTab studentId={studentId} />
         </TabsContent>
 
         <TabsContent value="medical" className="mt-6">

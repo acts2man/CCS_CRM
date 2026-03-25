@@ -36,13 +36,28 @@ export default function TeacherDashboard() {
         return;
       }
 
-      const [allClasses, allAssignments] = await Promise.all([
+      const [allClasses, allAssignments, allStudents] = await Promise.all([
         base44.entities.ClassSection.list(),
-        base44.entities.Assignment.list()
+        base44.entities.Assignment.list(),
+        base44.entities.Student.list()
       ]);
 
       const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
-      const totalStudents = teacherClasses.reduce((sum, c) => sum + (c.student_ids?.length || 0), 0);
+      
+      // Count students from both class enrollment and direct assignment
+      const classStudents = new Set();
+      teacherClasses.forEach(c => {
+        (c.student_ids || []).forEach(id => classStudents.add(id));
+      });
+      
+      const directlyAssignedStudents = new Set(
+        allStudents
+          .filter(s => s.teacher_ids?.includes(teacherId))
+          .map(s => s.id)
+      );
+      
+      const totalStudents = new Set([...classStudents, ...directlyAssignedStudents]).size;
+      
       const teacherAssignments = allAssignments.filter(a => 
         teacherClasses.some(c => c.id === a.class_section_id)
       );
