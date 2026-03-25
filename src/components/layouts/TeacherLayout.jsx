@@ -144,7 +144,16 @@ export default function TeacherLayout({ children }) {
                 );
               })}
             </nav>
-            <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-slate-700">
+            <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-slate-700 space-y-2">
+              {isImpersonating && (
+                <button
+                  onClick={handleExitView}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 transition-colors"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  <span className="text-sm font-medium">Exit View</span>
+                </button>
+              )}
               <button
                 onClick={() => base44.auth.logout()}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
@@ -235,6 +244,15 @@ export default function TeacherLayout({ children }) {
                     </Link>
                   );
                 })}
+                {isImpersonating && (
+                  <button
+                    onClick={() => { handleExitView(); setMoreOpen(false); }}
+                    className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-amber-600 hover:bg-amber-50 transition-colors"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                    <span className="text-sm font-medium">Exit View</span>
+                  </button>
+                )}
                 <button
                   onClick={() => base44.auth.logout()}
                   className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
