@@ -84,14 +84,32 @@ export default function StudentTeachers() {
           teachers.map((teacher) => (
             <Card key={teacher.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle className="text-lg">
-                  {teacher.first_name} {teacher.last_name}
-                </CardTitle>
-                {teacher.department && (
-                  <Badge variant="outline" className="w-fit mt-2">
-                    {teacher.department}
-                  </Badge>
-                )}
+                <div className="flex items-center gap-3">
+                  <div className="h-14 w-14 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                    {teacher.avatar ? (
+                      <img
+                        src={teacher.avatar}
+                        alt={`${teacher.first_name} ${teacher.last_name}`}
+                        className="w-full h-full object-cover"
+                        style={{ objectPosition: 'center 15%' }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-600 font-semibold">
+                        {teacher.first_name?.[0]}{teacher.last_name?.[0]}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">
+                      {teacher.first_name} {teacher.last_name}
+                    </CardTitle>
+                    {teacher.department && (
+                      <Badge variant="outline" className="w-fit mt-1">
+                        {teacher.department}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Classes */}

@@ -226,10 +226,20 @@ export default function Teachers() {
                 <div key={teacher.id} className="border rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <Avatar className="h-10 w-10 flex-shrink-0">
-                        <AvatarImage src={teacher.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${teacher.first_name}`} />
-                        <AvatarFallback>{teacher.first_name?.[0]}{teacher.last_name?.[0]}</AvatarFallback>
-                      </Avatar>
+                      <div className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                        {teacher.avatar ? (
+                          <img
+                            src={teacher.avatar}
+                            alt={`${teacher.first_name} ${teacher.last_name}`}
+                            className="w-full h-full object-cover"
+                            style={{ objectPosition: 'center 15%' }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-600 font-semibold text-sm">
+                            {teacher.first_name?.[0]}{teacher.last_name?.[0]}
+                          </div>
+                        )}
+                      </div>
                       <div className="min-w-0">
                         <div className="font-semibold truncate">{teacher.first_name} {teacher.last_name}</div>
                         <div className="text-sm text-gray-500 truncate">{teacher.email}</div>

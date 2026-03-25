@@ -127,11 +127,11 @@ export default function StudentProfile() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <div className="relative w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
             <img 
               src={student.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.first_name}`} 
               alt={`${student.first_name} ${student.last_name}`}
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-cover"
               style={{ objectPosition: 'center 15%' }}
             />
           </div>

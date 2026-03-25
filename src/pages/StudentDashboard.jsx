@@ -138,6 +138,7 @@ export default function StudentDashboard() {
                   src={student.photo_url} 
                   alt={`${student.first_name} ${student.last_name}`}
                   className="h-24 w-24 rounded-lg object-cover border-4 border-white shadow-md"
+                  style={{ objectPosition: 'center 15%' }}
                 />
               ) : (
                 <div className="h-24 w-24 rounded-lg bg-gray-300 flex items-center justify-center border-4 border-white shadow-md">

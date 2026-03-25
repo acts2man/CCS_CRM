@@ -163,7 +163,7 @@ export default function Students() {
                       <img 
                         src={student.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.first_name}`} 
                         alt={`${student.first_name} ${student.last_name}`}
-                        className="w-full h-full object-cover object-top"
+                        className="w-full h-full object-cover"
                         style={{ objectPosition: 'center 15%' }}
                       />
                     </div>
