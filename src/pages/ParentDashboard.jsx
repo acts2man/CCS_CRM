@@ -34,17 +34,8 @@ export default function ParentDashboard() {
   const loadParentData = async () => {
     try {
       // parentData is already loaded by useParentId hook
-      
-      if (parentError || !parentData) {
-        console.error("Parent sync error:", parentError);
-        setLoading(false);
-        return;
-      }
-      
-      setParent(parentData);
-      
       // Get children via ID-based lookup (standardized relationship)
-      const { students: myChildren, error: childrenError } = await getStudentsForParent(parentData.id);
+      const { students: myChildren, error: childrenError } = await getStudentsForParent(parentId);
       
       if (childrenError) {
         console.error("Children fetch error:", childrenError);
