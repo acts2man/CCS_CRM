@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { useStudentId } from "@/lib/useStudentId";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, BookOpen, ClipboardList, Zap, Clock, FileText, User, Mail, Phone, Users, X, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
-import { useImpersonation } from "@/lib/ImpersonationContext";
 import DocumentDetailModal from "@/components/students/DocumentDetailModal";
-import { getStudentByUserEmail, getParentsForStudent } from "@/lib/entitySyncUtils";
+import { getParentsForStudent } from "@/lib/entitySyncUtils";
 
 export default function StudentDashboard() {
-  const { impersonatedStudent, stopImpersonation } = useImpersonation();
-  const [student, setStudent] = useState(null);
+  const navigate = useNavigate();
+  const { studentId, student: studentData, loading: studentIdLoading } = useStudentId();
   const [parents, setParents] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [recentAttendance, setRecentAttendance] = useState([]);
@@ -27,25 +28,18 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (studentIdLoading) return;
+    if (!studentId) {
+      // No student found, redirect to dashboard
+      navigate('/Dashboard');
+      return;
+    }
     loadStudentData();
-  }, [impersonatedStudent]);
+  }, [studentId, studentIdLoading]);
 
   const loadStudentData = async () => {
     try {
-      // Use impersonated student if available, otherwise get logged-in student by email
-      let studentData;
-      
-      if (impersonatedStudent) {
-        studentData = impersonatedStudent;
-      } else {
-        const user = await base44.auth.me();
-        const { student, error } = await getStudentByUserEmail(user.email);
-        if (error || !student) {
-          console.error("Student sync error:", error);
-          return;
-        }
-        studentData = student;
-      }
+      // studentData is already loaded by useStudentId hook
       
       setStudent(studentData);
 
