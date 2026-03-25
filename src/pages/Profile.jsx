@@ -42,8 +42,8 @@ export default function Profile() {
       reader.onload = async () => {
         try {
           const base64Data = reader.result;
+          const response = await base44.functions.invoke('uploadAvatar', { avatarData: base64Data });
           setAvatar(base64Data);
-          await base44.auth.updateMe({ avatar: base64Data });
           setMessage('Avatar uploaded successfully');
           setTimeout(() => setMessage(''), 3000);
           if (fileInputRef.current) fileInputRef.current.value = '';
