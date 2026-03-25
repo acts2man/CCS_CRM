@@ -102,25 +102,26 @@ export default function StudentDashboard() {
     }
   };
 
-  if (loading) {
+  if (loading || studentIdLoading) {
     return <div className="p-8">Loading...</div>;
+  }
+
+  if (!studentData) {
+    return (
+      <div className="p-8">
+        <Card className="bg-red-50 border-red-200">
+          <CardContent className="pt-6">
+            <p className="text-red-900">Student data not found. Please try again.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
     <div className="p-8 space-y-6">
       {/* Profile Header */}
       <div className="relative">
-        {impersonatedStudent && (
-          <div className="absolute -top-2 -right-2 z-10">
-            <button
-              onClick={stopImpersonation}
-              className="flex items-center gap-2 px-3 py-1 bg-amber-500 text-white text-xs font-semibold rounded-full hover:bg-amber-600 transition-colors shadow-md"
-            >
-              <span>Viewing as {student?.first_name}</span>
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        )}
         <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
           <CardContent className="pt-6">
             <div className="flex items-start gap-6">
