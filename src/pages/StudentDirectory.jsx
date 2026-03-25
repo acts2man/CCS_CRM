@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { Users, Search, Mail, Phone } from "lucide-react";
 import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function StudentDirectory() {
+  const navigate = useNavigate();
   const [allStudents, setAllStudents] = useState([]);
   const [myStudents, setMyStudents] = useState([]);
   const [tab, setTab] = useState("my");
@@ -115,54 +117,62 @@ export default function StudentDirectory() {
             </CardContent>
           </Card>
         ) : (
-          filtered.map((student) => (
-            <Card key={student.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="pt-5 pb-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
-                    {student.photo_url ? (
-                      <img
-                        src={student.photo_url}
-                        alt={`${student.first_name} ${student.last_name}`}
-                        className="w-full h-full object-cover"
-                        style={{ objectPosition: "center 15%" }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-600 font-semibold text-sm">
-                        {student.first_name?.[0]}{student.last_name?.[0]}
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
-                      {student.first_name} {student.last_name}
-                    </h3>
-                    <Badge className="mt-0.5 bg-blue-100 text-blue-800 text-xs">
-                      Grade {student.grade_level}
-                    </Badge>
-                  </div>
-                </div>
+           filtered.map((student) => (
+             <Card 
+               key={student.id} 
+               className="hover:shadow-md transition-shadow cursor-pointer"
+               onClick={() => navigate(`/StudentProfile?id=${student.id}`)}
+             >
+               <CardContent className="pt-5 pb-5">
+                 <div className="flex items-center gap-3 mb-3">
+                   <div className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                     {student.photo_url ? (
+                       <img
+                         src={student.photo_url}
+                         alt={`${student.first_name} ${student.last_name}`}
+                         className="w-full h-full object-cover"
+                         style={{ objectPosition: "center 15%" }}
+                       />
+                     ) : (
+                       <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-600 font-semibold text-sm">
+                         {student.first_name?.[0]}{student.last_name?.[0]}
+                       </div>
+                     )}
+                   </div>
+                   <div>
+                     <h3 className="font-semibold text-gray-900">
+                       {student.first_name} {student.last_name}
+                     </h3>
+                     <Badge className="mt-0.5 bg-blue-100 text-blue-800 text-xs">
+                       Grade {student.grade_level}
+                     </Badge>
+                   </div>
+                 </div>
 
-                <div className="space-y-1.5 text-sm">
-                  {student.email && (
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <Mail className="h-4 w-4 flex-shrink-0" />
-                      <a href={`mailto:${student.email}`} className="hover:text-blue-600 truncate">
-                        {student.email}
-                      </a>
-                    </div>
-                  )}
-                  {student.phone && (
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <Phone className="h-4 w-4 flex-shrink-0" />
-                      {student.phone}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
+                 <div className="space-y-1.5 text-sm">
+                   {student.email && (
+                     <div className="flex items-center gap-2 text-gray-600">
+                       <Mail className="h-4 w-4 flex-shrink-0" />
+                       <a 
+                         href={`mailto:${student.email}`} 
+                         className="hover:text-blue-600 truncate"
+                         onClick={(e) => e.stopPropagation()}
+                       >
+                         {student.email}
+                       </a>
+                     </div>
+                   )}
+                   {student.phone && (
+                     <div className="flex items-center gap-2 text-gray-600">
+                       <Phone className="h-4 w-4 flex-shrink-0" />
+                       {student.phone}
+                     </div>
+                   )}
+                 </div>
+               </CardContent>
+             </Card>
+           ))
+         )}
       </div>
     </div>
   );
