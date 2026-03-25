@@ -10,7 +10,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useImpersonation } from '@/lib/ImpersonationContext';
 
 const navigation = [
   { name: 'Classes', href: 'TeacherClasses', icon: BookOpen },
@@ -31,12 +30,17 @@ export default function TeacherLayout({ children }) {
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { impersonatedTeacher, stopImpersonation, viewMode } = useImpersonation();
-  const isImpersonating = viewMode !== 'admin';
+  const teacherId = new URLSearchParams(window.location.search).get('teacherId');
+  const isImpersonating = !!teacherId;
 
   const handleExitView = () => {
-    stopImpersonation();
     navigate('/Dashboard');
+  };
+
+  // Build nav URL preserving teacherId param so it survives page navigation
+  const navUrl = (href) => {
+    const base = `/${href}`;
+    return teacherId ? `${base}?teacherId=${teacherId}` : base;
   };
 
   const isActive = (href) => location.pathname === `/${href}`;
@@ -67,7 +71,7 @@ export default function TeacherLayout({ children }) {
             return (
               <Link
                 key={item.name}
-                to={createPageUrl(item.href)}
+                to={navUrl(item.href)}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${
                   active ? 'bg-white/20 text-white font-semibold' : 'text-slate-300 hover:bg-slate-700 hover:text-white'
@@ -128,7 +132,7 @@ export default function TeacherLayout({ children }) {
                 return (
                   <Link
                     key={item.name}
-                    to={createPageUrl(item.href)}
+                    to={navUrl(item.href)}
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                       active ? 'bg-white/20 text-white font-semibold' : 'text-slate-300 hover:bg-slate-700 hover:text-white'
@@ -187,7 +191,7 @@ export default function TeacherLayout({ children }) {
               return (
                 <Link
                   key={item.name}
-                  to={createPageUrl(item.href)}
+                  to={navUrl(item.href)}
                   className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-0 ${
                     active ? 'text-blue-600' : 'text-gray-500'
                   }`}
@@ -220,7 +224,7 @@ export default function TeacherLayout({ children }) {
                   return (
                     <Link
                       key={item.name}
-                      to={createPageUrl(item.href)}
+                      to={navUrl(item.href)}
                       onClick={() => setMoreOpen(false)}
                       className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-colors ${
                         active ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'

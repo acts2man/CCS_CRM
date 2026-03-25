@@ -3,20 +3,19 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle, Clock, AlertCircle } from "lucide-react";
-import { useImpersonation } from "@/lib/ImpersonationContext";
-import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
+import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function TeacherAttendance() {
-  const [user, setUser] = useState(null);
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
   const [attendance, setAttendance] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { impersonatedTeacher } = useImpersonation();
+  const { teacherId, loading: teacherLoading } = useTeacherId();
 
   useEffect(() => {
+    if (teacherLoading) return;
     loadTeacherAttendance();
-  }, [impersonatedTeacher]);
+  }, [teacherId, teacherLoading]);
 
   useEffect(() => {
     if (selectedClass) {
@@ -25,24 +24,13 @@ export default function TeacherAttendance() {
   }, [selectedClass]);
 
   const loadTeacherAttendance = async () => {
+    setLoading(true);
     try {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-
-      let teacherId = impersonatedTeacher?.id;
-      if (!teacherId) {
-        const { teacher } = await getTeacherByUserEmail(currentUser.email);
-        teacherId = teacher?.id;
-      }
-
-      if (teacherId) {
-        const allClasses = await base44.entities.ClassSection.list();
-        const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
-        setClasses(teacherClasses);
-        if (teacherClasses.length > 0) {
-          setSelectedClass(teacherClasses[0]);
-        }
-      }
+      if (!teacherId) { setLoading(false); return; }
+      const allClasses = await base44.entities.ClassSection.list();
+      const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
+      setClasses(teacherClasses);
+      if (teacherClasses.length > 0) setSelectedClass(teacherClasses[0]);
     } catch (error) {
       console.error("Error loading attendance:", error);
     } finally {

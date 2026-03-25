@@ -4,40 +4,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, BookOpen, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
-import { useImpersonation } from "@/lib/ImpersonationContext";
+import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function TeacherClasses() {
-  const [user, setUser] = useState(null);
   const [classes, setClasses] = useState([]);
+  const { teacherId, loading: teacherLoading } = useTeacherId();
   const [loading, setLoading] = useState(true);
-  const { impersonatedTeacher } = useImpersonation();
 
   useEffect(() => {
+    if (teacherLoading) return;
     loadTeacherClasses();
-  }, [impersonatedTeacher]);
+  }, [teacherId, teacherLoading]);
 
   const loadTeacherClasses = async () => {
+    setLoading(true);
     try {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-
-      // Priority: URL param > impersonation context > user's own email
-      const urlParams = new URLSearchParams(window.location.search);
-      let teacherId = urlParams.get('teacherId') || impersonatedTeacher?.id;
-
       if (!teacherId) {
-        const { teacher, error } = await getTeacherByUserEmail(currentUser.email);
-        if (error || !teacher) {
-          console.error("Teacher sync error:", error);
-          return;
-        }
-        teacherId = teacher.id;
+        setClasses([]);
+        return;
       }
-
       const allClasses = await base44.entities.ClassSection.list();
-      const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
-      setClasses(teacherClasses);
+      setClasses(allClasses.filter(c => c.teacher_id === teacherId));
     } catch (error) {
       console.error("Error loading teacher classes:", error);
     } finally {
@@ -52,7 +39,7 @@ export default function TeacherClasses() {
         <p className="text-gray-600 mt-2">Manage your class sections and students</p>
       </div>
 
-      {loading ? (
+      {(loading || teacherLoading) ? (
         <div className="text-center py-12">
           <div className="inline-block w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
         </div>

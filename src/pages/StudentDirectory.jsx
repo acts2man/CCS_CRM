@@ -4,8 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Users, Search, Mail, Phone } from "lucide-react";
-import { useImpersonation } from "@/lib/ImpersonationContext";
-import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
+import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function StudentDirectory() {
   const [allStudents, setAllStudents] = useState([]);
@@ -13,11 +12,12 @@ export default function StudentDirectory() {
   const [tab, setTab] = useState("my");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const { impersonatedTeacher, viewMode } = useImpersonation();
+  const { teacherId, loading: teacherLoading } = useTeacherId();
 
   useEffect(() => {
+    if (teacherLoading) return;
     loadData();
-  }, [impersonatedTeacher]);
+  }, [teacherId, teacherLoading]);
 
   const loadData = async () => {
     setLoading(true);
@@ -28,23 +28,12 @@ export default function StudentDirectory() {
       ]);
       setAllStudents(studentsData);
 
-      // Determine which teacher we are
-      let teacherId = impersonatedTeacher?.id;
-      if (!teacherId) {
-        // Try to find teacher by logged-in user's email
-        const user = await base44.auth.me();
-        const { teacher } = await getTeacherByUserEmail(user.email);
-        teacherId = teacher?.id;
-      }
-
       if (teacherId) {
         const myClasses = classSections.filter(c => c.teacher_id === teacherId);
         const myStudentIds = new Set();
         myClasses.forEach(c => (c.student_ids || []).forEach(id => myStudentIds.add(id)));
-        const myList = studentsData.filter(s => myStudentIds.has(s.id));
-        setMyStudents(myList);
+        setMyStudents(studentsData.filter(s => myStudentIds.has(s.id)));
       } else {
-        // No specific teacher identified (admin viewing as generic teacher) — show all
         setMyStudents(studentsData);
       }
     } catch (error) {

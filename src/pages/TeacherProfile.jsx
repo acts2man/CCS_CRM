@@ -3,32 +3,10 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Briefcase, User } from "lucide-react";
-import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
+import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function TeacherProfile() {
-  const [teacher, setTeacher] = useState(null);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadProfile();
-  }, []);
-
-  const loadProfile = async () => {
-    try {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-
-      const { teacher, error } = await getTeacherByUserEmail(currentUser.email);
-      if (!error && teacher) {
-        setTeacher(teacher);
-      }
-    } catch (error) {
-      console.error("Error loading profile:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { teacher, loading } = useTeacherId();
 
   if (loading) {
     return (
