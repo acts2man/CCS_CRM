@@ -205,7 +205,7 @@ export default function TeacherDashboard() {
             </Card>
           </Link>
 
-          <Link to={navUrl("Documents")}>
+          <Link to={navUrl("TeacherDocuments")}>
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
