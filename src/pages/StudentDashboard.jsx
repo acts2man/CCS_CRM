@@ -40,25 +40,22 @@ export default function StudentDashboard() {
   const loadStudentData = async () => {
     try {
       // studentData is already loaded by useStudentId hook
-      
-      setStudent(studentData);
-
       // Get all related data in parallel
       const [classes, assignments, grades, docs, clockInOut, parentData] = await Promise.all([
         base44.entities.ClassSection.list(),
         base44.entities.Assignment.list(),
         base44.entities.AssignmentGrade.list(),
-        base44.entities.StudentDocument.filter({ student_id: studentData.id }),
-        base44.entities.StudentClockInOut.filter({ student_id: studentData.id }),
-        getParentsForStudent(studentData.id)
+        base44.entities.StudentDocument.filter({ student_id: studentId }),
+        base44.entities.StudentClockInOut.filter({ student_id: studentId }),
+        getParentsForStudent(studentId)
       ]);
 
       // Filter data relevant to this student
-      const enrolledClasses = classes.filter(c => c.student_ids?.includes(studentData.id));
+      const enrolledClasses = classes.filter(c => c.student_ids?.includes(studentId));
       const studentAssignments = assignments.filter(a => 
         enrolledClasses.some(c => c.id === a.class_section_id)
       );
-      const studentGrades = grades.filter(g => g.student_id === studentData.id);
+      const studentGrades = grades.filter(g => g.student_id === studentId);
 
       // Set parent information via ID-based lookup
       setParents(parentData.parents);
