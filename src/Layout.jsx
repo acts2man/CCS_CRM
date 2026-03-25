@@ -166,7 +166,26 @@ export default function Layout({ children, currentPageName }) {
 
       <Separator className="bg-slate-700" />
 
-      <div className="p-2 space-y-1">
+      <div className="p-3 space-y-3">
+        {user && !collapsed && (
+          <div className="flex items-center gap-3 px-3 py-2 bg-slate-800 rounded-lg">
+            {user.avatar ? (
+              <img
+                src={user.avatar}
+                alt={user.full_name}
+                className="h-10 w-10 rounded-full object-cover border border-slate-600"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
+                <Users className="h-5 w-5 text-slate-400" />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-white truncate">{user.full_name}</p>
+              <p className="text-xs text-slate-400 truncate">{user.email}</p>
+            </div>
+          </div>
+        )}
         <NavLink item={{ name: 'Profile', href: 'Profile', icon: Users }} />
         <NavLink item={{ name: 'Settings', href: 'Settings', icon: Settings }} />
         <Button 
