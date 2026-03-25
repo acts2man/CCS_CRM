@@ -75,7 +75,7 @@ export default function ParentLayout({ children }) {
             return (
               <Link
                 key={item.name}
-                to={createPageUrl(item.href)}
+                to={navUrl(item.href)}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${
                   active ? 'bg-white/15 text-white font-semibold' : 'text-slate-300 hover:bg-slate-900 hover:text-white'
