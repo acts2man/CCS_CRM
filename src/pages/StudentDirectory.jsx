@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,12 +9,19 @@ import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function StudentDirectory() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [allStudents, setAllStudents] = useState([]);
   const [myStudents, setMyStudents] = useState([]);
   const [tab, setTab] = useState("my");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const { teacherId, loading: teacherLoading } = useTeacherId();
+
+  const getNavUrl = (path, studentId) => {
+    const base = `/${path}?id=${studentId}`;
+    const teacherIdParam = new URLSearchParams(location.search).get('teacherId');
+    return teacherIdParam ? `${base}&teacherId=${teacherIdParam}` : base;
+  };
 
   useEffect(() => {
     if (teacherLoading) return;
@@ -121,7 +128,7 @@ export default function StudentDirectory() {
              <Card 
                key={student.id} 
                className="hover:shadow-md transition-shadow cursor-pointer"
-               onClick={() => navigate(`/TeacherStudentProfile?id=${student.id}`)}
+               onClick={() => navigate(getNavUrl('TeacherStudentProfile', student.id))}
              >
                <CardContent className="pt-5 pb-5">
                  <div className="flex items-center gap-3 mb-3">

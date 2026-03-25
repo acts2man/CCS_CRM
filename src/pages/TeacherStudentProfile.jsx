@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,6 +32,7 @@ import CommunicationHistoryTab from "@/components/students/CommunicationHistoryT
 
 export default function TeacherStudentProfile() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [student, setStudent] = useState(null);
   const [parents, setParents] = useState([]);
   const [grades, setGrades] = useState([]);
@@ -42,8 +43,14 @@ export default function TeacherStudentProfile() {
   const [communicationType, setCommunicationType] = useState(null);
   const [selectedParent, setSelectedParent] = useState(null);
 
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(location.search);
   const studentId = urlParams.get('id');
+  const teacherIdParam = urlParams.get('teacherId');
+
+  const getNavUrl = (path) => {
+    const base = `/${path}`;
+    return teacherIdParam ? `${base}?teacherId=${teacherIdParam}` : base;
+  };
 
   useEffect(() => {
     if (studentId) {

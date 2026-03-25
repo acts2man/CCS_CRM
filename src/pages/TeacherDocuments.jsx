@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useTeacherId } from '@/lib/useTeacherId';
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,7 @@ const CATEGORY_COLORS = {
 };
 
 export default function TeacherDocuments() {
+  const location = useLocation();
   const { teacherId, loading: teacherLoading } = useTeacherId();
   const [templates, setTemplates] = useState([]);
   const [sentDocs, setSentDocs] = useState([]);
@@ -42,6 +44,12 @@ export default function TeacherDocuments() {
   const [showBehaviorReport, setShowBehaviorReport] = useState(false);
   const [showSchoolBehaviorReport, setShowSchoolBehaviorReport] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
+
+  const getNavUrl = (path) => {
+    const base = `/${path}`;
+    const teacherIdParam = new URLSearchParams(location.search).get('teacherId');
+    return teacherIdParam ? `${base}?teacherId=${teacherIdParam}` : base;
+  };
 
   useEffect(() => {
     if (teacherLoading) return;
