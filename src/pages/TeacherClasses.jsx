@@ -34,8 +34,18 @@ export default function TeacherClasses() {
       }
       console.log('[TeacherClasses] Loading classes for teacherId:', teacherId);
       const allClasses = await base44.entities.ClassSection.list();
+      
+      // DEBUG: Data integrity check
+      console.log('[TeacherClasses] Total ClassSections in database:', allClasses.length);
+      console.log('[TeacherClasses] Sample ClassSection:', allClasses[0]);
+      console.log('[TeacherClasses] All unique teacher_ids in ClassSections:', [...new Set(allClasses.map(c => c.teacher_id))]);
+      
       const filtered = allClasses.filter(c => c.teacher_id === teacherId);
       console.log('[TeacherClasses] Found', filtered.length, 'classes for teacher', teacherId);
+      if (filtered.length === 0) {
+        console.warn('[TeacherClasses] ⚠️ NO CLASSES FOUND - Possible data sync issue');
+        console.log('[TeacherClasses] Classes with ANY teacher_id:', allClasses.filter(c => c.teacher_id));
+      }
       setClasses(filtered);
     } catch (error) {
       console.error("Error loading teacher classes:", error);
