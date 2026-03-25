@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, GraduationCap, Calendar, UserCheck, BookOpen } from "lucide-react";
+import { Users, GraduationCap, Calendar, UserCheck, BookOpen, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
@@ -56,10 +56,23 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-4 md:p-8 space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-         <div>
-           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-           <p className="text-gray-600 mt-1">Welcome, {user?.name || user?.full_name || 'Admin'}</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+         <div className="flex items-center gap-4">
+           {user?.avatar ? (
+             <img
+               src={user.avatar}
+               alt={user.full_name}
+               className="h-16 w-16 rounded-full object-cover border-2 border-blue-200"
+             />
+           ) : (
+             <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-200">
+               <User className="h-8 w-8 text-blue-600" />
+             </div>
+           )}
+           <div>
+             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+             <p className="text-gray-600 mt-1">Welcome, {user?.name || user?.full_name || 'Admin'}</p>
+           </div>
          </div>
          <div className="flex items-center gap-2 flex-wrap">
            <RoleSwitcher />
