@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
   LayoutDashboard, BookOpen, FileText, Calendar, 
   ClipboardList, MessageSquare, Megaphone,
-  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal
+  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal, ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -32,6 +32,18 @@ export default function StudentLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const studentId = new URLSearchParams(location.search).get('studentId');
+  const isImpersonating = !!studentId;
+
+  const handleExitView = () => {
+    navigate('/Dashboard');
+  };
+
+  const navUrl = (href) => {
+    const base = `/${href}`;
+    return studentId ? `${base}?studentId=${studentId}` : base;
+  };
 
   const isActive = (href) => location.pathname === `/${href}`;
 
@@ -61,7 +73,7 @@ export default function StudentLayout({ children }) {
             return (
               <Link
                 key={item.name}
-                to={createPageUrl(item.href)}
+                to={navUrl(item.href)}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${
                   active ? 'bg-white/25 text-white font-semibold' : 'text-white/80 hover:bg-white/20 hover:text-white'
@@ -75,7 +87,17 @@ export default function StudentLayout({ children }) {
         </nav>
       </ScrollArea>
       <Separator className="opacity-20" />
-      <div className="p-2">
+      <div className="p-2 space-y-1">
+        {isImpersonating && (
+          <Button 
+            onClick={handleExitView}
+            className="w-full justify-start text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 bg-transparent border border-amber-500/30"
+            variant="ghost"
+          >
+            <ArrowLeft className="h-5 w-5 flex-shrink-0" />
+            {!collapsed && <span className="text-sm font-medium ml-3">Exit View</span>}
+          </Button>
+        )}
         <Button 
           onClick={() => base44.auth.logout()}
           className="w-full justify-start text-white/80 hover:bg-white/20 hover:text-white bg-transparent"
@@ -112,7 +134,7 @@ export default function StudentLayout({ children }) {
                 return (
                   <Link
                     key={item.name}
-                    to={createPageUrl(item.href)}
+                    to={navUrl(item.href)}
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                       active ? 'bg-white/25 text-white font-semibold' : 'text-white/80 hover:bg-white/15 hover:text-white'
@@ -124,7 +146,16 @@ export default function StudentLayout({ children }) {
                 );
               })}
             </nav>
-            <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/20">
+            <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/20 space-y-2">
+              {isImpersonating && (
+                <button
+                  onClick={handleExitView}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 transition-colors"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  <span className="text-sm font-medium">Exit View</span>
+                </button>
+              )}
               <button
                 onClick={() => base44.auth.logout()}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-white/80 hover:bg-white/15 hover:text-white transition-colors"
@@ -171,7 +202,7 @@ export default function StudentLayout({ children }) {
               return (
                 <Link
                   key={item.name}
-                  to={createPageUrl(item.href)}
+                  to={navUrl(item.href)}
                   className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-0 ${
                     active ? 'text-blue-600' : 'text-gray-500'
                   }`}
@@ -204,25 +235,34 @@ export default function StudentLayout({ children }) {
                   const active = isActive(item.href);
                   return (
                     <Link
-                      key={item.name}
-                      to={createPageUrl(item.href)}
-                      onClick={() => setMoreOpen(false)}
-                      className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-colors ${
-                        active ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
-                      }`}
+                       key={item.name}
+                       to={navUrl(item.href)}
+                       onClick={() => setMoreOpen(false)}
+                       className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-colors ${
+                         active ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
+                       }`}
+                     >
+                       <Icon className="h-5 w-5 flex-shrink-0" />
+                       <span className="text-sm font-medium">{item.name}</span>
+                     </Link>
+                    );
+                    })}
+                    {isImpersonating && (
+                    <button
+                     onClick={() => { handleExitView(); setMoreOpen(false); }}
+                     className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-amber-600 hover:bg-amber-50 transition-colors"
                     >
-                      <Icon className="h-5 w-5 flex-shrink-0" />
-                      <span className="text-sm font-medium">{item.name}</span>
-                    </Link>
-                  );
-                })}
-                <button
-                  onClick={() => base44.auth.logout()}
-                  className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <LogOut className="h-5 w-5 text-gray-500" />
-                  <span className="text-sm font-medium">Logout</span>
-                </button>
+                     <ArrowLeft className="h-5 w-5" />
+                     <span className="text-sm font-medium">Exit View</span>
+                    </button>
+                    )}
+                    <button
+                    onClick={() => base44.auth.logout()}
+                    className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                    <LogOut className="h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium">Logout</span>
+                    </button>
               </nav>
             </div>
           </div>

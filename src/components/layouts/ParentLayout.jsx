@@ -136,7 +136,7 @@ export default function ParentLayout({ children }) {
                 return (
                   <Link
                     key={item.name}
-                    to={createPageUrl(item.href)}
+                    to={navUrl(item.href)}
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                       active ? 'bg-white/15 text-white font-semibold' : 'text-slate-300 hover:bg-slate-900 hover:text-white'
@@ -148,7 +148,16 @@ export default function ParentLayout({ children }) {
                 );
               })}
             </nav>
-            <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-slate-800">
+            <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-slate-800 space-y-2">
+              {isImpersonating && (
+                <button
+                  onClick={handleExitView}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 transition-colors"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  <span className="text-sm font-medium">Exit View</span>
+                </button>
+              )}
               <button
                 onClick={() => base44.auth.logout()}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-900 hover:text-white transition-colors"
@@ -195,7 +204,7 @@ export default function ParentLayout({ children }) {
               return (
                 <Link
                   key={item.name}
-                  to={createPageUrl(item.href)}
+                  to={navUrl(item.href)}
                   className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors min-w-0 ${
                     active ? 'text-blue-600' : 'text-gray-500'
                   }`}
@@ -228,7 +237,7 @@ export default function ParentLayout({ children }) {
                   return (
                     <Link
                       key={item.name}
-                      to={createPageUrl(item.href)}
+                      to={navUrl(item.href)}
                       onClick={() => setMoreOpen(false)}
                       className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-colors ${
                         active ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
@@ -239,6 +248,15 @@ export default function ParentLayout({ children }) {
                     </Link>
                   );
                 })}
+                {isImpersonating && (
+                  <button
+                    onClick={() => { handleExitView(); setMoreOpen(false); }}
+                    className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-amber-600 hover:bg-amber-50 transition-colors"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                    <span className="text-sm font-medium">Exit View</span>
+                  </button>
+                )}
                 <button
                   onClick={() => base44.auth.logout()}
                   className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
