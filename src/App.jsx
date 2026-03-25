@@ -52,6 +52,7 @@ import UserManagement from '@/pages/UserManagement';
 import DataHealthCheck from '@/pages/DataHealthCheck';
 import Profile from '@/pages/Profile';
 import TeacherDocuments from '@/pages/TeacherDocuments';
+import TeacherStudentProfile from '@/pages/TeacherStudentProfile';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -159,6 +160,7 @@ const AuthenticatedApp = () => {
       <Route path="/TeacherProfile" element={<TeacherLayout><TeacherProfile /></TeacherLayout>} />
       <Route path="/TeacherSettings" element={<TeacherLayout><TeacherSettings /></TeacherLayout>} />
       <Route path="/StudentDirectory" element={<TeacherLayout><StudentDirectory /></TeacherLayout>} />
+      <Route path="/TeacherStudentProfile" element={<TeacherLayout><TeacherStudentProfile /></TeacherLayout>} />
       <Route path="/TeacherDocuments" element={<TeacherLayout><TeacherDocuments /></TeacherLayout>} />
       <Route path="/UserManagement" element={<LayoutWrapper currentPageName="UserManagement"><UserManagement /></LayoutWrapper>} />
       <Route path="/DataHealthCheck" element={<LayoutWrapper currentPageName="DataHealthCheck"><DataHealthCheck /></LayoutWrapper>} />

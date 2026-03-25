@@ -121,7 +121,7 @@ export default function StudentDirectory() {
              <Card 
                key={student.id} 
                className="hover:shadow-md transition-shadow cursor-pointer"
-               onClick={() => navigate(`/StudentProfile?id=${student.id}`)}
+               onClick={() => navigate(`/TeacherStudentProfile?id=${student.id}`)}
              >
                <CardContent className="pt-5 pb-5">
                  <div className="flex items-center gap-3 mb-3">
