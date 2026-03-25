@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { getTeacherByUserEmail } from '@/lib/entitySyncUtils';
 
 /**
  * Single source of truth for resolving which teacher's data to show.
@@ -32,7 +31,8 @@ export function useTeacherId() {
       } else {
         // Real teacher logged in — find their record by email
         const currentUser = await base44.auth.me();
-        const { teacher: found } = await getTeacherByUserEmail(currentUser.email);
+        const teachers = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
+        const found = teachers?.[0] || null;
         setTeacherId(found?.id || null);
         setTeacher(found || null);
       }
