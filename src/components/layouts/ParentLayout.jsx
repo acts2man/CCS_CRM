@@ -89,7 +89,17 @@ export default function ParentLayout({ children }) {
         </nav>
       </ScrollArea>
       <Separator className="bg-slate-800" />
-      <div className="p-2">
+      <div className="p-2 space-y-1">
+        {isImpersonating && (
+          <Button 
+            onClick={handleExitView}
+            className="w-full justify-start text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 bg-transparent border border-amber-500/30"
+            variant="ghost"
+          >
+            <ArrowLeft className="h-5 w-5 flex-shrink-0" />
+            {!collapsed && <span className="text-sm font-medium ml-3">Exit View</span>}
+          </Button>
+        )}
         <Button 
           onClick={() => base44.auth.logout()}
           className="w-full justify-start text-slate-300 hover:bg-slate-900 hover:text-white bg-transparent"
