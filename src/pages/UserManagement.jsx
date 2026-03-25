@@ -3,14 +3,17 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Mail, Plus, Shield, Users } from 'lucide-react';
+import { Mail, Plus, Shield, Users, Check, X } from 'lucide-react';
 import UserInviteModal from '@/components/admin/UserInviteModal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editName, setEditName] = useState('');
 
   useEffect(() => {
     loadUsers();
@@ -35,6 +38,26 @@ export default function UserManagement() {
     } catch (error) {
       console.error('Error updating user role:', error);
     }
+  };
+
+  const startEditingName = (user) => {
+    setEditingId(user.id);
+    setEditName(user.full_name || '');
+  };
+
+  const saveName = async (userId) => {
+    try {
+      await base44.auth.updateMe({ full_name: editName });
+      setUsers(users.map(u => u.id === userId ? { ...u, full_name: editName } : u));
+      setEditingId(null);
+    } catch (error) {
+      console.error('Error updating user name:', error);
+    }
+  };
+
+  const cancelEditingName = () => {
+    setEditingId(null);
+    setEditName('');
   };
 
   const getRoleColor = (role) => {
@@ -148,7 +171,39 @@ export default function UserManagement() {
                   {users.map(user => (
                     <tr key={user.id} className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4 font-medium text-gray-900">
-                        {user.full_name || '—'}
+                        {editingId === user.id ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="text"
+                              value={editName}
+                              onChange={(e) => setEditName(e.target.value)}
+                              className="h-8 text-sm flex-1"
+                              placeholder="Enter full name"
+                              autoFocus
+                            />
+                            <button
+                              onClick={() => saveName(user.id)}
+                              className="p-1 hover:bg-green-100 rounded transition-colors"
+                              title="Save"
+                            >
+                              <Check className="h-4 w-4 text-green-600" />
+                            </button>
+                            <button
+                              onClick={cancelEditingName}
+                              className="p-1 hover:bg-red-100 rounded transition-colors"
+                              title="Cancel"
+                            >
+                              <X className="h-4 w-4 text-red-600" />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => startEditingName(user)}
+                            className="hover:text-blue-600 hover:underline transition-colors"
+                          >
+                            {user.full_name || '—'}
+                          </button>
+                        )}
                       </td>
                       <td className="py-3 px-4 text-gray-600">{user.email}</td>
                       <td className="py-3 px-4">
