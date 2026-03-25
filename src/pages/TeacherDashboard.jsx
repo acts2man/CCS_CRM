@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useTeacherId } from "@/lib/useTeacherId";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, BarChart3, Calendar } from "lucide-react";
+import { BookOpen, Users, BarChart3, Calendar, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function TeacherDashboard() {
@@ -67,11 +67,24 @@ export default function TeacherDashboard() {
     <div className="p-8 space-y-8">
       {/* Welcome Greeting */}
       {teacher && (
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">
-            Welcome back, <span className="text-blue-600">{teacher.first_name}</span>
-          </h1>
-          <p className="text-gray-600">{teacher.department || 'Teacher'}</p>
+        <div className="flex items-start gap-6">
+          {teacher.avatar ? (
+            <img
+              src={teacher.avatar}
+              alt={`${teacher.first_name} ${teacher.last_name}`}
+              className="h-24 w-24 rounded-full object-cover border-4 border-blue-100 shadow-md flex-shrink-0"
+            />
+          ) : (
+            <div className="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center border-4 border-blue-200 shadow-md flex-shrink-0">
+              <User className="h-12 w-12 text-blue-600" />
+            </div>
+          )}
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold text-gray-900">
+              Welcome back, <span className="text-blue-600">{teacher.first_name}</span>
+            </h1>
+            <p className="text-gray-600">{teacher.department || 'Teacher'}</p>
+          </div>
         </div>
       )}
 
