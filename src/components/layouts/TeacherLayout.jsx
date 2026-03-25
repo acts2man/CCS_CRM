@@ -30,7 +30,7 @@ export default function TeacherLayout({ children }) {
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const teacherId = new URLSearchParams(window.location.search).get('teacherId');
+  const teacherId = new URLSearchParams(location.search).get('teacherId');
   const isImpersonating = !!teacherId;
 
   const handleExitView = () => {
