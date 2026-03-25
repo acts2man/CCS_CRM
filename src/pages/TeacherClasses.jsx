@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, BookOpen, Calendar } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { Link, useLocation } from "react-router-dom";
 import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function TeacherClasses() {
