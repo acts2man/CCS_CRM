@@ -56,9 +56,9 @@ export default function TeacherClasses() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {classes.map((cls) => (
-            <Link key={cls.id} to={createPageUrl("TeacherGradebook")}>
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+           {classes.map((cls) => (
+             <Link key={cls.id} to={getNavUrl("TeacherGradebook")}>
+               <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
                 <CardHeader>
                   <CardTitle className="text-lg">{cls.name}</CardTitle>
                 </CardHeader>
