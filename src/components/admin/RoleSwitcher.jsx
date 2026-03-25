@@ -42,12 +42,13 @@ export default function RoleSwitcher() {
   };
 
   const handlePersonSelected = (person) => {
-    startImpersonation(person, pendingMode);
+    const mode = pendingMode; // capture before clearing
+    startImpersonation(person, mode);
     setModalOpen(false);
     setPendingMode(null);
-    if (pendingMode === 'teacher') navigate(`/TeacherClasses?teacherId=${person.id}`);
-    else if (pendingMode === 'student') navigate(`/StudentDashboard?studentId=${person.id}`);
-    else if (pendingMode === 'parent') navigate(`/ParentDashboard?parentId=${person.id}`);
+    if (mode === 'teacher') navigate(`/TeacherClasses?teacherId=${person.id}`);
+    else if (mode === 'student') navigate(`/StudentDashboard?studentId=${person.id}`);
+    else if (mode === 'parent') navigate(`/ParentDashboard?parentId=${person.id}`);
   };
 
   const handleModalClose = () => {
