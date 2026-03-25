@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, GraduationCap, Calendar, UserCheck, BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,8 @@ import { useImpersonation } from "@/lib/ImpersonationContext";
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
   const [showImpersonation, setShowImpersonation] = useState(false);
-  const { startImpersonation } = useImpersonation();
+  const { startImpersonation, viewMode, setViewMode } = useImpersonation();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     students: 0,
     teachers: 0,
@@ -187,7 +188,13 @@ export default function AdminDashboard() {
       <ImpersonationModal
         open={showImpersonation}
         onClose={() => setShowImpersonation(false)}
-        onSelect={(teacher) => startImpersonation(teacher)}
+        mode="teacher"
+        onSelect={(person) => {
+          startImpersonation(person, 'teacher');
+          setShowImpersonation(false);
+          setViewMode('teacher');
+          navigate('/TeacherClasses');
+        }}
       />
     </div>
   );
