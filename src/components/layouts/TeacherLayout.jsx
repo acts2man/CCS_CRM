@@ -30,7 +30,8 @@ export default function TeacherLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
-  const { impersonatedTeacher, stopImpersonation } = useImpersonation();
+  const { impersonatedTeacher, stopImpersonation, viewMode } = useImpersonation();
+  const isImpersonating = viewMode !== 'admin';
 
   const isActive = (href) => location.pathname === `/${href}`;
 
@@ -98,7 +99,7 @@ export default function TeacherLayout({ children }) {
   );
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className={`flex h-screen overflow-hidden bg-gray-50 ${isImpersonating ? 'pt-10' : ''}`}>
       {/* Mobile sidebar overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
