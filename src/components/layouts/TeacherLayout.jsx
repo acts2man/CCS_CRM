@@ -5,11 +5,12 @@ import { base44 } from '@/api/base44Client';
 import { 
   BookOpen, BarChart3, Calendar, 
   Users, MessageSquare, Settings, 
-  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal, User
+  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal, User, ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { useImpersonation } from '@/lib/ImpersonationContext';
 
 const navigation = [
   { name: 'Classes', href: 'TeacherClasses', icon: BookOpen },
@@ -29,6 +30,7 @@ export default function TeacherLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
+  const { impersonatedTeacher, stopImpersonation } = useImpersonation();
 
   const isActive = (href) => location.pathname === `/${href}`;
 
@@ -72,7 +74,17 @@ export default function TeacherLayout({ children }) {
         </nav>
       </ScrollArea>
       <Separator className="bg-slate-700" />
-      <div className="p-2">
+      <div className="p-2 space-y-1">
+        {impersonatedTeacher && (
+          <Button 
+            onClick={stopImpersonation}
+            className="w-full justify-start text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 bg-transparent border border-amber-500/30"
+            variant="ghost"
+          >
+            <ArrowLeft className="h-5 w-5 flex-shrink-0" />
+            {!collapsed && <span className="text-sm font-medium ml-3">Exit View</span>}
+          </Button>
+        )}
         <Button 
           onClick={() => base44.auth.logout()}
           className="w-full justify-start text-slate-300 hover:bg-slate-700 hover:text-white bg-transparent"
