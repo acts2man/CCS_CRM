@@ -97,11 +97,27 @@ export default function ParentDashboard() {
     return <div className="p-8">Loading...</div>;
   }
 
+  if (loading || parentIdLoading) {
+    return <div className="p-8">Loading...</div>;
+  }
+
+  if (!parentData) {
+    return (
+      <div className="p-8">
+        <Card className="bg-red-50 border-red-200">
+          <CardContent className="pt-6">
+            <p className="text-red-900">Parent data not found. Please try again.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 space-y-6">
       {/* Welcome Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Welcome, {parent?.first_name} {parent?.last_name}!</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Welcome, {parentData?.first_name} {parentData?.last_name}!</h1>
         <p className="text-gray-600 mt-1">Overview of your children's academic progress</p>
       </div>
 
