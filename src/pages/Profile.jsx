@@ -38,17 +38,29 @@ export default function Profile() {
 
     setSaving(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setAvatar(file_url);
-      await base44.auth.updateMe({ avatar: file_url });
-      setMessage('Avatar uploaded successfully');
-      setTimeout(() => setMessage(''), 3000);
-      // Reset file input
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const { file_url } = await base44.integrations.Core.UploadFile({ file: reader.result });
+          setAvatar(file_url);
+          await base44.auth.updateMe({ avatar: file_url });
+          setMessage('Avatar uploaded successfully');
+          setTimeout(() => setMessage(''), 3000);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+        } catch (error) {
+          console.error('Error uploading avatar:', error);
+          setMessage('Failed to upload avatar');
+          setSaving(false);
+        }
+      };
+      reader.onerror = () => {
+        setMessage('Failed to read file');
+        setSaving(false);
+      };
+      reader.readAsArrayBuffer(file);
     } catch (error) {
       console.error('Error uploading avatar:', error);
       setMessage('Failed to upload avatar');
-    } finally {
       setSaving(false);
     }
   };
