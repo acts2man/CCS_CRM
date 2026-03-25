@@ -22,17 +22,12 @@ export default function StudentDirectory() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [studentsData, classSections] = await Promise.all([
-        base44.entities.Student.list("-created_date", 500),
-        base44.entities.ClassSection.list(),
-      ]);
+      const studentsData = await base44.entities.Student.list("-created_date", 500);
       setAllStudents(studentsData);
 
       if (teacherId) {
-        const myClasses = classSections.filter(c => c.teacher_id === teacherId);
-        const myStudentIds = new Set();
-        myClasses.forEach(c => (c.student_ids || []).forEach(id => myStudentIds.add(id)));
-        setMyStudents(studentsData.filter(s => myStudentIds.has(s.id)));
+        // Filter by teacher_ids in Student entity - single source of truth
+        setMyStudents(studentsData.filter(s => s.teacher_ids?.includes(teacherId)));
       } else {
         setMyStudents(studentsData);
       }

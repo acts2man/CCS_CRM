@@ -43,21 +43,10 @@ export default function TeacherDashboard() {
       ]);
 
       const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
-      
-      // Count students from both class enrollment and direct assignment
-      const classStudents = new Set();
-      teacherClasses.forEach(c => {
-        (c.student_ids || []).forEach(id => classStudents.add(id));
-      });
-      
-      const directlyAssignedStudents = new Set(
-        allStudents
-          .filter(s => s.teacher_ids?.includes(teacherId))
-          .map(s => s.id)
-      );
-      
-      const totalStudents = new Set([...classStudents, ...directlyAssignedStudents]).size;
-      
+
+      // Count students from Student entity teacher_ids - single source of truth
+      const totalStudents = allStudents.filter(s => s.teacher_ids?.includes(teacherId)).length;
+
       const teacherAssignments = allAssignments.filter(a => 
         teacherClasses.some(c => c.id === a.class_section_id)
       );
