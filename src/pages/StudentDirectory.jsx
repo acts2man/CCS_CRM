@@ -13,13 +13,14 @@ export default function StudentDirectory() {
   const [tab, setTab] = useState("my");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const { impersonatedTeacher } = useImpersonation();
+  const { impersonatedTeacher, viewMode } = useImpersonation();
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [impersonatedTeacher]);
 
   const loadData = async () => {
+    setLoading(true);
     try {
       const [studentsData, classSections] = await Promise.all([
         base44.entities.Student.list("-created_date", 500),
@@ -30,19 +31,21 @@ export default function StudentDirectory() {
       // Determine which teacher we are
       let teacherId = impersonatedTeacher?.id;
       if (!teacherId) {
+        // Try to find teacher by logged-in user's email
         const user = await base44.auth.me();
         const { teacher } = await getTeacherByUserEmail(user.email);
         teacherId = teacher?.id;
       }
 
       if (teacherId) {
-        // Find class sections assigned to this teacher
         const myClasses = classSections.filter(c => c.teacher_id === teacherId);
-        // Collect all student IDs across those classes
         const myStudentIds = new Set();
         myClasses.forEach(c => (c.student_ids || []).forEach(id => myStudentIds.add(id)));
         const myList = studentsData.filter(s => myStudentIds.has(s.id));
         setMyStudents(myList);
+      } else {
+        // No specific teacher identified (admin viewing as generic teacher) — show all
+        setMyStudents(studentsData);
       }
     } catch (error) {
       console.error("Error loading students:", error);
