@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     loadProfile();
@@ -42,6 +43,8 @@ export default function Profile() {
       await base44.auth.updateMe({ avatar: file_url });
       setMessage('Avatar uploaded successfully');
       setTimeout(() => setMessage(''), 3000);
+      // Reset file input
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
       console.error('Error uploading avatar:', error);
       setMessage('Failed to upload avatar');
@@ -115,34 +118,33 @@ export default function Profile() {
                 </div>
               )}
               <div className="flex-1">
-                <label className="block">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarUpload}
-                    disabled={saving}
-                    className="hidden"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => document.querySelector('input[type="file"]').click()}
-                    disabled={saving}
-                    className="gap-2"
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Uploading...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="h-4 w-4" />
-                        Upload Avatar
-                      </>
-                    )}
-                  </Button>
-                </label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  disabled={saving}
+                  className="hidden"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={saving}
+                  className="gap-2"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4" />
+                      Upload Avatar
+                    </>
+                  )}
+                </Button>
                 <p className="text-xs text-gray-600 mt-2">JPG, PNG or GIF (max 5MB)</p>
               </div>
             </div>
