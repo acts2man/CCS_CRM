@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { getParentByUserEmail, getStudentsForParent } from "@/lib/entitySyncUtils";
+import { useParentId } from "@/lib/useParentId";
+import { getStudentsForParent } from "@/lib/entitySyncUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, BookOpen, DollarSign, Calendar } from "lucide-react";
@@ -8,7 +10,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function ParentDashboard() {
-  const [parent, setParent] = useState(null);
+  const navigate = useNavigate();
+  const { parentId, parent: parentData, loading: parentIdLoading } = useParentId();
   const [children, setChildren] = useState([]);
   const [stats, setStats] = useState({
     totalChildren: 0,
@@ -19,15 +22,18 @@ export default function ParentDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (parentIdLoading) return;
+    if (!parentId) {
+      // No parent found, redirect to dashboard
+      navigate('/Dashboard');
+      return;
+    }
     loadParentData();
-  }, []);
+  }, [parentId, parentIdLoading]);
 
   const loadParentData = async () => {
     try {
-      const currentUser = await base44.auth.me();
-      
-      // Fetch parent by email (standardized lookup)
-      const { parent: parentData, error: parentError } = await getParentByUserEmail(currentUser.email);
+      // parentData is already loaded by useParentId hook
       
       if (parentError || !parentData) {
         console.error("Parent sync error:", parentError);
