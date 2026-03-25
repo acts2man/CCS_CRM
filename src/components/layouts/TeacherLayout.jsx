@@ -99,7 +99,7 @@ export default function TeacherLayout({ children }) {
   );
 
   return (
-    <div className={`flex h-screen overflow-hidden bg-gray-50 ${isImpersonating ? 'pt-10' : ''}`}>
+    <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Mobile sidebar overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
