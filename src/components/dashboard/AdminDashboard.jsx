@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Users, GraduationCap, Calendar, UserCheck, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 import ClassesOverview from "@/components/gradebook/ClassesOverview";
 import RoleSwitcher from "@/components/admin/RoleSwitcher";
-import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
 
-  const navigate = useNavigate();
   const [stats, setStats] = useState({
     students: 0,
     teachers: 0,
