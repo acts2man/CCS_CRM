@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, BookOpen, Calendar } from "lucide-react";
+import { Users, BookOpen, Calendar, Mail, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTeacherId } from "@/lib/useTeacherId";
 
 export default function TeacherClasses() {
   const [classes, setClasses] = useState([]);
-  const { teacherId, loading: teacherLoading } = useTeacherId();
+  const { teacherId, teacher, loading: teacherLoading } = useTeacherId();
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   
@@ -56,8 +56,41 @@ export default function TeacherClasses() {
 
   return (
     <div className="p-8 space-y-6">
+      {/* Teacher Profile Header */}
+      {teacher && (
+        <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-6">
+              {teacher?.avatar ? (
+                <img 
+                  src={teacher.avatar} 
+                  alt={`${teacher.first_name} ${teacher.last_name}`}
+                  className="h-24 w-24 rounded-lg object-cover border-4 border-white shadow-md"
+                />
+              ) : (
+                <div className="h-24 w-24 rounded-lg bg-gray-300 flex items-center justify-center border-4 border-white shadow-md">
+                  <User className="h-12 w-12 text-gray-500" />
+                </div>
+              )}
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-gray-900">{teacher?.first_name} {teacher?.last_name}</h1>
+                <p className="text-lg text-gray-600 mt-1">{teacher?.department || 'Teacher'}</p>
+                {teacher?.id && (
+                  <p className="text-sm text-gray-500 mt-2">Teacher ID: <span className="font-mono font-semibold">{teacher.id}</span></p>
+                )}
+                {teacher?.email && (
+                  <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
+                    <Mail className="h-4 w-4" /> {teacher.email}
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">My Classes</h1>
+        <h2 className="text-2xl font-bold text-gray-900">My Classes</h2>
         <p className="text-gray-600 mt-2">Manage your class sections and students</p>
       </div>
 
