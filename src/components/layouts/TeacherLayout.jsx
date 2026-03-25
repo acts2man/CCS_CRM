@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
@@ -30,8 +30,14 @@ export default function TeacherLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { impersonatedTeacher, stopImpersonation, viewMode } = useImpersonation();
   const isImpersonating = viewMode !== 'admin';
+
+  const handleExitView = () => {
+    stopImpersonation();
+    navigate('/Dashboard');
+  };
 
   const isActive = (href) => location.pathname === `/${href}`;
 
@@ -76,9 +82,9 @@ export default function TeacherLayout({ children }) {
       </ScrollArea>
       <Separator className="bg-slate-700" />
       <div className="p-2 space-y-1">
-        {impersonatedTeacher && (
+        {isImpersonating && (
           <Button 
-            onClick={stopImpersonation}
+            onClick={handleExitView}
             className="w-full justify-start text-amber-300 hover:bg-amber-500/20 hover:text-amber-200 bg-transparent border border-amber-500/30"
             variant="ghost"
           >
