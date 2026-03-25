@@ -47,7 +47,7 @@ export default function UserManagement() {
 
   const saveName = async (userId) => {
     try {
-      await base44.auth.updateMe({ full_name: editName });
+      await base44.entities.User.update(userId, { full_name: editName });
       setUsers(users.map(u => u.id === userId ? { ...u, full_name: editName } : u));
       setEditingId(null);
     } catch (error) {
