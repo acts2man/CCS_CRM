@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useTeacherId } from "@/lib/useTeacherId";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, BarChart3, Calendar, User } from "lucide-react";
+import { BookOpen, Users, BarChart3, Calendar, User, FileText } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function TeacherDashboard() {
@@ -199,6 +199,22 @@ export default function TeacherDashboard() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Communications</h3>
                     <p className="text-sm text-gray-600">Parent communication log</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to={navUrl("Documents")}>
+            <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FileText className="h-6 w-6 text-red-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Documents</h3>
+                    <p className="text-sm text-gray-600">Send behavior reports & forms</p>
                   </div>
                 </div>
               </CardContent>
