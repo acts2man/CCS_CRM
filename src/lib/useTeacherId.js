@@ -21,18 +21,24 @@ export function useTeacherId() {
     try {
       const urlParams = new URLSearchParams(location.search);
       const paramId = urlParams.get('teacherId');
+      console.log('[useTeacherId] URL param teacherId:', paramId);
 
       if (paramId) {
         // Admin is viewing as a specific teacher via URL param
+        console.log('[useTeacherId] Using URL param teacherId');
         const teachers = await base44.entities.Teacher.list();
         const found = teachers.find(t => t.id === paramId);
+        console.log('[useTeacherId] Found teacher:', found?.id, found?.first_name, found?.last_name);
         setTeacherId(paramId);
         setTeacher(found || null);
       } else {
         // Real teacher logged in — find their record by email
+        console.log('[useTeacherId] No URL param, looking up logged-in teacher');
         const currentUser = await base44.auth.me();
+        console.log('[useTeacherId] Current user email:', currentUser.email);
         const teachers = await base44.entities.Teacher.filter({ email: currentUser.email }, '', 1);
         const found = teachers?.[0] || null;
+        console.log('[useTeacherId] Found teacher by email:', found?.id, found?.first_name, found?.last_name);
         setTeacherId(found?.id || null);
         setTeacher(found || null);
       }

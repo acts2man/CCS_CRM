@@ -11,9 +11,12 @@ export default function TeacherClasses() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   
-  const getNavUrl = (path) => {
-    const teacherIdParam = new URLSearchParams(location.search).get('teacherId');
-    return teacherIdParam ? `/${path}?teacherId=${teacherIdParam}` : `/${path}`;
+  // Build nav URL preserving teacherId param
+  const navUrl = (href) => {
+    const base = `/${href}`;
+    return teacherId && new URLSearchParams(location.search).get('teacherId') 
+      ? `${base}?teacherId=${teacherId}` 
+      : base;
   };
 
   useEffect(() => {
@@ -25,11 +28,15 @@ export default function TeacherClasses() {
     setLoading(true);
     try {
       if (!teacherId) {
+        console.warn('[TeacherClasses] No teacherId from hook');
         setClasses([]);
         return;
       }
+      console.log('[TeacherClasses] Loading classes for teacherId:', teacherId);
       const allClasses = await base44.entities.ClassSection.list();
-      setClasses(allClasses.filter(c => c.teacher_id === teacherId));
+      const filtered = allClasses.filter(c => c.teacher_id === teacherId);
+      console.log('[TeacherClasses] Found', filtered.length, 'classes for teacher', teacherId);
+      setClasses(filtered);
     } catch (error) {
       console.error("Error loading teacher classes:", error);
     } finally {
@@ -57,7 +64,7 @@ export default function TeacherClasses() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
            {classes.map((cls) => (
-             <Link key={cls.id} to={getNavUrl("TeacherGradebook")}>
+             <Link key={cls.id} to={navUrl("TeacherGradebook")}>
                <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
                 <CardHeader>
                   <CardTitle className="text-lg">{cls.name}</CardTitle>
