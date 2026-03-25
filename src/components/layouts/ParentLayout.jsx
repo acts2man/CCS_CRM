@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
   LayoutDashboard, BookOpen, FileText, Calendar, 
   DollarSign, Users, Megaphone, ClipboardList,
-  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal
+  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal, ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -33,6 +33,19 @@ export default function ParentLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const parentId = new URLSearchParams(location.search).get('parentId');
+  const isImpersonating = !!parentId;
+
+  const handleExitView = () => {
+    navigate('/Dashboard');
+  };
+
+  // Build nav URL preserving parentId param
+  const navUrl = (href) => {
+    const base = `/${href}`;
+    return parentId ? `${base}?parentId=${parentId}` : base;
+  };
 
   const isActive = (href) => location.pathname === `/${href}`;
 
