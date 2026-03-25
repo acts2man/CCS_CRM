@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
+import { supabase } from '@/api/supabaseClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,30 +39,30 @@ export default function Profile() {
 
     setSaving(true);
     try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        try {
-          const base64Avatar = reader.result;
-          setAvatar(base64Avatar);
-          await base44.auth.updateMe({ avatar: base64Avatar });
-          setMessage('Avatar uploaded successfully');
-          setTimeout(() => setMessage(''), 3000);
-          if (fileInputRef.current) fileInputRef.current.value = '';
-          setSaving(false);
-        } catch (error) {
-          console.error('Error uploading avatar:', error);
-          setMessage('Failed to upload avatar');
-          setSaving(false);
-        }
-      };
-      reader.onerror = () => {
-        setMessage('Failed to read file');
-        setSaving(false);
-      };
-      reader.readAsDataURL(file);
+      if (!user?.id) throw new Error('User ID not found');
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      
+      const { data, error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file, { upsert: true });
+      
+      if (uploadError) throw uploadError;
+      
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(data.path);
+      
+      setAvatar(publicUrl);
+      await base44.auth.updateMe({ avatar: publicUrl });
+      setMessage('Avatar uploaded successfully');
+      setTimeout(() => setMessage(''), 3000);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
       console.error('Error uploading avatar:', error);
       setMessage('Failed to upload avatar');
+    } finally {
       setSaving(false);
     }
   };
