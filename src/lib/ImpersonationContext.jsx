@@ -1,26 +1,49 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ImpersonationContext = createContext(null);
 
+const SESSION_KEY = 'impersonation_state';
+
+function loadFromSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { person: null, mode: 'admin' };
+}
+
+function saveToSession(state) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
+  } catch {}
+}
+
 export function ImpersonationProvider({ children }) {
-  // Single atomic state to avoid race conditions between viewMode and impersonatedPerson
-  const [state, setState] = useState({ person: null, mode: 'admin' });
+  const [state, setState] = useState(() => loadFromSession());
+
+  const updateState = (newState) => {
+    setState(newState);
+    saveToSession(newState);
+  };
 
   const startImpersonation = (person, mode) => {
-    setState({ person, mode: mode || 'admin' });
+    updateState({ person, mode: mode || 'admin' });
   };
 
   const stopImpersonation = () => {
-    setState({ person: null, mode: 'admin' });
+    updateState({ person: null, mode: 'admin' });
   };
 
   const setViewMode = (mode) => {
-    setState(prev => ({ ...prev, mode }));
+    setState(prev => {
+      const next = { ...prev, mode };
+      saveToSession(next);
+      return next;
+    });
   };
 
   const { person, mode } = state;
 
-  // Convenience getters by role
   const impersonatedTeacher = mode === 'teacher' ? person : null;
   const impersonatedStudent = mode === 'student' ? person : null;
   const impersonatedParent  = mode === 'parent'  ? person : null;
