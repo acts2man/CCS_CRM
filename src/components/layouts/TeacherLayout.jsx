@@ -5,13 +5,14 @@ import { base44 } from '@/api/base44Client';
 import { 
   BookOpen, BarChart3, Calendar, 
   Users, MessageSquare, Settings, 
-  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal, User, ArrowLeft
+  ChevronLeft, ChevronRight, Menu, X, LogOut, MoreHorizontal, User, ArrowLeft, LayoutDashboard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 
 const navigation = [
+  { name: 'Dashboard', href: 'TeacherDashboard', icon: LayoutDashboard },
   { name: 'Classes', href: 'TeacherClasses', icon: BookOpen },
   { name: 'Gradebook', href: 'TeacherGradebook', icon: BarChart3 },
   { name: 'Attendance', href: 'TeacherAttendance', icon: Calendar },

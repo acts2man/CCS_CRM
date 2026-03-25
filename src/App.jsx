@@ -40,6 +40,7 @@ import ParentAssignments from '@/pages/ParentAssignments';
 import ParentAttendance from '@/pages/ParentAttendance';
 import ParentDocuments from '@/pages/ParentDocuments';
 import ParentBilling from '@/pages/ParentBilling';
+import TeacherDashboard from '@/pages/TeacherDashboard';
 import TeacherClasses from '@/pages/TeacherClasses';
 import TeacherGradebook from '@/pages/TeacherGradebook';
 import TeacherAttendance from '@/pages/TeacherAttendance';
@@ -148,6 +149,7 @@ const AuthenticatedApp = () => {
       <Route path="/ParentBilling" element={<ParentLayout><ParentBilling /></ParentLayout>} />
       
       {/* Teacher Dashboard Routes */}
+      <Route path="/TeacherDashboard" element={<TeacherLayout><TeacherDashboard /></TeacherLayout>} />
       <Route path="/TeacherClasses" element={<TeacherLayout><TeacherClasses /></TeacherLayout>} />
       <Route path="/TeacherGradebook" element={<TeacherLayout><TeacherGradebook /></TeacherLayout>} />
       <Route path="/TeacherAttendance" element={<TeacherLayout><TeacherAttendance /></TeacherLayout>} />

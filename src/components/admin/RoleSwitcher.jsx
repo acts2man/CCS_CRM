@@ -39,7 +39,7 @@ export default function RoleSwitcher() {
     setModalOpen(false);
     setPendingMode(null);
     // Navigate with the ID in the URL — no context, no state, just URL
-    if (mode === 'teacher') navigate(`/TeacherClasses?teacherId=${person.id}`);
+    if (mode === 'teacher') navigate(`/TeacherDashboard?teacherId=${person.id}`);
     else if (mode === 'student') navigate(`/StudentDashboard?studentId=${person.id}`);
     else if (mode === 'parent') navigate(`/ParentDashboard?parentId=${person.id}`);
   };
