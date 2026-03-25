@@ -3,37 +3,40 @@ import React, { createContext, useContext, useState } from 'react';
 const ImpersonationContext = createContext(null);
 
 export function ImpersonationProvider({ children }) {
-  const [impersonatedPerson, setImpersonatedPerson] = useState(null);
-  const [viewMode, setViewMode] = useState('admin'); // 'admin', 'teacher', 'student', 'parent'
+  // Single atomic state to avoid race conditions between viewMode and impersonatedPerson
+  const [state, setState] = useState({ person: null, mode: 'admin' });
 
   const startImpersonation = (person, mode) => {
-    setImpersonatedPerson(person);
-    if (mode) setViewMode(mode);
+    setState({ person, mode: mode || 'admin' });
   };
 
   const stopImpersonation = () => {
-    setImpersonatedPerson(null);
-    setViewMode('admin');
+    setState({ person: null, mode: 'admin' });
   };
 
+  const setViewMode = (mode) => {
+    setState(prev => ({ ...prev, mode }));
+  };
+
+  const { person, mode } = state;
+
   // Convenience getters by role
-  const impersonatedTeacher = viewMode === 'teacher' ? impersonatedPerson : null;
-  const impersonatedStudent = viewMode === 'student' ? impersonatedPerson : null;
-  const impersonatedParent = viewMode === 'parent' ? impersonatedPerson : null;
+  const impersonatedTeacher = mode === 'teacher' ? person : null;
+  const impersonatedStudent = mode === 'student' ? person : null;
+  const impersonatedParent  = mode === 'parent'  ? person : null;
 
   return (
     <ImpersonationContext.Provider 
       value={{ 
-        impersonatedPerson,
+        impersonatedPerson: person,
         impersonatedTeacher,
         impersonatedStudent,
         impersonatedParent,
         startImpersonation,
-        // keep legacy alias
         startStudentImpersonation: (student) => startImpersonation(student, 'student'),
         stopImpersonation,
-        viewMode,
-        setViewMode
+        viewMode: mode,
+        setViewMode,
       }}
     >
       {children}
