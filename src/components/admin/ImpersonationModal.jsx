@@ -4,27 +4,25 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, GraduationCap, Users, UserCheck, Loader2 } from 'lucide-react';
-import { useImpersonation } from '@/lib/ImpersonationContext';
 
-export default function ImpersonationModal({ open, onClose, onSelect }) {
-  const { viewMode } = useImpersonation();
+export default function ImpersonationModal({ open, onClose, onSelect, activeMode }) {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (open) loadData();
-  }, [open, viewMode]);
+    if (open && activeMode) loadData();
+  }, [open, activeMode]);
 
   const loadData = async () => {
     setLoading(true);
     let all = [];
     
-    if (viewMode === 'teacher') {
+    if (activeMode === 'teacher') {
       all = await base44.entities.Teacher.list();
-    } else if (viewMode === 'parent') {
+    } else if (activeMode === 'parent') {
       all = await base44.entities.Parent.list();
-    } else if (viewMode === 'student') {
+    } else if (activeMode === 'student') {
       all = await base44.entities.Student.list();
     }
     
@@ -41,8 +39,8 @@ export default function ImpersonationModal({ open, onClose, onSelect }) {
   };
 
   const getTertiaryInfo = (item) => {
-    if (viewMode === 'teacher') return item.department || '';
-    if (viewMode === 'parent') return item.relationship || '';
+    if (activeMode === 'teacher') return item.department || '';
+    if (activeMode === 'parent') return item.relationship || '';
     return '';
   };
 
@@ -56,16 +54,16 @@ export default function ImpersonationModal({ open, onClose, onSelect }) {
   });
 
   const getIcon = () => {
-    if (viewMode === 'teacher') return <GraduationCap className="h-5 w-5 text-blue-600" />;
-    if (viewMode === 'parent') return <Users className="h-5 w-5 text-purple-600" />;
-    if (viewMode === 'student') return <UserCheck className="h-5 w-5 text-green-600" />;
+    if (activeMode === 'teacher') return <GraduationCap className="h-5 w-5 text-blue-600" />;
+    if (activeMode === 'parent') return <Users className="h-5 w-5 text-purple-600" />;
+    if (activeMode === 'student') return <UserCheck className="h-5 w-5 text-green-600" />;
     return <GraduationCap className="h-5 w-5 text-blue-600" />;
   };
 
   const getTitle = () => {
-    if (viewMode === 'teacher') return 'View as Teacher';
-    if (viewMode === 'parent') return 'View as Parent';
-    if (viewMode === 'student') return 'View as Student';
+    if (activeMode === 'teacher') return 'View as Teacher';
+    if (activeMode === 'parent') return 'View as Parent';
+    if (activeMode === 'student') return 'View as Student';
     return 'Impersonate';
   };
 

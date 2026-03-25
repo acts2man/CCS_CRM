@@ -36,8 +36,6 @@ export default function RoleSwitcher() {
       stopImpersonation();
       navigate('/Dashboard');
     } else {
-      // For teacher/student/parent: set viewMode then open picker modal
-      setViewMode(mode);
       setPendingMode(mode);
       setModalOpen(true);
     }
@@ -93,6 +91,7 @@ export default function RoleSwitcher() {
         open={modalOpen}
         onClose={handleModalClose}
         onSelect={handlePersonSelected}
+        activeMode={pendingMode}
       />
     </>
   );
