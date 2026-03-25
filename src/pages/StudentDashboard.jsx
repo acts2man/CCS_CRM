@@ -123,34 +123,34 @@ export default function StudentDashboard() {
       {/* Profile Header */}
       <div className="relative">
         <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-6">
-              {student?.photo_url ? (
-                <img 
-                  src={student.photo_url} 
-                  alt={`${student.first_name} ${student.last_name}`}
-                  className="h-24 w-24 rounded-lg object-cover border-4 border-white shadow-md"
-                  style={{ objectPosition: 'center 15%' }}
-                />
-              ) : (
-                <div className="h-24 w-24 rounded-lg bg-gray-300 flex items-center justify-center border-4 border-white shadow-md">
-                  <User className="h-12 w-12 text-gray-500" />
-                </div>
-              )}
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold text-gray-900">{student?.first_name} {student?.last_name}</h1>
-                <p className="text-lg text-gray-600 mt-1">Grade {student?.grade_level}</p>
-                {student?.id && (
-                  <p className="text-sm text-gray-500 mt-2">Student ID: <span className="font-mono font-semibold">{student.id}</span></p>
-                )}
-                {student?.email && (
-                  <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
-                    <Mail className="h-4 w-4" /> {student.email}
-                  </p>
-                )}
-                {student?.phone && (
-                  <p className="text-sm text-gray-600 flex items-center gap-2">
-                    <Phone className="h-4 w-4" /> {student.phone}
+           <CardContent className="pt-6">
+             <div className="flex items-start gap-6">
+               {studentData?.photo_url ? (
+                 <img 
+                   src={studentData.photo_url} 
+                   alt={`${studentData.first_name} ${studentData.last_name}`}
+                   className="h-24 w-24 rounded-lg object-cover border-4 border-white shadow-md"
+                   style={{ objectPosition: 'center 15%' }}
+                 />
+               ) : (
+                 <div className="h-24 w-24 rounded-lg bg-gray-300 flex items-center justify-center border-4 border-white shadow-md">
+                   <User className="h-12 w-12 text-gray-500" />
+                 </div>
+               )}
+               <div className="flex-1">
+                 <h1 className="text-3xl font-bold text-gray-900">{studentData?.first_name} {studentData?.last_name}</h1>
+                 <p className="text-lg text-gray-600 mt-1">Grade {studentData?.grade_level}</p>
+                 {studentData?.id && (
+                   <p className="text-sm text-gray-500 mt-2">Student ID: <span className="font-mono font-semibold">{studentData.id}</span></p>
+                 )}
+                 {studentData?.email && (
+                   <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
+                     <Mail className="h-4 w-4" /> {studentData.email}
+                   </p>
+                 )}
+                 {studentData?.phone && (
+                   <p className="text-sm text-gray-600 flex items-center gap-2">
+                     <Phone className="h-4 w-4" /> {studentData.phone}
                   </p>
                 )}
               </div>
