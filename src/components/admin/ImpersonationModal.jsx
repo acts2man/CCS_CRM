@@ -91,13 +91,13 @@ export default function ImpersonationModal({ open, onClose, onSelect, activeMode
         {loading ? (
           <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-blue-600" /></div>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-sm text-gray-400 py-8">No {viewMode}s found.</p>
+          <p className="text-center text-sm text-gray-400 py-8">No results found.</p>
         ) : (
           <div className="space-y-1 max-h-72 overflow-y-auto">
             {filtered.map(item => (
               <button
                 key={item.id}
-                onClick={() => { onSelect(item); onClose(); }}
+                onClick={() => onSelect(item)}
                 className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-3"
               >
                 <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">

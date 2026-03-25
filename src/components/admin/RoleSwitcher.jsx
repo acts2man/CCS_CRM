@@ -44,16 +44,17 @@ export default function RoleSwitcher() {
   const handlePersonSelected = (person) => {
     startImpersonation(person, pendingMode);
     setModalOpen(false);
+    setPendingMode(null);
     if (pendingMode === 'teacher') navigate('/TeacherClasses');
     else if (pendingMode === 'student') navigate('/StudentDashboard');
     else if (pendingMode === 'parent') navigate('/ParentDashboard');
   };
 
   const handleModalClose = () => {
-    // If they close modal without picking, reset viewMode back to admin
     setModalOpen(false);
-    setViewMode('admin');
     setPendingMode(null);
+    // Only reset viewMode if no person was selected (modal dismissed)
+    stopImpersonation();
   };
 
   return (
