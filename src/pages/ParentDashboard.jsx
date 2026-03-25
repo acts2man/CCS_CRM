@@ -201,9 +201,9 @@ export default function ParentDashboard() {
                 <CardContent className="pt-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="font-semibold text-gray-900">{child.first_name} {child.last_name}</h3>
-                      <p className="text-sm text-gray-600">Grade {child.grade_level}</p>
-                    </div>
+                        <h3 className="font-semibold text-gray-900">{child.first_name} {child.last_name}</h3>
+                        <p className="text-sm text-gray-600">Grade {child.grade_level}</p>
+                      </div>
                     <Badge variant="outline">{child.enrollment_status}</Badge>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
