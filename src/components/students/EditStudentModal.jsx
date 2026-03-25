@@ -101,6 +101,7 @@ export default function EditStudentModal({ open, onOpenChange, student, onStuden
                 src={photoUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.first_name}`} 
                 alt="Student photo"
                 className="w-full h-full object-cover"
+                style={{ objectPosition: 'center 15%' }}
               />
             </div>
             <input

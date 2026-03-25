@@ -152,12 +152,20 @@ export default function EditTeacherModal({ open, onOpenChange, teacher, onTeache
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col items-center gap-3">
-            <Avatar className="w-24 h-24">
-              <AvatarImage src={photoUrl} alt="Teacher photo" />
-              <AvatarFallback className="bg-gray-100">
-                {formData.first_name?.[0]}{formData.last_name?.[0]}
-              </AvatarFallback>
-            </Avatar>
+            <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+              {photoUrl ? (
+                <img
+                  src={photoUrl}
+                  alt="Teacher photo"
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: 'center 15%' }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-600 font-semibold text-xl">
+                  {formData.first_name?.[0]}{formData.last_name?.[0]}
+                </div>
+              )}
+            </div>
             <input
               ref={fileInputRef}
               type="file"
