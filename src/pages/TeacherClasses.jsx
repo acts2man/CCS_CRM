@@ -22,7 +22,9 @@ export default function TeacherClasses() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      let teacherId = impersonatedTeacher?.id;
+      // Priority: URL param > impersonation context > user's own email
+      const urlParams = new URLSearchParams(window.location.search);
+      let teacherId = urlParams.get('teacherId') || impersonatedTeacher?.id;
 
       if (!teacherId) {
         const { teacher, error } = await getTeacherByUserEmail(currentUser.email);

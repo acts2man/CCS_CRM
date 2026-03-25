@@ -45,9 +45,9 @@ export default function RoleSwitcher() {
     startImpersonation(person, pendingMode);
     setModalOpen(false);
     setPendingMode(null);
-    if (pendingMode === 'teacher') navigate('/TeacherClasses');
-    else if (pendingMode === 'student') navigate('/StudentDashboard');
-    else if (pendingMode === 'parent') navigate('/ParentDashboard');
+    if (pendingMode === 'teacher') navigate(`/TeacherClasses?teacherId=${person.id}`);
+    else if (pendingMode === 'student') navigate(`/StudentDashboard?studentId=${person.id}`);
+    else if (pendingMode === 'parent') navigate(`/ParentDashboard?parentId=${person.id}`);
   };
 
   const handleModalClose = () => {
