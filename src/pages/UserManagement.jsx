@@ -38,6 +38,15 @@ export default function UserManagement() {
     }
   };
 
+  const updateUserName = async (userId, newName) => {
+    try {
+      await base44.entities.User.update(userId, { name: newName });
+      setUsers(users.map(u => u.id === userId ? { ...u, name: newName } : u));
+    } catch (error) {
+      console.error('Error updating user name:', error);
+    }
+  };
+
 
 
   const getRoleColor = (role) => {
@@ -151,7 +160,19 @@ export default function UserManagement() {
                   {users.map(user => (
                     <tr key={user.id} className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4 font-medium text-gray-900">
-                        {user.full_name || '—'}
+                        <input
+                          type="text"
+                          value={user.name || ''}
+                          onChange={(e) => setUsers(users.map(u => u.id === user.id ? { ...u, name: e.target.value } : u))}
+                          onBlur={(e) => {
+                            const newName = e.target.value.trim();
+                            if (newName !== (user.name || '')) {
+                              updateUserName(user.id, newName);
+                            }
+                          }}
+                          placeholder="Enter name"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
                       </td>
                       <td className="py-3 px-4 text-gray-600">{user.email}</td>
                       <td className="py-3 px-4">
