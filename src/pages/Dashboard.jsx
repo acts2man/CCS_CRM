@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,13 +9,12 @@ import ParentDashboard from "@/components/dashboard/ParentDashboard";
 import StudentDashboardComponent from "@/components/dashboard/StudentDashboard";
 import ParentLayout from "@/components/layouts/ParentLayout";
 import StudentLayout from "@/components/layouts/StudentLayout";
-import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function Dashboard() {
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { impersonatedTeacher, viewMode } = useImpersonation();
 
   useEffect(() => {
     loadUser();
@@ -75,19 +75,6 @@ export default function Dashboard() {
         </button>
       </div>
     );
-  }
-
-  // If admin is impersonating someone, use the viewMode to determine what to show
-  if (impersonatedTeacher && viewMode === 'teacher') {
-    return <TeacherDashboard impersonatedTeacher={impersonatedTeacher} />;
-  }
-  
-  if (impersonatedTeacher && viewMode === 'student') {
-    return <StudentLayout><StudentDashboardComponent /></StudentLayout>;
-  }
-
-  if (impersonatedTeacher && viewMode === 'parent') {
-    return <ParentLayout><ParentDashboard /></ParentLayout>;
   }
 
   // Normal user viewing - show based on their actual role
