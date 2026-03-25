@@ -3,6 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Users } from "lucide-react";
+import { useImpersonation } from "@/lib/ImpersonationContext";
+import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
 
 export default function TeacherGradebook() {
   const [user, setUser] = useState(null);
@@ -10,10 +12,11 @@ export default function TeacherGradebook() {
   const [selectedClass, setSelectedClass] = useState(null);
   const [grades, setGrades] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { impersonatedTeacher } = useImpersonation();
 
   useEffect(() => {
     loadTeacherGradebook();
-  }, []);
+  }, [impersonatedTeacher]);
 
   useEffect(() => {
     if (selectedClass) {
@@ -26,10 +29,15 @@ export default function TeacherGradebook() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const teachers = await base44.entities.Teacher.filter({ email: currentUser.email });
-      if (teachers.length > 0) {
+      let teacherId = impersonatedTeacher?.id;
+      if (!teacherId) {
+        const { teacher } = await getTeacherByUserEmail(currentUser.email);
+        teacherId = teacher?.id;
+      }
+
+      if (teacherId) {
         const allClasses = await base44.entities.ClassSection.list();
-        const teacherClasses = allClasses.filter(c => c.teacher_id === teachers[0].id);
+        const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
         setClasses(teacherClasses);
         if (teacherClasses.length > 0) {
           setSelectedClass(teacherClasses[0]);

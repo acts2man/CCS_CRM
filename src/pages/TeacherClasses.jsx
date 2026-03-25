@@ -5,29 +5,36 @@ import { Users, BookOpen, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { getTeacherByUserEmail } from "@/lib/entitySyncUtils";
+import { useImpersonation } from "@/lib/ImpersonationContext";
 
 export default function TeacherClasses() {
   const [user, setUser] = useState(null);
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { impersonatedTeacher } = useImpersonation();
 
   useEffect(() => {
     loadTeacherClasses();
-  }, []);
+  }, [impersonatedTeacher]);
 
   const loadTeacherClasses = async () => {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const { teacher, error } = await getTeacherByUserEmail(currentUser.email);
-      if (error || !teacher) {
-        console.error("Teacher sync error:", error);
-        return;
+      let teacherId = impersonatedTeacher?.id;
+
+      if (!teacherId) {
+        const { teacher, error } = await getTeacherByUserEmail(currentUser.email);
+        if (error || !teacher) {
+          console.error("Teacher sync error:", error);
+          return;
+        }
+        teacherId = teacher.id;
       }
 
       const allClasses = await base44.entities.ClassSection.list();
-      const teacherClasses = allClasses.filter(c => c.teacher_id === teacher.id);
+      const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
       setClasses(teacherClasses);
     } catch (error) {
       console.error("Error loading teacher classes:", error);
