@@ -5,9 +5,10 @@ import { useParentId } from "@/lib/useParentId";
 import { getStudentsForParent } from "@/lib/entitySyncUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, BookOpen, DollarSign, Calendar } from "lucide-react";
+import { Users, BookOpen, DollarSign, Calendar, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import ParentNotificationInbox from "@/components/parents/ParentNotificationInbox";
 
 export default function ParentDashboard() {
   const navigate = useNavigate();
@@ -220,6 +221,11 @@ export default function ParentDashboard() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Parent Inbox */}
+      {parentId && (
+        <ParentNotificationInbox parentId={parentId} />
       )}
 
       {/* Quick Links */}
