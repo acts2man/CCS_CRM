@@ -45,13 +45,23 @@ export default function SendDocumentModal({ open, onOpenChange, template, studen
       },
       notes,
       parent_notified: false,
+      send_delay_minutes: 10,
       status: 'submitted',
     });
 
-    // Trigger parent notification if template requires it
+    // Schedule parent notification if template requires it
     if (template.notify_parent) {
-      await base44.functions.invoke('sendDocumentNotification', { studentDocumentId: doc.id });
-      toast({ title: 'Document sent & parent notified', description: `${template.title} attached to student record.` });
+      await base44.functions.invoke('scheduleDocumentNotification', { 
+        event: { type: 'create', entity_name: 'StudentDocument', entity_id: doc.id },
+        data: { 
+          student_id: doc.student_id,
+          id: doc.id,
+          title: doc.title,
+          submitted_by_name: doc.submitted_by_name,
+          send_delay_minutes: 10
+        }
+      });
+      toast({ title: 'Document created', description: `${template.title} will be sent to parents in 10 minutes. You can edit or send now.` });
     } else {
       toast({ title: 'Document attached', description: `${template.title} added to student record.` });
     }

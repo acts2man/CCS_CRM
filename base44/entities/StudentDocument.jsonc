@@ -1,0 +1,124 @@
+{
+  "name": "StudentDocument",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Student this document is attached to"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "Source template ID"
+    },
+    "template_type": {
+      "type": "string",
+      "description": "Type of document"
+    },
+    "title": {
+      "type": "string",
+      "description": "Document title"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "Staff member who submitted"
+    },
+    "submitted_by_name": {
+      "type": "string",
+      "description": "Display name of submitter"
+    },
+    "form_data": {
+      "type": "object",
+      "description": "Filled-in form field values"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Attached file URL"
+    },
+    "parent_notified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether parent was notified"
+    },
+    "parent_notified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When parent was notified"
+    },
+    "parent_acknowledged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether parent acknowledged"
+    },
+    "parent_acknowledged_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When parent acknowledged"
+    },
+    "parent_response": {
+      "type": "string",
+      "description": "Parent's response text (if response required)"
+    },
+    "parent_responded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When parent responded"
+    },
+    "response_required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a parent response is required"
+    },
+    "follow_up_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "follow_up_sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "communication_log": {
+      "type": "array",
+      "description": "Log of all communications (sent, acknowledged, responded, follow-ups)",
+      "items": {
+        "type": "object"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "scheduled",
+        "parent_notified",
+        "acknowledged",
+        "responded",
+        "follow_up_sent",
+        "closed"
+      ],
+      "default": "submitted",
+      "description": "Document status"
+    },
+    "send_delay_minutes": {
+      "type": "number",
+      "default": 10,
+      "description": "Minutes to delay before sending notification (for review window)"
+    },
+    "scheduled_send_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When notification is scheduled to be sent"
+    },
+    "parent_notification_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether parent notification was actually sent"
+    }
+  },
+  "required": [
+    "student_id",
+    "title"
+  ]
+}

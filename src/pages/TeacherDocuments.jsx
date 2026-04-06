@@ -8,11 +8,12 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, FileText, Send, BookOpen, Loader2 } from 'lucide-react';
+import { Search, FileText, Send, BookOpen, Loader2, Clock, SendHorizontal, Edit2 } from 'lucide-react';
 import SendDocumentModal from '@/components/documents/SendDocumentModal';
 import BehaviorReportModal from '@/components/documents/BehaviorReportModal';
 import SchoolBehaviorReportModal from '@/components/documents/SchoolBehaviorReportModal';
 import DocumentDetailModal from '@/components/students/DocumentDetailModal';
+import { useToast } from '@/components/ui/use-toast';
 
 const TEMPLATE_TYPE_LABELS = {
   behavior_report: 'Behavior Report',
@@ -33,6 +34,7 @@ const CATEGORY_COLORS = {
 
 export default function TeacherDocuments() {
   const location = useLocation();
+  const { toast } = useToast();
   const { teacherId, loading: teacherLoading } = useTeacherId();
   const [templates, setTemplates] = useState([]);
   const [sentDocs, setSentDocs] = useState([]);
@@ -44,6 +46,7 @@ export default function TeacherDocuments() {
   const [showBehaviorReport, setShowBehaviorReport] = useState(false);
   const [showSchoolBehaviorReport, setShowSchoolBehaviorReport] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const [sendingNow, setSendingNow] = useState(null);
 
   const getNavUrl = (path) => {
     const base = `/${path}`;
@@ -81,6 +84,19 @@ export default function TeacherDocuments() {
   const getStudentName = (id) => {
     const s = students.find(s => s.id === id);
     return s ? `${s.first_name} ${s.last_name}` : 'Unknown';
+  };
+
+  const handleSendNow = async (docId) => {
+    setSendingNow(docId);
+    try {
+      await base44.functions.invoke('sendDocumentNotificationNow', { document_id: docId });
+      loadData();
+      toast({ title: 'Sent!', description: 'Document notification sent to parents immediately.' });
+    } catch (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } finally {
+      setSendingNow(null);
+    }
   };
 
   if (teacherLoading || loading) {
@@ -197,28 +213,55 @@ export default function TeacherDocuments() {
               </Card>
             ) : (
               sentDocs.map(doc => (
-                <Card key={doc.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setSelectedDoc(doc)}>
+                <Card key={doc.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="py-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3 flex-1 cursor-pointer" onClick={() => setSelectedDoc(doc)}>
+                        <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
                           <FileText className="h-4 w-4 text-slate-600" />
                         </div>
-                        <div>
+                        <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm">{doc.title}</div>
                           <div className="text-xs text-gray-500">
                             Student: {getStudentName(doc.student_id)} · By {doc.submitted_by_name || doc.submitted_by}
                             {doc.created_date && ` · ${new Date(doc.created_date).toLocaleDateString()}`}
                           </div>
+                          {doc.status === 'scheduled' && doc.scheduled_send_at && (
+                            <div className="text-xs text-orange-600 mt-1 flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              Scheduled for {new Date(doc.scheduled_send_at).toLocaleTimeString()}
+                            </div>
+                          )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {doc.parent_acknowledged ? (
                           <Badge className="bg-green-100 text-green-800">Acknowledged</Badge>
                         ) : doc.parent_notified ? (
                           <Badge className="bg-blue-100 text-blue-800">Notified</Badge>
+                        ) : doc.status === 'scheduled' ? (
+                          <Badge className="bg-orange-100 text-orange-800 flex items-center gap-1">
+                            <Clock className="h-3 w-3" /> Scheduled
+                          </Badge>
                         ) : (
                           <Badge className="bg-gray-100 text-gray-600">Submitted</Badge>
+                        )}
+                        {doc.status === 'scheduled' && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendNow(doc.id);
+                            }}
+                            disabled={sendingNow === doc.id}
+                            className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 disabled:opacity-50"
+                            title="Send notification now (for testing)"
+                          >
+                            {sendingNow === doc.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <SendHorizontal className="h-4 w-4" />
+                            )}
+                          </button>
                         )}
                       </div>
                     </div>
