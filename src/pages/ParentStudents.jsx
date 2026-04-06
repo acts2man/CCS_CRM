@@ -18,6 +18,7 @@ export default function ParentStudents() {
       const user = await base44.auth.me();
       const { parent } = await getParentByUserEmail(user.email);
       if (!parent) { setLoading(false); return; }
+      // SINGLE SOURCE OF TRUTH: Use Student.parent_ids[] ONLY
       const { students } = await getStudentsForParent(parent.id);
       setChildren(students);
     } catch (error) {

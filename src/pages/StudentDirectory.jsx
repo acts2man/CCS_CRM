@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Users, Search, Mail, Phone } from "lucide-react";
 import { useTeacherId } from "@/lib/useTeacherId";
+import { getStudentsForTeacher } from "@/lib/entitySyncUtils";
 
 export default function StudentDirectory() {
   const navigate = useNavigate();
@@ -35,8 +36,9 @@ export default function StudentDirectory() {
       setAllStudents(studentsData);
 
       if (teacherId) {
-        // Filter by teacher_ids in Student entity - single source of truth
-        setMyStudents(studentsData.filter(s => s.teacher_ids?.includes(teacherId)));
+        // SINGLE SOURCE OF TRUTH: Get students via ClassSection, not Student.teacher_ids[]
+        const { students: teacherStudents } = await getStudentsForTeacher(teacherId);
+        setMyStudents(teacherStudents);
       } else {
         setMyStudents(studentsData);
       }

@@ -36,16 +36,22 @@ export default function TeacherDashboard() {
         return;
       }
 
-      const [allClasses, allAssignments, allStudents] = await Promise.all([
+      const [allClasses, allAssignments] = await Promise.all([
         base44.entities.ClassSection.list(),
-        base44.entities.Assignment.list(),
-        base44.entities.Student.list()
+        base44.entities.Assignment.list()
       ]);
 
       const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
 
-      // Count students from Student entity teacher_ids - single source of truth
-      const totalStudents = allStudents.filter(s => s.teacher_ids?.includes(teacherId)).length;
+      // SINGLE SOURCE OF TRUTH: Count unique students from ClassSection.student_ids[]
+      // Do NOT use Student.teacher_ids[]
+      const studentIds = new Set();
+      teacherClasses.forEach(cls => {
+        if (cls.student_ids && Array.isArray(cls.student_ids)) {
+          cls.student_ids.forEach(id => studentIds.add(id));
+        }
+      });
+      const totalStudents = studentIds.size;
 
       const teacherAssignments = allAssignments.filter(a => 
         teacherClasses.some(c => c.id === a.class_section_id)

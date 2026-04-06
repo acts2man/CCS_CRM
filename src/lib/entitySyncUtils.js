@@ -34,7 +34,7 @@ export async function getParentByUserEmail(userEmail) {
 export async function getStudentsForParent(parentId) {
   try {
     const allStudents = await base44.entities.Student.list();
-    // Filter students where parent_ids contains this parentId
+    // SINGLE SOURCE OF TRUTH: Student.parent_ids[] is the only authority
     const children = allStudents.filter(s => s.parent_ids?.includes(parentId));
     return { students: children, error: null };
   } catch (error) {
@@ -67,12 +67,37 @@ export async function getParentsForStudent(studentId) {
       return { parents: [], error: null };
     }
 
-    // Fetch all parents and filter by IDs
+    // SINGLE SOURCE OF TRUTH: Fetch parents via Student.parent_ids[] ONLY
     const allParents = await base44.entities.Parent.list();
     const parents = allParents.filter(p => student.parent_ids.includes(p.id));
     
     return { parents, error: null };
   } catch (error) {
     return { parents: [], error: `Failed to fetch student's parents: ${error.message}` };
+  }
+}
+
+export async function getStudentsForTeacher(teacherId) {
+  try {
+    // SINGLE SOURCE OF TRUTH: Teacher → Students via ClassSection ONLY
+    // Never use Student.teacher_ids[]
+    const allClasses = await base44.entities.ClassSection.list();
+    const teacherClasses = allClasses.filter(c => c.teacher_id === teacherId);
+    
+    // Collect all unique student IDs from teacher's classes
+    const studentIds = new Set();
+    teacherClasses.forEach(cls => {
+      if (cls.student_ids && Array.isArray(cls.student_ids)) {
+        cls.student_ids.forEach(id => studentIds.add(id));
+      }
+    });
+    
+    // Fetch all students and filter by the collected IDs
+    const allStudents = await base44.entities.Student.list();
+    const students = allStudents.filter(s => studentIds.has(s.id));
+    
+    return { students, classes: teacherClasses, error: null };
+  } catch (error) {
+    return { students: [], classes: [], error: `Failed to fetch teacher's students: ${error.message}` };
   }
 }
