@@ -1,0 +1,83 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "recipient_id": {
+      "type": "string",
+      "description": "User/Parent ID who receives notification"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Recipient email address"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "document",
+        "grade",
+        "attendance",
+        "message",
+        "system",
+        "alert"
+      ],
+      "description": "Type of notification"
+    },
+    "title": {
+      "type": "string",
+      "description": "Notification title/subject"
+    },
+    "message": {
+      "type": "string",
+      "description": "Notification message content"
+    },
+    "related_entity_id": {
+      "type": "string",
+      "description": "ID of related entity (StudentDocument, Grade, etc)"
+    },
+    "related_entity_type": {
+      "type": "string",
+      "description": "Type of related entity"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether notification has been read"
+    },
+    "read_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When notification was read"
+    },
+    "delivery_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "delivered",
+        "failed",
+        "bounced"
+      ],
+      "default": "pending",
+      "description": "Email delivery status"
+    },
+    "delivery_attempts": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of delivery attempts"
+    },
+    "last_attempt_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When last delivery attempt was made"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error message if delivery failed"
+    }
+  },
+  "required": [
+    "recipient_id",
+    "type",
+    "message"
+  ]
+}
