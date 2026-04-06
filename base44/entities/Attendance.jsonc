@@ -1,0 +1,75 @@
+{
+  "name": "Attendance",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Student ID"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Attendance date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "present",
+        "absent",
+        "tardy",
+        "excused",
+        "early_dismissal"
+      ],
+      "description": "Attendance status"
+    },
+    "class_period_id": {
+      "type": "string",
+      "description": "Class period ID if applicable"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for absence or tardy"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "recorded_by": {
+      "type": "string",
+      "description": "User ID who recorded attendance"
+    },
+    "parent_notified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether parent was notified"
+    },
+    "notification_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When notification was sent"
+    },
+    "arrival_time": {
+      "type": "string",
+      "description": "Arrival time if tardy"
+    },
+    "departure_time": {
+      "type": "string",
+      "description": "Departure time if early dismissal"
+    },
+    "synced_from_clock_in_out": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether synced from StudentClockInOut automation"
+    },
+    "synced_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When synced from clock in out"
+    }
+  },
+  "required": [
+    "student_id",
+    "date",
+    "status"
+  ]
+}
