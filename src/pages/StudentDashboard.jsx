@@ -40,7 +40,7 @@ export default function StudentDashboard() {
   const loadStudentData = async () => {
     try {
       // studentData is already loaded by useStudentId hook
-      // Get all related data in parallel
+      // SINGLE SOURCE OF TRUTH: Use AssignmentGrade ONLY (Grade entity is deprecated)
       const [classes, assignments, grades, docs, clockInOut, parentData] = await Promise.all([
         base44.entities.ClassSection.list(),
         base44.entities.Assignment.list(),

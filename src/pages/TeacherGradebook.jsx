@@ -40,6 +40,7 @@ export default function TeacherGradebook() {
 
   const loadClassGrades = async (classId) => {
     try {
+      // SINGLE SOURCE OF TRUTH: Use AssignmentGrade ONLY (Grade entity is deprecated)
       const classData = classes.find(c => c.id === classId);
       const allGrades = await base44.entities.AssignmentGrade.list();
       

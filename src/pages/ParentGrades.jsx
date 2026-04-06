@@ -36,6 +36,7 @@ export default function ParentGrades() {
 
   const loadChildGrades = async (studentId) => {
     try {
+      // SINGLE SOURCE OF TRUTH: Use AssignmentGrade ONLY (Grade entity is deprecated)
       const [reportCards, assignments, assignmentGrades] = await Promise.all([
         base44.entities.ReportCard.filter({ student_id: studentId }),
         base44.entities.Assignment.list(),

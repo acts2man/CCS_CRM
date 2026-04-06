@@ -19,7 +19,6 @@ export default function Grading() {
   const [recentGrades, setRecentGrades] = useState([]);
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [grades, setGrades] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,19 +28,18 @@ export default function Grading() {
 
   const loadGradingData = async () => {
     try {
-      const [studentsData, gradesData, classData, assignmentGradeData] = await Promise.all([
+      // SINGLE SOURCE OF TRUTH: Use AssignmentGrade ONLY (Grade entity is deprecated)
+      const [studentsData, classData, assignmentGradeData] = await Promise.all([
         base44.entities.Student.filter({ enrollment_status: 'active' }, '', 200),
-        base44.entities.Grade.list('-created_date', 200),
         base44.entities.ClassSection.filter({ is_active: true }, '', 100),
         base44.entities.AssignmentGrade.list('-created_date', 500)
       ]);
 
       setStudents(studentsData);
-      setGrades(gradesData);
       setClasses(classData);
       if (classData.length > 0 && !selectedClass) setSelectedClass(classData[0]);
 
-      // Calculate stats
+      // Calculate stats using AssignmentGrade only
       let average = 0;
       if (assignmentGradeData.length > 0) {
         const validGrades = assignmentGradeData.filter(g => g.percentage !== null && g.percentage !== undefined);
@@ -60,19 +58,30 @@ export default function Grading() {
       const totalAssignments = classData.reduce((sum, c) => sum + (c.student_ids?.length || 0), 0);
       const gradingPercentage = totalAssignments > 0 ? (assignmentGradeData.length / totalAssignments) * 100 : 0;
 
-      const uniqueSubjects = [...new Set(gradesData.map(g => g.subject))].filter(Boolean);
-
       setStats({
         totalStudents: studentsData.length,
         totalGrades: assignmentGradeData.length,
         classAverage: average,
-        subjects: uniqueSubjects.length,
+        subjects: 0, // AssignmentGrade doesn't have subject field; use assignment metadata instead
         studentsAboveAvg,
         studentsBelowAvg,
         gradingPercentage
       });
 
-      setRecentGrades(gradesData.slice(0, 10));
+      // Map AssignmentGrade records with assignment metadata for display
+      const assignments = await base44.entities.Assignment.list();
+      const gradesWithMetadata = assignmentGradeData.map(ag => {
+        const assignment = assignments.find(a => a.id === ag.assignment_id);
+        return {
+          id: ag.id,
+          student_id: ag.student_id,
+          assignment_name: assignment?.title || 'Unknown Assignment',
+          grade_value: ag.percentage,
+          created_date: ag.created_date
+        };
+      });
+
+      setRecentGrades(gradesWithMetadata.slice(0, 10));
     } catch (error) {
       console.error('Error loading grading data:', error);
     } finally {
@@ -255,7 +264,8 @@ export default function Grading() {
                       {selectedClass.student_ids && selectedClass.student_ids.length > 0 ? (
                         selectedClass.student_ids.map(sid => {
                           const student = students.find(s => s.id === sid);
-                          const classGrades = grades.filter(g => g.student_id === sid);
+                          // SINGLE SOURCE OF TRUTH: Use AssignmentGrade only (not Grade entity)
+                          const classGrades = recentGrades.filter(g => g.student_id === sid);
                           const avg = classGrades.length ? classGrades.reduce((sum, g) => sum + (g.grade_value || 0), 0) / classGrades.length : null;
                           const letter = avg === null ? '—' : avg >= 90 ? 'A' : avg >= 80 ? 'B' : avg >= 70 ? 'C' : avg >= 60 ? 'D' : 'F';
                           return (
@@ -335,8 +345,9 @@ export default function Grading() {
               <h3 className="text-lg font-semibold mb-4">Student Performance Breakdown</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 {['A', 'B', 'C', 'D', 'F'].map(letter => {
+                  // SINGLE SOURCE OF TRUTH: Use AssignmentGrade only
                   const count = students.filter(s => {
-                    const stuGrades = grades.filter(g => g.student_id === s.id);
+                    const stuGrades = recentGrades.filter(g => g.student_id === s.id);
                     if (stuGrades.length === 0) return false;
                     const avg = stuGrades.reduce((sum, g) => sum + (g.grade_value || 0), 0) / stuGrades.length;
                     const gradeLetters = { A: [90, 100], B: [80, 89], C: [70, 79], D: [60, 69], F: [0, 59] };
@@ -421,7 +432,10 @@ export default function Grading() {
               <h3 className="text-lg font-semibold mb-4">Class Comparison</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={classes.slice(0, 5).map(cls => {
-                  const classGrades = grades.filter(g => g.class_id === cls.id || g.subject === cls.name);
+                  // SINGLE SOURCE OF TRUTH: Use AssignmentGrade only
+                  const classGrades = recentGrades.filter(g => 
+                    classes.find(c => c.name === cls.name)?.student_ids?.includes(g.student_id)
+                  );
                   const avg = classGrades.length ? classGrades.reduce((sum, g) => sum + (g.grade_value || 0), 0) / classGrades.length : 0;
                   return { name: cls.name, average: avg };
                 })}>

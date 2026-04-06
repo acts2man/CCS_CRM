@@ -31,7 +31,7 @@ export default function StudentGrades() {
       }
       setStudentRecord(student);
 
-      // Get all data needed
+      // SINGLE SOURCE OF TRUTH: Use AssignmentGrade ONLY (Grade entity is deprecated)
       const [classes, grades, assignments] = await Promise.all([
         base44.entities.ClassSection.list(),
         base44.entities.AssignmentGrade.filter({ student_id: student.id }),
