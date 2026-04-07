@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, FileText, Download, Calendar, BarChart3, ClipboardList, BookOpen, Eye } from 'lucide-react';
+import { Loader2, FileText, Download, Calendar, BarChart3, ClipboardList, BookOpen, Eye, Save, CheckCircle } from 'lucide-react';
 import ReportCardView from '@/components/reports/ReportCardView';
 import GradingPeriodManager from '@/components/reports/GradingPeriodManager';
 
@@ -27,6 +27,9 @@ export default function ReportCenter() {
   const [reportData, setReportData] = useState(null);
   const [livePreviewStudent, setLivePreviewStudent] = useState(null);
   const [showPeriodManager, setShowPeriodManager] = useState(false);
+  const [generatingCard, setGeneratingCard] = useState(false);
+  const [savedCard, setSavedCard] = useState(null);
+  const [savedCardMessage, setSavedCardMessage] = useState('');
 
   useEffect(() => { loadData(); }, [schoolYear]);
 
@@ -180,6 +183,27 @@ export default function ReportCenter() {
 
   const getLetterColor = (l) => ({ A: 'text-green-600', B: 'text-blue-600', C: 'text-yellow-600', D: 'text-orange-600', F: 'text-red-600' }[l] || 'text-gray-500');
 
+  const handleGenerateReportCard = async () => {
+    if (!livePreviewStudent || !selectedPeriod) return;
+    setGeneratingCard(true);
+    setSavedCard(null);
+    setSavedCardMessage('');
+    const period = gradingPeriods.find(p => p.id === selectedPeriod);
+    const response = await base44.functions.invoke('generateReportCard', {
+      student_id: livePreviewStudent.id,
+      period_id: selectedPeriod,
+      school_year: schoolYear,
+      reporting_period: period?.period_type || 'FY',
+      period_start_date: period?.start_date || null,
+      period_end_date: period?.end_date || null
+    });
+    const result = response.data;
+    setSavedCard(result.report_card);
+    const action = result.summary?.was_updated ? 'Updated' : 'Generated';
+    setSavedCardMessage(`${action}: ${result.summary?.classes_with_grades} class(es), ${result.summary?.total_graded_assignments} graded assignment(s) — Overall: ${result.summary?.overall_letter} (${result.summary?.overall_average?.toFixed(1)}%)`);
+    setGeneratingCard(false);
+  };
+
   if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="h-8 w-8 animate-spin text-blue-600" /></div>;
 
   return (
@@ -289,19 +313,53 @@ export default function ReportCenter() {
                 )}
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Student</label>
-                  <Select value={livePreviewStudent?.id || ''} onValueChange={sid => setLivePreviewStudent(students.find(s => s.id === sid))}>
+                  <Select value={livePreviewStudent?.id || ''} onValueChange={sid => { setLivePreviewStudent(students.find(s => s.id === sid)); setSavedCard(null); setSavedCardMessage(''); }}>
                     <SelectTrigger><SelectValue placeholder="Select student to preview" /></SelectTrigger>
                     <SelectContent>
                       {students.map(s => <SelectItem key={s.id} value={s.id}>{s.first_name} {s.last_name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div className="flex items-center gap-3 pt-2">
+                  <Button
+                    className="bg-slate-900 hover:bg-slate-800"
+                    onClick={handleGenerateReportCard}
+                    disabled={generatingCard || !livePreviewStudent || !selectedPeriod}
+                  >
+                    {generatingCard ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                    Generate & Save Report Card
+                  </Button>
+                  {savedCardMessage && (
+                    <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
+                      <CheckCircle className="h-4 w-4 flex-shrink-0" />
+                      {savedCardMessage}
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
 
             {livePreviewStudent && selectedPeriod && (
-              <div className="mt-6">
-                <ReportCardView reportCard={generateReportCardPreview(livePreviewStudent.id)} />
+              <div className="mt-6 space-y-6">
+                {savedCard && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <h3 className="font-semibold text-gray-900">Saved Report Card</h3>
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium">✓ Saved to Database</span>
+                    </div>
+                    <ReportCardView reportCard={savedCard} />
+                  </div>
+                )}
+                {!savedCard && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <h3 className="font-semibold text-gray-900">Live Preview</h3>
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">Preview only — not saved</span>
+                    </div>
+                    <ReportCardView reportCard={generateReportCardPreview(livePreviewStudent.id)} />
+                  </div>
+                )}
               </div>
             )}
           </TabsContent>
