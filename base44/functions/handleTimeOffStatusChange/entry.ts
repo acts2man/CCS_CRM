@@ -1,8 +1,7 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import { google } from 'npm:googleapis@140.0.0';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 import { Resend } from 'npm:resend@4.0.0';
 
-const CALENDAR_ID = 'a0f63acb1d30ec35e8ca13a3f8da083f039696f1f8b419e86e1c8ec6fe983546@group.calendar.google.com';
+const CALENDAR_ID = 'fc26e7e11e62a246a3967bba8a33f18883ba3daf1e84d144b98d871eeeb60b0d@group.calendar.google.com';
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 Deno.serve(async (req) => {
@@ -52,28 +51,45 @@ Deno.serve(async (req) => {
       try {
         // Add to Google Calendar
         console.log('Adding event to Google Calendar');
-        const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+        const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
         console.log('Got calendar access token');
-        
-        const auth = new google.auth.OAuth2();
-        auth.setCredentials({ access_token: accessToken });
-        const calendar = google.calendar({ version: 'v3', auth });
 
-        const calendarResult = await calendar.events.insert({
-          calendarId: CALENDAR_ID,
-          requestBody: {
-            summary: `${request.first_name} ${request.last_name} - Time Off`,
-            description: `Reason: ${request.reason_notes}`,
-            start: {
-              date: request.start_date,
-            },
-            end: {
-              date: request.end_date,
-            },
-            colorId: '11', // Red color for time off
-          },
-        });
-        console.log('Calendar event created:', calendarResult.data.id);
+        // For all-day events, Google requires end date to be day AFTER the last day
+        const endDateObj = new Date(request.end_date);
+        endDateObj.setDate(endDateObj.getDate() + 1);
+        const endDateStr = endDateObj.toISOString().split('T')[0];
+
+        const eventBody = {
+          summary: `${request.first_name} ${request.last_name} - Time Off`,
+          description: `Reason: ${request.reason_notes}\nPTO: ${request.use_pto ? 'Yes' : 'No'}\nTotal Hours: ${request.total_hours}`,
+          colorId: '11',
+        };
+
+        if (request.full_day) {
+          eventBody.start = { date: request.start_date };
+          eventBody.end = { date: endDateStr };
+        } else {
+          eventBody.start = { dateTime: `${request.start_date}T${request.start_time}:00`, timeZone: 'America/Los_Angeles' };
+          eventBody.end = { dateTime: `${request.end_date}T${request.end_time}:00`, timeZone: 'America/Los_Angeles' };
+        }
+
+        const calRes = await fetch(
+          `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events`,
+          {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(eventBody),
+          }
+        );
+
+        if (!calRes.ok) {
+          const errText = await calRes.text();
+          console.error('Calendar API error:', errText);
+          throw new Error(`Calendar API error: ${errText}`);
+        }
+
+        const calData = await calRes.json();
+        console.log('Calendar event created:', calData.id);
       } catch (calendarError) {
         console.error('Failed to add to calendar:', calendarError);
         throw calendarError;

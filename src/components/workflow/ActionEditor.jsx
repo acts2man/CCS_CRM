@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +13,9 @@ import ConditionEditor from './ConditionEditor';
 import EmailEditor from './EmailEditor';
 
 export default function ActionEditor({ action, onClose, onUpdate }) {
+  const [actionName, setActionName] = useState(action.name || '');
+  const [config, setConfig] = useState(action.config || {});
+
   // Route to appropriate editor based on action type
   if (action.type === 'trigger') {
     return <TriggerEditor action={action} onClose={onClose} onUpdate={onUpdate} />;
@@ -24,10 +28,6 @@ export default function ActionEditor({ action, onClose, onUpdate }) {
   if (action.type === 'action' && action.config?.action_type === 'send_email') {
     return <EmailEditor action={action} onClose={onClose} onUpdate={onUpdate} />;
   }
-
-  // Default editor for other action types
-  const [actionName, setActionName] = useState(action.name || '');
-  const [config, setConfig] = useState(action.config || {});
 
   const handleSave = () => {
     onUpdate({

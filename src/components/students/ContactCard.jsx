@@ -157,7 +157,7 @@ function ContactItem({ parent, onCall, onEmailClick, onSMSClick }) {
                 size="sm"
                 variant="outline"
                 title="Call parent"
-                onClick={() => handleCall(parent.phone)}
+                onClick={() => window.open(`tel:${parent.phone}`)}
               >
                 <Phone className="h-4 w-4" />
               </Button>
