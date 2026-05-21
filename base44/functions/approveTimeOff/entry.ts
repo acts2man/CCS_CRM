@@ -1,7 +1,6 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest, createClient } from 'npm:@base44/sdk@0.8.25';
 import { Resend } from 'npm:resend@4.0.0';
 
-const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 const CALENDAR_ID = 'fc26e7e11e62a246a3967bba8a33f18883ba3daf1e84d144b98d871eeeb60b0d@group.calendar.google.com';
 
 function htmlPage(title, color, emoji, body) {
@@ -29,15 +28,9 @@ Deno.serve(async (req) => {
       return htmlPage('Missing Parameters', '#dc2626', '❌', 'The link is missing required parameters. Please contact your administrator.');
     }
 
-    // Create client WITHOUT requiring auth (this is a webhook-like endpoint)
-    let base44;
-    try {
-      base44 = createClientFromRequest(req);
-    } catch (e) {
-      // If no auth context, create service-only client
-      const { createClient } = await import('npm:@base44/sdk@0.8.21');
-      base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
-    }
+    // Use service role client — no user auth needed for email link actions
+    const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
+    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
     const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({ id: requestId });
 
