@@ -1,4 +1,4 @@
-import { createClientFromRequest, createClient } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 import { Resend } from 'npm:resend@4.0.0';
 
 const CALENDAR_ID = 'fc26e7e11e62a246a3967bba8a33f18883ba3daf1e84d144b98d871eeeb60b0d@group.calendar.google.com';
@@ -28,11 +28,11 @@ Deno.serve(async (req) => {
       return htmlPage('Missing Parameters', '#dc2626', '❌', 'The link is missing required parameters. Please contact your administrator.');
     }
 
-    // Use service role client — no user auth needed for email link actions
-    const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
+    // Use request-based client so we don't need serviceToken
+    const base44 = createClientFromRequest(req);
     const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
-    const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({ id: requestId });
+    const requests = await base44.entities.TimeOffRequest.filter({ id: requestId });
 
     if (!requests || requests.length === 0) {
       return htmlPage('Not Found', '#dc2626', '❌', 'This time-off request could not be found.');
@@ -51,43 +51,54 @@ Deno.serve(async (req) => {
 
     if (action === 'approve') {
       let accessToken;
+      let calendarSynced = false;
+      
       try {
         const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
         accessToken = conn.accessToken;
       } catch (connErr) {
-        console.error('Connector error:', connErr.message);
-        return htmlPage('Authorization Error', '#dc2626', '❌', `Could not access Google Calendar. Make sure it's authorized in settings. Error: ${connErr.message}`);
+        console.warn('Calendar not available:', connErr.message);
+        // Calendar is optional — continue with email/DB update
+        accessToken = null;
       }
 
-      const eventBody = {
-        summary: `${request.first_name} ${request.last_name} — Time Off`,
-        description: `Reason: ${request.reason_notes}\nPTO: ${request.use_pto ? 'Yes' : 'No'}\nTotal Hours: ${request.total_hours}`,
-        colorId: '11',
-      };
+      // Try to add to calendar if token available
+      if (accessToken) {
+        const eventBody = {
+          summary: `${request.first_name} ${request.last_name} — Time Off`,
+          description: `Reason: ${request.reason_notes}\nPTO: ${request.use_pto ? 'Yes' : 'No'}\nTotal Hours: ${request.total_hours}`,
+          colorId: '11',
+        };
 
-      if (request.full_day) {
-        const endDateObj = new Date(request.end_date);
-        endDateObj.setDate(endDateObj.getDate() + 1);
-        eventBody.start = { date: request.start_date };
-        eventBody.end = { date: endDateObj.toISOString().split('T')[0] };
-      } else {
-        eventBody.start = { dateTime: `${request.start_date}T${request.start_time}:00`, timeZone: 'America/Los_Angeles' };
-        eventBody.end = { dateTime: `${request.end_date}T${request.end_time}:00`, timeZone: 'America/Los_Angeles' };
-      }
-
-      const calRes = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events`,
-        {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(eventBody),
+        if (request.full_day) {
+          const endDateObj = new Date(request.end_date);
+          endDateObj.setDate(endDateObj.getDate() + 1);
+          eventBody.start = { date: request.start_date };
+          eventBody.end = { date: endDateObj.toISOString().split('T')[0] };
+        } else {
+          eventBody.start = { dateTime: `${request.start_date}T${request.start_time}:00`, timeZone: 'America/Los_Angeles' };
+          eventBody.end = { dateTime: `${request.end_date}T${request.end_time}:00`, timeZone: 'America/Los_Angeles' };
         }
-      );
 
-      if (!calRes.ok) {
-        const err = await calRes.text();
-        console.error('Calendar error:', err);
-        return htmlPage('Calendar Error', '#dc2626', '❌', `Could not add to calendar: ${err}`);
+        try {
+          const calRes = await fetch(
+            `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events`,
+            {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify(eventBody),
+            }
+          );
+
+          if (calRes.ok) {
+            calendarSynced = true;
+          } else {
+            const err = await calRes.text();
+            console.warn('Calendar sync failed:', err);
+          }
+        } catch (calErr) {
+          console.warn('Calendar API error:', calErr.message);
+        }
       }
 
       await Promise.all([
@@ -98,16 +109,16 @@ Deno.serve(async (req) => {
           html: `<div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 32px;">
             <h2 style="color: #16a34a;">Your Request Was Approved! ✅</h2>
             <p>Hi ${request.first_name},</p>
-            <p>Your time-off request has been approved and added to the school calendar.</p>
+            <p>Your time-off request has been approved${calendarSynced ? ' and added to the school calendar' : ''}.</p>
             <p><strong>Dates:</strong> ${request.start_date} → ${request.end_date}<br>
             <strong>Hours:</strong> ${request.total_hours}<br>
             <strong>PTO Used:</strong> ${request.use_pto ? 'Yes' : 'No'}</p>
           </div>`
         }),
-        base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
+        base44.entities.TimeOffRequest.update(request.id, {
           status: 'approved',
           user_notified: true,
-          synced_to_calendar: true,
+          synced_to_calendar: calendarSynced,
         })
       ]);
 
@@ -115,7 +126,7 @@ Deno.serve(async (req) => {
         'Request Approved ✅',
         '#16a34a',
         '✅',
-        `${request.first_name} ${request.last_name}'s time off (${request.start_date} → ${request.end_date}) has been approved, added to the calendar, and the employee has been notified.`
+        `${request.first_name} ${request.last_name}'s time off (${request.start_date} → ${request.end_date}) has been approved and the employee has been notified.`
       );
 
     } else if (action === 'deny') {
@@ -133,7 +144,7 @@ Deno.serve(async (req) => {
             <p>Please reach out to the admin with any questions.</p>
           </div>`
         }),
-        base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
+        base44.entities.TimeOffRequest.update(request.id, {
           status: 'denied',
           user_notified: true,
         })
