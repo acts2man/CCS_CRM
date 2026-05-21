@@ -15,7 +15,8 @@ Deno.serve(async (req) => {
   });
 
   // Build approve/deny links — point directly to the backend function (no login required)
-  const fnBaseUrl = 'https://calvaryforkidscrm.com/functions/approveTimeOff';
+  const appId = Deno.env.get('BASE44_APP_ID');
+  const fnBaseUrl = `https://api.base44.com/api/apps/${appId}/functions/approveTimeOff`;
   const approveLink = `${fnBaseUrl}?requestId=${request.id}&action=approve`;
   const denyLink = `${fnBaseUrl}?requestId=${request.id}&action=deny`;
 
