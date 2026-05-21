@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
-    const requests = await base44.entities.TimeOffRequest.filter({ id: requestId });
+    const requests = await base44.asServiceRole.entities.TimeOffRequest.filter({ id: requestId });
 
     if (!requests || requests.length === 0) {
       return htmlPage('Not Found', '#dc2626', '❌', 'This time-off request could not be found.');
@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
             <strong>PTO Used:</strong> ${request.use_pto ? 'Yes' : 'No'}</p>
           </div>`
         }),
-        base44.entities.TimeOffRequest.update(request.id, {
+        base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
           status: 'approved',
           user_notified: true,
           synced_to_calendar: calendarSynced,
@@ -144,7 +144,7 @@ Deno.serve(async (req) => {
             <p>Please reach out to the admin with any questions.</p>
           </div>`
         }),
-        base44.entities.TimeOffRequest.update(request.id, {
+        base44.asServiceRole.entities.TimeOffRequest.update(request.id, {
           status: 'denied',
           user_notified: true,
         })
