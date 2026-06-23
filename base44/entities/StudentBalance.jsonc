@@ -1,0 +1,46 @@
+{
+  "name": "StudentBalance",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "total_charged": {
+      "type": "number",
+      "default": 0
+    },
+    "total_paid": {
+      "type": "number",
+      "default": 0
+    },
+    "outstanding_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "last_payment_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_payment_amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "current",
+        "outstanding",
+        "overdue"
+      ],
+      "default": "current"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "student_id"
+  ]
+}

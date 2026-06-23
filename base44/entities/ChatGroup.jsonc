@@ -1,0 +1,43 @@
+{
+  "name": "ChatGroup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Group chat name"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "group",
+        "class",
+        "grade",
+        "department",
+        "announcement"
+      ],
+      "description": "Type of chat group"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "Group avatar URL"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Creator user ID"
+    },
+    "description": {
+      "type": "string",
+      "description": "Group description"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "created_by"
+  ]
+}

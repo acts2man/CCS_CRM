@@ -1,0 +1,36 @@
+{
+  "name": "GradeCategory",
+  "type": "object",
+  "properties": {
+    "class_section_id": {
+      "type": "string",
+      "description": "Parent class section"
+    },
+    "subject_id": {
+      "type": "string",
+      "description": "Parent subject"
+    },
+    "name": {
+      "type": "string",
+      "description": "Component name (e.g., Homework, Quizzes, Tests)"
+    },
+    "weight": {
+      "type": "number",
+      "description": "Weight as a percentage (e.g., 25 for 25%)"
+    },
+    "color": {
+      "type": "string",
+      "description": "UI color for display"
+    },
+    "order_index": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "class_section_id",
+    "subject_id",
+    "name",
+    "weight"
+  ]
+}

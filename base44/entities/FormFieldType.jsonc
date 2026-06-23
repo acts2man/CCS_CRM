@@ -1,0 +1,41 @@
+{
+  "name": "FormFieldType",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Field type name (e.g., 'text', 'email', 'select')"
+    },
+    "description": {
+      "type": "string",
+      "description": "Field type description"
+    },
+    "properties": {
+      "type": "object",
+      "description": "Field type configuration properties"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon name for UI"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "input",
+        "selection",
+        "date",
+        "file",
+        "layout"
+      ],
+      "description": "Field category"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "properties"
+  ]
+}

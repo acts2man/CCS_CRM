@@ -1,0 +1,54 @@
+{
+  "name": "ChatMessage",
+  "type": "object",
+  "properties": {
+    "sender_id": {
+      "type": "string",
+      "description": "Sender user ID"
+    },
+    "recipient_id": {
+      "type": "string",
+      "description": "Direct message recipient ID (null for group messages)"
+    },
+    "group_id": {
+      "type": "string",
+      "description": "Group ID for group messages"
+    },
+    "content": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Message timestamp"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Read status"
+    },
+    "thread_id": {
+      "type": "string",
+      "description": "Thread ID for threaded conversations"
+    },
+    "topic_type": {
+      "type": "string",
+      "description": "Message topic classification"
+    },
+    "edited_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When message was edited"
+    },
+    "deleted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When message was deleted (soft delete)"
+    }
+  },
+  "required": [
+    "sender_id",
+    "content"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "name": "ParentCommunicationLog",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Student this communication relates to"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Student name for quick lookup"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "Parent this communication was with"
+    },
+    "parent_name": {
+      "type": "string",
+      "description": "Parent name for quick lookup"
+    },
+    "parent_phone": {
+      "type": "string",
+      "description": "Phone number contacted"
+    },
+    "parent_email": {
+      "type": "string",
+      "description": "Email address contacted"
+    },
+    "communication_type": {
+      "type": "string",
+      "enum": [
+        "email",
+        "sms",
+        "phone_call",
+        "in_person"
+      ],
+      "description": "Type of communication"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject line (for emails)"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "outbound",
+        "inbound"
+      ],
+      "default": "outbound",
+      "description": "Direction of communication"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "delivered",
+        "failed",
+        "pending"
+      ],
+      "default": "sent",
+      "description": "Delivery status"
+    },
+    "initiated_by": {
+      "type": "string",
+      "description": "User who initiated the communication"
+    },
+    "initiated_by_name": {
+      "type": "string",
+      "description": "Name of user who initiated"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When communication occurred"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the communication"
+    }
+  },
+  "required": [
+    "student_id",
+    "parent_id",
+    "communication_type",
+    "timestamp",
+    "initiated_by"
+  ]
+}

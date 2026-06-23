@@ -1,0 +1,42 @@
+{
+  "name": "AutomationStep",
+  "type": "object",
+  "properties": {
+    "automation_id": {
+      "type": "string",
+      "description": "Parent automation ID"
+    },
+    "step_type": {
+      "type": "string",
+      "enum": [
+        "trigger",
+        "action",
+        "condition"
+      ],
+      "description": "Type of automation step"
+    },
+    "step_data": {
+      "type": "object",
+      "description": "Step configuration and parameters"
+    },
+    "order_position": {
+      "type": "number",
+      "description": "Step order in the automation sequence"
+    },
+    "is_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this step is active"
+    },
+    "description": {
+      "type": "string",
+      "description": "Step description"
+    }
+  },
+  "required": [
+    "automation_id",
+    "step_type",
+    "step_data",
+    "order_position"
+  ]
+}

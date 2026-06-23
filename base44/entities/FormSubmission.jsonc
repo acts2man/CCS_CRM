@@ -1,0 +1,71 @@
+{
+  "name": "FormSubmission",
+  "type": "object",
+  "properties": {
+    "form_id": {
+      "type": "string",
+      "description": "Form ID"
+    },
+    "submitter_id": {
+      "type": "string",
+      "description": "User who submitted"
+    },
+    "submitter_name": {
+      "type": "string",
+      "description": "Submitter display name"
+    },
+    "submitter_role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "teacher",
+        "parent",
+        "student"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "description": "Form field responses"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected"
+      ],
+      "default": "submitted"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Reviewer user ID"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "form_id",
+    "submitter_id",
+    "data"
+  ]
+}

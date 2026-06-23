@@ -1,0 +1,23 @@
+{
+  "name": "Subject",
+  "type": "object",
+  "properties": {
+    "class_section_id": {
+      "type": "string",
+      "description": "Parent class section"
+    },
+    "name": {
+      "type": "string",
+      "description": "Subject name (e.g., Math, English, Science)"
+    },
+    "order_index": {
+      "type": "number",
+      "default": 0,
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "class_section_id",
+    "name"
+  ]
+}

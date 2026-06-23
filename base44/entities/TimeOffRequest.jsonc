@@ -1,0 +1,97 @@
+{
+  "name": "TimeOffRequest",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Employee first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Employee last name"
+    },
+    "work_email": {
+      "type": "string",
+      "description": "Employee work email"
+    },
+    "submission_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date request was submitted"
+    },
+    "full_day": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether requesting full day off"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Time off start date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Time off end date"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start time (HH:MM format)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "End time (HH:MM format)"
+    },
+    "total_hours": {
+      "type": "number",
+      "description": "Total hours requested"
+    },
+    "reason_notes": {
+      "type": "string",
+      "description": "Reason for time off request"
+    },
+    "use_pto": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use PTO if available"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "denied"
+      ],
+      "default": "pending",
+      "description": "Request approval status"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Admin notes on approval/denial"
+    },
+    "user_notified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has been notified of decision"
+    },
+    "synced_to_sheets": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether synced to Google Sheets"
+    },
+    "synced_to_calendar": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether added to Google Calendar"
+    }
+  },
+  "required": [
+    "first_name",
+    "last_name",
+    "work_email",
+    "start_date",
+    "end_date",
+    "total_hours",
+    "reason_notes"
+  ]
+}

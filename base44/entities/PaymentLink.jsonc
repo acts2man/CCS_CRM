@@ -1,0 +1,111 @@
+{
+  "name": "PaymentLink",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Payment link name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Link description"
+    },
+    "link_url": {
+      "type": "string",
+      "description": "Generated unique URL"
+    },
+    "link_id": {
+      "type": "string",
+      "description": "Unique link identifier"
+    },
+    "product_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Associated product IDs"
+    },
+    "invoice_id": {
+      "type": "string",
+      "description": "Associated invoice ID if applicable"
+    },
+    "payment_type": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "recurring",
+        "mixed"
+      ],
+      "default": "one_time",
+      "description": "Payment type"
+    },
+    "billing_frequency": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "annually"
+      ],
+      "description": "Frequency if recurring"
+    },
+    "billing_cycles": {
+      "type": "number",
+      "description": "Number of billing cycles (null = until cancelled)"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Total amount or recurring amount"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "expired"
+      ],
+      "default": "active",
+      "description": "Link status"
+    },
+    "total_collected": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount collected via this link"
+    },
+    "payment_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of payments made"
+    },
+    "expiration_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Link expiration date"
+    },
+    "max_payments": {
+      "type": "number",
+      "description": "Maximum number of payments allowed"
+    },
+    "allow_custom_amount": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allow payer to enter custom amount"
+    },
+    "require_student_info": {
+      "type": "boolean",
+      "default": true,
+      "description": "Require student name/ID at checkout"
+    },
+    "last_payment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last payment date"
+    }
+  },
+  "required": [
+    "name",
+    "link_id",
+    "link_url",
+    "payment_type",
+    "amount"
+  ]
+}

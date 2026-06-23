@@ -1,0 +1,111 @@
+{
+  "name": "Grade",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Student ID"
+    },
+    "class_id": {
+      "type": "string",
+      "description": "Class ID"
+    },
+    "assignment_name": {
+      "type": "string",
+      "description": "Assignment or assessment name"
+    },
+    "assignment_type": {
+      "type": "string",
+      "enum": [
+        "homework",
+        "quiz",
+        "test",
+        "project",
+        "participation",
+        "midterm",
+        "final",
+        "other"
+      ],
+      "description": "Type of assignment"
+    },
+    "score": {
+      "type": "number",
+      "description": "Points earned"
+    },
+    "max_score": {
+      "type": "number",
+      "description": "Maximum possible points"
+    },
+    "percentage": {
+      "type": "number",
+      "description": "Percentage score"
+    },
+    "letter_grade": {
+      "type": "string",
+      "enum": [
+        "A+",
+        "A",
+        "A-",
+        "B+",
+        "B",
+        "B-",
+        "C+",
+        "C",
+        "C-",
+        "D+",
+        "D",
+        "D-",
+        "F",
+        "I",
+        "W"
+      ],
+      "description": "Letter grade"
+    },
+    "weight": {
+      "type": "number",
+      "description": "Grade weight for final calculation"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Assignment due date"
+    },
+    "submitted_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date submitted"
+    },
+    "grading_period": {
+      "type": "string",
+      "enum": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "S1",
+        "S2",
+        "final"
+      ],
+      "description": "Grading period"
+    },
+    "feedback": {
+      "type": "string",
+      "description": "Teacher feedback"
+    },
+    "is_missing": {
+      "type": "boolean",
+      "default": false,
+      "description": "Assignment not submitted"
+    },
+    "is_late": {
+      "type": "boolean",
+      "default": false,
+      "description": "Assignment submitted late"
+    }
+  },
+  "required": [
+    "student_id",
+    "class_id",
+    "assignment_name"
+  ]
+}

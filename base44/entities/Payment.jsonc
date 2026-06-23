@@ -1,0 +1,63 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "parent_id": {
+      "type": "string"
+    },
+    "parent_name": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "cash",
+        "check",
+        "credit_card",
+        "bank_transfer",
+        "stripe",
+        "other"
+      ],
+      "default": "cash"
+    },
+    "reference_number": {
+      "type": "string",
+      "description": "Check number, transaction ID, etc."
+    },
+    "charge_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Charges this payment applies to"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "recorded_by": {
+      "type": "string"
+    },
+    "stripe_payment_intent": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "student_id",
+    "amount",
+    "payment_date",
+    "method"
+  ]
+}

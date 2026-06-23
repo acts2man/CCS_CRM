@@ -1,0 +1,64 @@
+{
+  "name": "SchoolForm",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Form title (e.g., Field Trip Permission Slip)"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this form is for"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "field_trip",
+        "permission_slip",
+        "event",
+        "medical",
+        "other"
+      ],
+      "default": "permission_slip",
+      "description": "Type of form"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Deadline for submission"
+    },
+    "details": {
+      "type": "string",
+      "description": "Full details / body of the form"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Optional attached file"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this form is currently active"
+    },
+    "requires_signature": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether parent must sign/acknowledge"
+    },
+    "target_grade_levels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Which grade levels this applies to (empty = all)"
+    },
+    "created_by_name": {
+      "type": "string",
+      "description": "Name of admin who created this form"
+    }
+  },
+  "required": [
+    "title",
+    "description"
+  ]
+}

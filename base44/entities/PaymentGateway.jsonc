@@ -1,0 +1,44 @@
+{
+  "name": "PaymentGateway",
+  "type": "object",
+  "properties": {
+    "gateway_type": {
+      "type": "string",
+      "enum": [
+        "stripe",
+        "paypal"
+      ],
+      "description": "Gateway type"
+    },
+    "is_connected": {
+      "type": "boolean",
+      "default": false,
+      "description": "Connection status"
+    },
+    "account_email": {
+      "type": "string",
+      "description": "Connected account email"
+    },
+    "account_id": {
+      "type": "string",
+      "description": "Gateway account ID"
+    },
+    "api_key_last_four": {
+      "type": "string",
+      "description": "Last 4 digits of API key for display"
+    },
+    "test_mode": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether in test mode"
+    },
+    "connected_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date connected"
+    }
+  },
+  "required": [
+    "gateway_type"
+  ]
+}

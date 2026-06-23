@@ -1,0 +1,44 @@
+{
+  "name": "ClassPeriod",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Period name (e.g., 'Period 1', 'Morning Session')"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start time (e.g., '08:00')"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "End time (e.g., '09:00')"
+    },
+    "days_of_week": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Days this period occurs (e.g., ['Monday', 'Wednesday', 'Friday'])"
+    },
+    "academic_year": {
+      "type": "string",
+      "description": "Academic year"
+    },
+    "order": {
+      "type": "number",
+      "description": "Period order in the day"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "start_time",
+    "end_time",
+    "days_of_week",
+    "academic_year"
+  ]
+}

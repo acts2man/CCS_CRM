@@ -1,0 +1,78 @@
+{
+  "name": "Class",
+  "type": "object",
+  "properties": {
+    "class_name": {
+      "type": "string",
+      "description": "Class name"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject area"
+    },
+    "grade_level": {
+      "type": "string",
+      "description": "Grade level"
+    },
+    "teacher_id": {
+      "type": "string",
+      "description": "Assigned teacher ID"
+    },
+    "student_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Enrolled student IDs"
+    },
+    "room_number": {
+      "type": "string",
+      "description": "Classroom number"
+    },
+    "period": {
+      "type": "string",
+      "description": "Class period"
+    },
+    "schedule": {
+      "type": "string",
+      "description": "Class schedule (e.g., MWF 9:00-10:00)"
+    },
+    "academic_year": {
+      "type": "string",
+      "description": "Academic year (e.g., 2024-2025)"
+    },
+    "semester": {
+      "type": "string",
+      "enum": [
+        "fall",
+        "spring",
+        "summer",
+        "full_year"
+      ],
+      "description": "Semester"
+    },
+    "capacity": {
+      "type": "number",
+      "description": "Maximum class capacity"
+    },
+    "description": {
+      "type": "string",
+      "description": "Class description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "class_name",
+    "subject",
+    "grade_level",
+    "academic_year"
+  ]
+}

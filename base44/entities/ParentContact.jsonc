@@ -1,0 +1,51 @@
+{
+  "name": "ParentContact",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Associated student ID"
+    },
+    "name": {
+      "type": "string",
+      "description": "Contact name"
+    },
+    "relationship": {
+      "type": "string",
+      "default": "Parent/Guardian",
+      "description": "Relationship to student"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Primary contact for student"
+    },
+    "can_pickup": {
+      "type": "boolean",
+      "default": true,
+      "description": "Authorized for pickup"
+    },
+    "receive_notifications": {
+      "type": "boolean",
+      "default": true,
+      "description": "Should receive notifications"
+    },
+    "address": {
+      "type": "string",
+      "description": "Home address"
+    }
+  },
+  "required": [
+    "student_id",
+    "name",
+    "email"
+  ]
+}

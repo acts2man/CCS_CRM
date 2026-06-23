@@ -1,0 +1,65 @@
+{
+  "name": "FormResponse",
+  "type": "object",
+  "properties": {
+    "form_id": {
+      "type": "string",
+      "description": "Form ID"
+    },
+    "submitted_by": {
+      "type": "string",
+      "description": "User who submitted (null for anonymous)"
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Submission timestamp"
+    },
+    "data": {
+      "type": "object",
+      "description": "Form response data"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata (IP, user agent, etc.)"
+    },
+    "access_token": {
+      "type": "string",
+      "description": "Access token for anonymous submissions"
+    },
+    "email_sent_to": {
+      "type": "string",
+      "description": "Email address for confirmation"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When response access expires"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected"
+      ],
+      "default": "submitted"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Reviewer user ID"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "form_id",
+    "data"
+  ]
+}

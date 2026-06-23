@@ -1,0 +1,22 @@
+{
+  "name": "AttendanceSettings",
+  "type": "object",
+  "properties": {
+    "setting_key": {
+      "type": "string",
+      "description": "Setting identifier key"
+    },
+    "setting_value": {
+      "type": "object",
+      "description": "Setting configuration value"
+    },
+    "description": {
+      "type": "string",
+      "description": "Setting description"
+    }
+  },
+  "required": [
+    "setting_key",
+    "setting_value"
+  ]
+}

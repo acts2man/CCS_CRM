@@ -1,0 +1,108 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "sender_id": {
+      "type": "string",
+      "description": "Sender user ID"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Sender display name"
+    },
+    "sender_role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "teacher",
+        "parent",
+        "student"
+      ],
+      "description": "Sender role"
+    },
+    "recipient_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Recipient user IDs"
+    },
+    "recipient_type": {
+      "type": "string",
+      "enum": [
+        "individual",
+        "group",
+        "class",
+        "grade_level",
+        "all"
+      ],
+      "description": "Type of recipients"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Message subject"
+    },
+    "body": {
+      "type": "string",
+      "description": "Message content (HTML supported)"
+    },
+    "thread_id": {
+      "type": "string",
+      "description": "Thread ID for conversation grouping"
+    },
+    "parent_message_id": {
+      "type": "string",
+      "description": "Parent message ID for replies"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Read status"
+    },
+    "read_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of user IDs who have read"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "File attachments"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "is_announcement": {
+      "type": "boolean",
+      "default": false,
+      "description": "Is this an announcement"
+    }
+  },
+  "required": [
+    "sender_id",
+    "subject",
+    "body"
+  ]
+}

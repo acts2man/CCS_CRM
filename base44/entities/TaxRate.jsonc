@@ -1,0 +1,31 @@
+{
+  "name": "TaxRate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Tax name (e.g., 'State Sales Tax')"
+    },
+    "rate": {
+      "type": "number",
+      "description": "Tax rate as percentage (e.g., 7.5 for 7.5%)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Tax description"
+    },
+    "tax_id": {
+      "type": "string",
+      "description": "Tax identification number"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether tax is active"
+    }
+  },
+  "required": [
+    "name",
+    "rate"
+  ]
+}

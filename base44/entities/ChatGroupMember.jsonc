@@ -1,0 +1,41 @@
+{
+  "name": "ChatGroupMember",
+  "type": "object",
+  "properties": {
+    "group_id": {
+      "type": "string",
+      "description": "Chat group ID"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User ID"
+    },
+    "joined_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When user joined"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "member"
+      ],
+      "default": "member",
+      "description": "Member role in group"
+    },
+    "is_muted": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_read_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time user read messages"
+    }
+  },
+  "required": [
+    "group_id",
+    "user_id"
+  ]
+}

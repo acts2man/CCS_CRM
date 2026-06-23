@@ -1,0 +1,43 @@
+{
+  "name": "GradingPeriodConfig",
+  "type": "object",
+  "properties": {
+    "school_year": {
+      "type": "string",
+      "description": "e.g., 2025-2026"
+    },
+    "period_type": {
+      "type": "string",
+      "enum": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "S1",
+        "S2"
+      ],
+      "description": "Period type"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Period start date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Period end date"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this period is currently active"
+    }
+  },
+  "required": [
+    "school_year",
+    "period_type",
+    "start_date",
+    "end_date"
+  ]
+}

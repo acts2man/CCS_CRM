@@ -1,0 +1,36 @@
+{
+  "name": "TeacherActivity",
+  "type": "object",
+  "properties": {
+    "teacher_id": {
+      "type": "string",
+      "description": "Teacher ID"
+    },
+    "activity": {
+      "type": "string",
+      "description": "Activity description"
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "Type of entity affected (student, class, grade, etc.)"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of affected entity"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Activity timestamp"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional activity metadata"
+    }
+  },
+  "required": [
+    "teacher_id",
+    "activity",
+    "entity_type"
+  ]
+}

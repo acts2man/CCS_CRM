@@ -1,0 +1,37 @@
+{
+  "name": "ChatThread",
+  "type": "object",
+  "properties": {
+    "message_id": {
+      "type": "string",
+      "description": "Original message that started the thread"
+    },
+    "title": {
+      "type": "string",
+      "description": "Thread title"
+    },
+    "last_activity": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last activity in thread"
+    },
+    "participant_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of participants"
+    },
+    "message_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of messages in thread"
+    },
+    "is_locked": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "message_id",
+    "title"
+  ]
+}

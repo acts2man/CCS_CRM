@@ -1,0 +1,58 @@
+{
+  "name": "InvoiceItem",
+  "type": "object",
+  "properties": {
+    "invoice_id": {
+      "type": "string",
+      "description": "Parent invoice ID"
+    },
+    "product_id": {
+      "type": "string",
+      "description": "Associated product/fee ID if applicable"
+    },
+    "description": {
+      "type": "string",
+      "description": "Item description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tuition",
+        "registration",
+        "meal",
+        "extracurricular",
+        "aftercare",
+        "textbooks",
+        "uniforms",
+        "technology",
+        "other"
+      ],
+      "description": "Item category"
+    },
+    "quantity": {
+      "type": "number",
+      "default": 1,
+      "description": "Quantity"
+    },
+    "unit_price": {
+      "type": "number",
+      "description": "Price per unit"
+    },
+    "total": {
+      "type": "number",
+      "description": "Line total (quantity * unit_price)"
+    },
+    "order_index": {
+      "type": "number",
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "invoice_id",
+    "description",
+    "category",
+    "quantity",
+    "unit_price",
+    "total"
+  ]
+}

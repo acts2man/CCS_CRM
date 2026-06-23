@@ -1,0 +1,68 @@
+{
+  "name": "ClockInOutAudit",
+  "type": "object",
+  "properties": {
+    "clock_record_id": {
+      "type": "string",
+      "description": "Related StudentClockInOut ID"
+    },
+    "student_id": {
+      "type": "string",
+      "description": "Student ID"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Student name"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the clock record"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "clock_in_recorded",
+        "clock_out_recorded",
+        "clock_in_edited",
+        "clock_out_edited",
+        "notes_updated"
+      ],
+      "description": "Type of edit/change"
+    },
+    "old_value": {
+      "type": "string",
+      "description": "Previous value (e.g., old time)"
+    },
+    "new_value": {
+      "type": "string",
+      "description": "New value (e.g., new time)"
+    },
+    "edited_by": {
+      "type": "string",
+      "description": "User ID who made the change"
+    },
+    "edited_by_name": {
+      "type": "string",
+      "description": "Name of user who made the change"
+    },
+    "edited_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the change was made"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for the edit (optional)"
+    }
+  },
+  "required": [
+    "clock_record_id",
+    "student_id",
+    "student_name",
+    "date",
+    "action",
+    "edited_by",
+    "edited_at"
+  ]
+}

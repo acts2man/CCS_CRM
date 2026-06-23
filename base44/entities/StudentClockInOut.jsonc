@@ -1,0 +1,58 @@
+{
+  "name": "StudentClockInOut",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Student ID"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Student name for quick lookup"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Clock in/out date"
+    },
+    "clock_in_time": {
+      "type": "string",
+      "description": "HH:MM:SS format - arrival time at school"
+    },
+    "clock_out_time": {
+      "type": "string",
+      "description": "HH:MM:SS format - departure time from school"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Total minutes from clock in to clock out"
+    },
+    "tardy_cutoff_time": {
+      "type": "string",
+      "description": "HH:MM:SS - configurable tardy cutoff (e.g., 08:30)"
+    },
+    "is_tardy": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether arrival was after tardy cutoff"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes about arrival/departure"
+    },
+    "recorded_by": {
+      "type": "string",
+      "description": "User ID who recorded the clock in/out"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this record was created"
+    }
+  },
+  "required": [
+    "student_id",
+    "student_name",
+    "date"
+  ]
+}

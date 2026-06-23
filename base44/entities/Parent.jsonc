@@ -1,0 +1,75 @@
+{
+  "name": "Parent",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Parent's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Parent's last name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Parent's email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Primary phone number"
+    },
+    "alternate_phone": {
+      "type": "string",
+      "description": "Alternate phone number"
+    },
+    "address": {
+      "type": "string",
+      "description": "Home address"
+    },
+    "relationship": {
+      "type": "string",
+      "enum": [
+        "mother",
+        "father",
+        "guardian",
+        "grandparent",
+        "other"
+      ],
+      "description": "Relationship to student"
+    },
+    "student_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Associated student IDs"
+    },
+    "occupation": {
+      "type": "string",
+      "description": "Occupation"
+    },
+    "employer": {
+      "type": "string",
+      "description": "Employer name"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Profile photo URL"
+    },
+    "is_primary_contact": {
+      "type": "boolean",
+      "default": true,
+      "description": "Primary contact for communications"
+    },
+    "can_pickup": {
+      "type": "boolean",
+      "default": true,
+      "description": "Authorized for student pickup"
+    }
+  },
+  "required": [
+    "first_name",
+    "last_name",
+    "email"
+  ]
+}

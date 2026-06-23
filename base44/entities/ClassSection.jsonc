@@ -1,0 +1,63 @@
+{
+  "name": "ClassSection",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Class section name (e.g., English 11, Middle School English Period 1)"
+    },
+    "teacher_id": {
+      "type": "string",
+      "description": "Assigned teacher ID"
+    },
+    "teacher_name": {
+      "type": "string",
+      "description": "Teacher name for display"
+    },
+    "school_year": {
+      "type": "string",
+      "description": "e.g. 2025-2026"
+    },
+    "grade_level": {
+      "type": "string",
+      "description": "Grade level (K, 1-12)"
+    },
+    "period": {
+      "type": "string",
+      "description": "Period or time slot"
+    },
+    "room_number": {
+      "type": "string",
+      "description": "Room number"
+    },
+    "grade_scale": {
+      "type": "string",
+      "enum": [
+        "standard_10pt"
+      ],
+      "default": "standard_10pt",
+      "description": "90-100=A, 80-89=B, 70-79=C, 60-69=D, <60=F"
+    },
+    "include_on_report_card": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to include this class on student report cards"
+    },
+    "student_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Enrolled student IDs"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this class is currently active"
+    }
+  },
+  "required": [
+    "name",
+    "school_year"
+  ]
+}

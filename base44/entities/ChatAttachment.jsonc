@@ -1,0 +1,36 @@
+{
+  "name": "ChatAttachment",
+  "type": "object",
+  "properties": {
+    "message_id": {
+      "type": "string",
+      "description": "Associated message ID"
+    },
+    "name": {
+      "type": "string",
+      "description": "File name"
+    },
+    "url": {
+      "type": "string",
+      "description": "File URL"
+    },
+    "type": {
+      "type": "string",
+      "description": "MIME type"
+    },
+    "size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Thumbnail URL for images/videos"
+    }
+  },
+  "required": [
+    "message_id",
+    "name",
+    "url",
+    "type"
+  ]
+}

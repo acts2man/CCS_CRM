@@ -1,0 +1,56 @@
+{
+  "name": "SchoolSettings",
+  "type": "object",
+  "properties": {
+    "school_name": {
+      "type": "string",
+      "description": "School name"
+    },
+    "address": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "current_academic_year": {
+      "type": "string"
+    },
+    "current_semester": {
+      "type": "string",
+      "enum": [
+        "fall",
+        "spring",
+        "summer"
+      ]
+    },
+    "grading_scale": {
+      "type": "object",
+      "description": "Grade thresholds"
+    },
+    "attendance_settings": {
+      "type": "object",
+      "description": "Attendance configuration"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "school_start_time": {
+      "type": "string"
+    },
+    "school_end_time": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "school_name"
+  ]
+}

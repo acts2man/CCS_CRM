@@ -1,0 +1,67 @@
+{
+  "name": "DocumentTemplate",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Template title (e.g., Behavior Report)"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this template is used for"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "school",
+        "preschool",
+        "both"
+      ],
+      "default": "both",
+      "description": "Who this template applies to"
+    },
+    "template_type": {
+      "type": "string",
+      "enum": [
+        "behavior_report",
+        "accident_report",
+        "dress_code_violation",
+        "suspension_notice",
+        "preschool_notes",
+        "supply_list",
+        "enrollment_form",
+        "other"
+      ],
+      "description": "Type of document template"
+    },
+    "fields": {
+      "type": "array",
+      "description": "Form field definitions",
+      "items": {
+        "type": "object"
+      }
+    },
+    "notify_parent": {
+      "type": "boolean",
+      "default": true,
+      "description": "Automatically email parent when submitted"
+    },
+    "require_acknowledgment": {
+      "type": "boolean",
+      "default": false,
+      "description": "Parent must acknowledge receipt"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Optional attached file/template file"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "template_type"
+  ]
+}

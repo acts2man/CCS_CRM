@@ -1,0 +1,48 @@
+{
+  "name": "AdminNote",
+  "type": "object",
+  "properties": {
+    "teacher_id": {
+      "type": "string",
+      "description": "Teacher this note is about"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Admin who created the note"
+    },
+    "note": {
+      "type": "string",
+      "description": "Note content"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "performance",
+        "conduct",
+        "achievement",
+        "concern",
+        "general"
+      ],
+      "description": "Note category"
+    },
+    "is_confidential": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether note is confidential"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    }
+  },
+  "required": [
+    "teacher_id",
+    "created_by",
+    "note"
+  ]
+}

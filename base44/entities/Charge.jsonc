@@ -1,0 +1,66 @@
+{
+  "name": "Charge",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "charge_type": {
+      "type": "string",
+      "enum": [
+        "tuition",
+        "field_trip",
+        "fundraiser",
+        "registration",
+        "lunch",
+        "aftercare",
+        "uniform",
+        "textbook",
+        "technology",
+        "other"
+      ],
+      "description": "Type of charge"
+    },
+    "description": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "paid",
+        "partial",
+        "waived"
+      ],
+      "default": "unpaid"
+    },
+    "paid_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "school_year": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "student_id",
+    "charge_type",
+    "amount"
+  ]
+}

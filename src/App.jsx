@@ -50,6 +50,7 @@ import TeacherSettings from '@/pages/TeacherSettings';
 import StudentDirectory from '@/pages/StudentDirectory';
 import UserManagement from '@/pages/UserManagement';
 import DataHealthCheck from '@/pages/DataHealthCheck';
+import DataExport from '@/pages/DataExport';
 import Profile from '@/pages/Profile';
 import TeacherDocuments from '@/pages/TeacherDocuments';
 import TeacherStudentProfile from '@/pages/TeacherStudentProfile';
@@ -164,6 +165,7 @@ const AuthenticatedApp = () => {
       <Route path="/TeacherDocuments" element={<TeacherLayout><TeacherDocuments /></TeacherLayout>} />
       <Route path="/UserManagement" element={<LayoutWrapper currentPageName="UserManagement"><UserManagement /></LayoutWrapper>} />
       <Route path="/DataHealthCheck" element={<LayoutWrapper currentPageName="DataHealthCheck"><DataHealthCheck /></LayoutWrapper>} />
+      <Route path="/DataExport" element={<LayoutWrapper currentPageName="DataExport"><DataExport /></LayoutWrapper>} />
       <Route path="/BulletinBoard" element={<LayoutWrapper currentPageName="BulletinBoard"><BulletinBoard /></LayoutWrapper>} />
       <Route path="/SchoolForms" element={<LayoutWrapper currentPageName="SchoolForms"><SchoolForms /></LayoutWrapper>} />
       <Route path="/Profile" element={<LayoutWrapper currentPageName="Profile"><Profile /></LayoutWrapper>} />

@@ -1,0 +1,44 @@
+{
+  "name": "Assignment",
+  "type": "object",
+  "properties": {
+    "class_section_id": {
+      "type": "string"
+    },
+    "grade_category_id": {
+      "type": "string"
+    },
+    "category_name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "Assignment title (e.g., Essay, Reading Log)"
+    },
+    "description": {
+      "type": "string"
+    },
+    "points_possible": {
+      "type": "number",
+      "default": 100
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "assigned_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "class_section_id",
+    "grade_category_id",
+    "title",
+    "points_possible"
+  ]
+}

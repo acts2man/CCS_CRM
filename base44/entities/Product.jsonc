@@ -1,0 +1,86 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Product/Fee name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Product description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tuition",
+        "registration",
+        "meal",
+        "extracurricular",
+        "aftercare",
+        "textbooks",
+        "uniforms",
+        "technology",
+        "other"
+      ],
+      "description": "Product category"
+    },
+    "default_price": {
+      "type": "number",
+      "description": "Default price"
+    },
+    "billing_type": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "recurring"
+      ],
+      "default": "one_time",
+      "description": "Billing type"
+    },
+    "recurring_frequency": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "annually"
+      ],
+      "description": "Frequency if recurring"
+    },
+    "grade_levels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Applicable grade levels"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Product tags"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether product is active"
+    },
+    "last_used": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time used in invoice"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times used"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "default_price",
+    "billing_type"
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "name": "Teacher",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "Teacher's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Teacher's last name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Teacher's email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "department": {
+      "type": "string",
+      "description": "Department or subject area"
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Subjects taught"
+    },
+    "grade_levels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Grade levels taught"
+    },
+    "employment_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Employment start date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Inactive",
+        "On Leave"
+      ],
+      "default": "Active",
+      "description": "Employment status"
+    },
+    "education": {
+      "type": "string",
+      "description": "Educational background"
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Teaching certifications"
+    },
+    "homeroom": {
+      "type": "string",
+      "description": "Homeroom assignment"
+    },
+    "biography": {
+      "type": "string",
+      "description": "Teacher biography"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "Profile avatar URL"
+    },
+    "room_number": {
+      "type": "string",
+      "description": "Assigned classroom"
+    }
+  },
+  "required": [
+    "first_name",
+    "last_name",
+    "email",
+    "phone",
+    "department"
+  ]
+}

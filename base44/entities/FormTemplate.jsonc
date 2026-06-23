@@ -1,0 +1,49 @@
+{
+  "name": "FormTemplate",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Template title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Template description"
+    },
+    "category": {
+      "type": "string",
+      "description": "Template category"
+    },
+    "fields": {
+      "type": "object",
+      "description": "Form field definitions (JSON structure)"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Creator user ID"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether template is active"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Template tags for search/filter"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times used"
+    }
+  },
+  "required": [
+    "title",
+    "category",
+    "fields",
+    "created_by"
+  ]
+}

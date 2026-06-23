@@ -1,0 +1,52 @@
+{
+  "name": "AssignmentGrade",
+  "type": "object",
+  "properties": {
+    "assignment_id": {
+      "type": "string"
+    },
+    "class_section_id": {
+      "type": "string"
+    },
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "points_earned": {
+      "type": "number"
+    },
+    "percentage": {
+      "type": "number"
+    },
+    "letter_grade": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "graded_by": {
+      "type": "string"
+    },
+    "graded_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "missing",
+        "turned_in",
+        "graded",
+        "excused"
+      ],
+      "default": "missing"
+    }
+  },
+  "required": [
+    "assignment_id",
+    "class_section_id",
+    "student_id"
+  ]
+}

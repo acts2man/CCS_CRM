@@ -1,0 +1,79 @@
+{
+  "name": "Document",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Document name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Document description"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "File URL"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "File MIME type"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "policy",
+        "handbook",
+        "form",
+        "report",
+        "transcript",
+        "medical",
+        "financial",
+        "other"
+      ],
+      "description": "Document category"
+    },
+    "folder": {
+      "type": "string",
+      "description": "Folder path"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Document tags"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "staff",
+        "parents",
+        "students",
+        "private"
+      ],
+      "default": "private"
+    },
+    "associated_student_id": {
+      "type": "string",
+      "description": "Related student ID if applicable"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "Uploader user ID"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Document expiry date if applicable"
+    }
+  },
+  "required": [
+    "name",
+    "file_url"
+  ]
+}

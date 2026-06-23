@@ -1,0 +1,59 @@
+{
+  "name": "Bulletin",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Bulletin title"
+    },
+    "body": {
+      "type": "string",
+      "description": "Bulletin content/body text"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "announcement",
+        "reminder",
+        "event",
+        "urgent"
+      ],
+      "default": "announcement",
+      "description": "Type of bulletin"
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "all",
+        "parents",
+        "students",
+        "staff"
+      ],
+      "default": "all",
+      "description": "Who should see this bulletin"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this bulletin is pinned to the top"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this bulletin is visible"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional expiration date"
+    },
+    "posted_by_name": {
+      "type": "string",
+      "description": "Display name of poster"
+    }
+  },
+  "required": [
+    "title",
+    "body"
+  ]
+}

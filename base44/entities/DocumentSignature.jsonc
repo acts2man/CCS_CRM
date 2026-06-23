@@ -1,0 +1,50 @@
+{
+  "name": "DocumentSignature",
+  "type": "object",
+  "properties": {
+    "student_document_id": {
+      "type": "string",
+      "description": "Related StudentDocument ID"
+    },
+    "parent_email": {
+      "type": "string",
+      "description": "Email of parent who signed"
+    },
+    "parent_name": {
+      "type": "string",
+      "description": "Name of parent who signed"
+    },
+    "signature_token": {
+      "type": "string",
+      "description": "Unique secure token for signature link"
+    },
+    "is_signed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether document has been signed"
+    },
+    "signed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when signed"
+    },
+    "signature_type": {
+      "type": "string",
+      "enum": [
+        "acknowledged",
+        "digital_signature"
+      ],
+      "default": "acknowledged",
+      "description": "Type of signature"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address of signer"
+    }
+  },
+  "required": [
+    "student_document_id",
+    "parent_email",
+    "signature_token"
+  ]
+}

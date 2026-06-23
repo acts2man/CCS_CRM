@@ -1,0 +1,49 @@
+{
+  "name": "ExecutionLog",
+  "type": "object",
+  "properties": {
+    "automation_id": {
+      "type": "string",
+      "description": "Automation that was executed"
+    },
+    "triggered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When automation was triggered"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure",
+        "partial",
+        "skipped"
+      ],
+      "description": "Execution result"
+    },
+    "execution_data": {
+      "type": "object",
+      "description": "Execution context and data"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if failed"
+    },
+    "duration_ms": {
+      "type": "number",
+      "description": "Execution duration in milliseconds"
+    },
+    "steps_completed": {
+      "type": "number",
+      "description": "Number of steps completed"
+    },
+    "steps_total": {
+      "type": "number",
+      "description": "Total number of steps"
+    }
+  },
+  "required": [
+    "automation_id",
+    "result"
+  ]
+}

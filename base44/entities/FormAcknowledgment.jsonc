@@ -1,0 +1,44 @@
+{
+  "name": "FormAcknowledgment",
+  "type": "object",
+  "properties": {
+    "form_id": {
+      "type": "string",
+      "description": "SchoolForm ID"
+    },
+    "student_id": {
+      "type": "string",
+      "description": "Student this acknowledgment is for"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Student display name"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "Parent who signed"
+    },
+    "parent_name": {
+      "type": "string",
+      "description": "Parent display name"
+    },
+    "parent_email": {
+      "type": "string",
+      "description": "Parent email"
+    },
+    "signed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the parent signed/acknowledged"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes from parent"
+    }
+  },
+  "required": [
+    "form_id",
+    "student_id",
+    "parent_id"
+  ]
+}

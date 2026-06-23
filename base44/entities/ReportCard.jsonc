@@ -1,0 +1,133 @@
+{
+  "name": "ReportCard",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Student ID"
+    },
+    "student_name": {
+      "type": "string",
+      "description": "Student's full name"
+    },
+    "student_grade_level": {
+      "type": "string",
+      "description": "Grade level at time of report card"
+    },
+    "school_year": {
+      "type": "string",
+      "description": "e.g., 2025-2026"
+    },
+    "reporting_period": {
+      "type": "string",
+      "enum": [
+        "Q1",
+        "Q2",
+        "Q3",
+        "Q4",
+        "S1",
+        "S2",
+        "FY"
+      ],
+      "description": "Reporting period (Quarter 1-4, Semester 1-2, Full Year)"
+    },
+    "period_start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Start date of reporting period"
+    },
+    "period_end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "End date of reporting period"
+    },
+    "classes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "class_id": {
+            "type": "string"
+          },
+          "class_name": {
+            "type": "string"
+          },
+          "teacher_name": {
+            "type": "string"
+          },
+          "number_grade": {
+            "type": "number",
+            "description": "Percentage grade"
+          },
+          "letter_grade": {
+            "type": "string",
+            "description": "A, B, C, D, F"
+          },
+          "grade_components": {
+            "type": "object",
+            "description": "Category grades if applicable"
+          }
+        }
+      },
+      "description": "List of classes and grades"
+    },
+    "overall_number_grade": {
+      "type": "number",
+      "description": "Overall percentage grade across all classes"
+    },
+    "overall_letter_grade": {
+      "type": "string",
+      "description": "Overall letter grade (A, B, C, D, F)"
+    },
+    "attendance": {
+      "type": "object",
+      "properties": {
+        "present": {
+          "type": "number"
+        },
+        "absent": {
+          "type": "number"
+        },
+        "tardy": {
+          "type": "number"
+        },
+        "excused": {
+          "type": "number"
+        },
+        "attendance_rate": {
+          "type": "number",
+          "description": "Percentage"
+        }
+      },
+      "description": "Attendance summary for period"
+    },
+    "comments": {
+      "type": "string",
+      "description": "Teacher or admin comments for this period"
+    },
+    "grade_scale": {
+      "type": "object",
+      "description": "Grade scale used (e.g., 90-100=A, 80-89=B)"
+    },
+    "generated_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When report card was generated"
+    },
+    "generated_by": {
+      "type": "string",
+      "description": "User who generated report card"
+    },
+    "is_final": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is finalized"
+    }
+  },
+  "required": [
+    "student_id",
+    "student_name",
+    "school_year",
+    "reporting_period"
+  ]
+}

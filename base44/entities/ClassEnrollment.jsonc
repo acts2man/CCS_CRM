@@ -1,0 +1,49 @@
+{
+  "name": "ClassEnrollment",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string",
+      "description": "Student ID"
+    },
+    "class_name": {
+      "type": "string",
+      "description": "Name of the class (e.g., English 11, Biology)"
+    },
+    "school_year": {
+      "type": "string",
+      "description": "School year (e.g., 2026-2027)"
+    },
+    "teacher_id": {
+      "type": "string",
+      "description": "Assigned teacher ID"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject area"
+    },
+    "grade_level": {
+      "type": "string",
+      "description": "Grade level for this class"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "dropped"
+      ],
+      "default": "active",
+      "description": "Enrollment status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "student_id",
+    "class_name",
+    "school_year"
+  ]
+}

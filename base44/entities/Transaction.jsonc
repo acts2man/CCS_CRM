@@ -1,0 +1,97 @@
+{
+  "name": "Transaction",
+  "type": "object",
+  "properties": {
+    "invoice_id": {
+      "type": "string",
+      "description": "Associated invoice ID"
+    },
+    "payment_link_id": {
+      "type": "string",
+      "description": "Associated payment link ID if applicable"
+    },
+    "student_id": {
+      "type": "string",
+      "description": "Student ID"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "Parent ID"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount"
+    },
+    "transaction_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Transaction date and time"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "credit_card",
+        "debit_card",
+        "bank_transfer",
+        "cash",
+        "check",
+        "stripe",
+        "paypal",
+        "other"
+      ],
+      "description": "Payment method"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "pending",
+        "failed",
+        "refunded",
+        "cancelled"
+      ],
+      "default": "completed",
+      "description": "Transaction status"
+    },
+    "gateway": {
+      "type": "string",
+      "enum": [
+        "stripe",
+        "paypal",
+        "manual",
+        "other"
+      ],
+      "description": "Payment gateway used"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "Gateway transaction ID"
+    },
+    "receipt_number": {
+      "type": "string",
+      "description": "Receipt number"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Transaction notes"
+    },
+    "refund_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount refunded if applicable"
+    },
+    "refund_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Refund date if applicable"
+    }
+  },
+  "required": [
+    "student_id",
+    "parent_id",
+    "amount",
+    "transaction_date",
+    "method",
+    "status"
+  ]
+}

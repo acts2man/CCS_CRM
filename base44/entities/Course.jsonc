@@ -1,0 +1,50 @@
+{
+  "name": "Course",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Course name (e.g., English, Math, Bible)"
+    },
+    "code": {
+      "type": "string",
+      "description": "Course code (e.g., ENG, MTH)"
+    },
+    "description": {
+      "type": "string"
+    },
+    "subject_area": {
+      "type": "string",
+      "enum": [
+        "english",
+        "math",
+        "science",
+        "history",
+        "bible",
+        "art",
+        "pe",
+        "technology",
+        "music",
+        "other"
+      ]
+    },
+    "grade_levels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Applicable grade levels"
+    },
+    "credits": {
+      "type": "number",
+      "default": 1
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

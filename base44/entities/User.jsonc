@@ -1,0 +1,23 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "User display name"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "teacher",
+        "parent",
+        "student",
+        "user"
+      ],
+      "default": "user",
+      "description": "User role in the system"
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,68 @@
+{
+  "name": "Form",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Form title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Form description"
+    },
+    "fields": {
+      "type": "object",
+      "description": "Form field definitions (JSON structure)"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "Template ID if created from template"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "scheduled",
+        "closed"
+      ],
+      "default": "draft",
+      "description": "Form status"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Creator user ID"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When form was published"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Form expiry date"
+    },
+    "settings": {
+      "type": "object",
+      "description": "Form settings (notifications, permissions, etc.)"
+    },
+    "target_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Roles that can submit this form"
+    },
+    "response_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of responses"
+    }
+  },
+  "required": [
+    "title",
+    "fields",
+    "created_by"
+  ]
+}
