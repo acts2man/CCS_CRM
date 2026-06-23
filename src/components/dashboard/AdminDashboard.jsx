@@ -71,7 +71,7 @@ export default function AdminDashboard() {
            )}
            <div>
              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-             <p className="text-gray-600 mt-1">Welcome back, {user?.email === 'reputationanalysts@gmail.com' ? 'Principal Ashley Zotzman' : (user?.full_name || user?.name || 'Admin')}</p>
+             <p className="text-gray-600 mt-1">Welcome back, Principal Ashley Zotzman</p>
            </div>
          </div>
          <div className="flex items-center gap-2 flex-wrap">
