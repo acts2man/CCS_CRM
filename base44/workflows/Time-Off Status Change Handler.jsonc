@@ -1,0 +1,37 @@
+{
+  "name": "Time-Off Status Change Handler",
+  "description": "When time-off status changes to approved/denied, send email and add to calendar",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "TimeOffRequest"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "time_off_status_change_handler",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "handleTimeOffStatusChange",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "handleTimeOffStatusChange"
+  }
+}

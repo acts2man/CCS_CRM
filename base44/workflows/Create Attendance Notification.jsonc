@@ -1,0 +1,38 @@
+{
+  "name": "Create Attendance Notification",
+  "description": "Creates Notification records for parents when student attendance is marked absent or tardy.",
+  "trigger": {
+    "condition": "${ ((.trigger.data.status == \"absent\") or (.trigger.data.status == \"tardy\")) }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create",
+        "update"
+      ],
+      "entity_name": "Attendance"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "create_attendance_notification",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "createAttendanceNotification",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "createAttendanceNotification"
+  }
+}
